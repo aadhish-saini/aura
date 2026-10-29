@@ -1,0 +1,96 @@
+/* Windows Orbital Throbber Animation: Authentic non-linear motion */
+.win-loader-container {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto;
+}
+
+.win-dot {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  opacity: 0;
+  transform: rotate(225deg);
+  animation: winOrbit 5.6s cubic-bezier(0.12, 0.65, 0.4, 1) infinite;
+}
+
+.win-dot::after {
+  content: "";
+  position: absolute;
+  width: 4.8px;
+  height: 4.8px;
+  border-radius: 50%;
+  background-color: var(--color-loader-dot);
+  box-shadow: var(--color-loader-glow);
+  top: 0;
+  left: 23.6px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Staggered delays for the 5 dots creating the grouping & trailing effect */
+.win-dot:nth-child(1) { animation-delay: 0.18s; }
+.win-dot:nth-child(2) { animation-delay: 0.38s; }
+.win-dot:nth-child(3) { animation-delay: 0.58s; }
+.win-dot:nth-child(4) { animation-delay: 0.78s; }
+.win-dot:nth-child(5) { animation-delay: 0.98s; }
+
+@keyframes winOrbit {
+  0% {
+    transform: rotate(200deg);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.15, 0.7, 0.35, 1);
+  }
+  7% {
+    opacity: 1;
+  }
+  32% {
+    transform: rotate(540deg);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  40% {
+    transform: rotate(660deg);
+    animation-timing-function: linear;
+  }
+  50% {
+    transform: rotate(720deg);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+  74% {
+    transform: rotate(1080deg);
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+  78% {
+    transform: rotate(1115deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(1115deg);
+    opacity: 0;
+  }
+}
+
+/* Smooth Fade transitions for loading messages */
+.status-text-transition {
+  transition: opacity 0.35s ease-in-out, transform 0.35s ease-out;
+}
+
+/* Ambient glowing subtle pulse for the monogram */
+@keyframes brandPulse {
+  0%, 100% {
+    filter: var(--brand-pulse-filter-1);
+  }
+  50% {
+    filter: var(--brand-pulse-filter-2);
+  }
+}
+
+.brand-glow {
+  animation: brandPulse 4s ease-in-out infinite;
+}
+
+/* Welcome screen transition */
+.welcome-screen-overlay {
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
