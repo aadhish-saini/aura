@@ -1,0 +1,15 @@
+/* Power Menu Popover */
+.power-menu-popover {
+  width: 220px;
+  bottom: 74px;
+  left: 200px;
+}
+
+@media (max-width: 640px) {
+  .power-menu-popover {
+    left: 16px;
+    bottom: 70px;
+    width: calc(100vw - 32px);
+    max-width: 260px;
+  }
+}

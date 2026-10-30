@@ -1,0 +1,24 @@
+/* Sleep Screen Styles */
+.sleep-screen {
+  background-color: #030403;
+  cursor: pointer;
+}
+
+@keyframes sleepBreathing {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+.sleep-logo-pulse {
+  animation: sleepBreathing 5s ease-in-out infinite;
+}
+
+.wake-system-btn {
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.2);
+}

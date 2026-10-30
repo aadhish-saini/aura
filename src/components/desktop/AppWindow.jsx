@@ -76,12 +76,12 @@ export default function AppWindow({
   const style = win.isMaximized || isSmallScreen
     ? {
         position: 'fixed',
-        top: '52px',
-        left: '0',
-        right: '0',
-        bottom: '52px',
-        width: '100vw',
-        height: 'calc(100vh - 104px)',
+        top: '8px',
+        left: '8px',
+        right: '8px',
+        bottom: '56px',
+        width: 'calc(100vw - 16px)',
+        height: 'calc(100vh - 64px)',
         zIndex: win.zIndex,
       }
     : {
@@ -91,7 +91,7 @@ export default function AppWindow({
         width: `${win.size.width}px`,
         height: `${win.size.height}px`,
         maxWidth: 'calc(100vw - 32px)',
-        maxHeight: 'calc(100vh - 120px)',
+        maxHeight: 'calc(100vh - 76px)',
         zIndex: win.zIndex,
       };
 

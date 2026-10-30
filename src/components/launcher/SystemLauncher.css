@@ -1,0 +1,40 @@
+/* System Launcher Styles */
+.launcher-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.launcher-card {
+  position: relative;
+}
+
+.launcher-brand-wrapper {
+  position: relative;
+}
+
+.boot-primary-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.boot-primary-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+}
+
+.boot-primary-btn:hover::after {
+  left: 150%;
+}

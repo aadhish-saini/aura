@@ -61,7 +61,7 @@ export default function WelcomeOverlay({ isVisible, onEnterWorkspace }) {
           className="text-sm mb-6 font-mono tracking-wide transition-colors duration-300"
           style={{ color: 'var(--color-text-secondary)' }}
         >
-          AURA Workspace is Ready
+          Developer Workspace is Ready
         </p>
 
         {/* Launch Action Button */}

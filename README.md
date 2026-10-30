@@ -97,7 +97,7 @@ The following features are roadmap items planned for future releases:
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/aadhishsaini/aura-portfolio.git
+   git clone https://github.com/aadhishsaini/aura.git
    cd aura-portfolio
    ```
 

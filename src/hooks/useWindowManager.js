@@ -168,11 +168,19 @@ export function useWindowManager() {
     );
   }, []);
 
+  // Close currently active window (for Alt+F4)
+  const closeActiveWindow = useCallback(() => {
+    if (activeWindowId) {
+      closeWindow(activeWindowId);
+    }
+  }, [activeWindowId, closeWindow]);
+
   return {
     openWindows,
     activeWindowId,
     openApp,
     closeWindow,
+    closeActiveWindow,
     minimizeWindow,
     maximizeWindow,
     focusWindow,

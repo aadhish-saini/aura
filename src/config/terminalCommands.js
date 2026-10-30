@@ -21,9 +21,10 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput }) {
     return {
       type: 'success',
       content: [
-        { text: 'AURA Shell, version 4.19.0-release (wasm32-unknown-linux-gnu)', style: 'muted' },
+        { text: 'AADHISH OS Shell, version 4.19.0-release (wasm32-unknown-linux-gnu)', style: 'muted' },
         { text: 'These shell commands are defined internally. Type a command to execute:', style: 'normal' },
         { text: '  help          - List all available commands', style: 'highlight' },
+        { text: '  shortcuts     - View system keyboard shortcuts (Ctrl+Alt+F, etc.)', style: 'highlight' },
         { text: '  about         - Display developer summary and biography', style: 'highlight' },
         { text: '  skills        - List engineering technologies & proficiencies', style: 'highlight' },
         { text: '  projects      - List featured software projects & repositories', style: 'highlight' },
@@ -32,9 +33,24 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput }) {
         { text: '  resume        - Open resume viewer application', style: 'highlight' },
         { text: '  date          - Print current workstation timestamp', style: 'highlight' },
         { text: '  whoami        - Print current identity and role', style: 'highlight' },
-        { text: '  neofetch      - Display AURA ASCII badge and system telemetry', style: 'highlight' },
+        { text: '  neofetch      - Display AADHISH OS ASCII badge and system telemetry', style: 'highlight' },
         { text: '  sudo unlock   - Reveal builder philosophy & AWS Student Builder mindset', style: 'highlight' },
         { text: '  clear         - Clear terminal screen buffer', style: 'highlight' }
+      ]
+    };
+  }
+
+  if (lower === 'shortcuts') {
+    return {
+      type: 'success',
+      content: [
+        { text: 'AADHISH OS // SYSTEM KEYBOARD SHORTCUTS:', style: 'accent' },
+        { text: '  Escape              : Close open Start menu, power menu, or dialogs', style: 'highlight' },
+        { text: '  Ctrl + Shift + Esc  : Launch Terminal CLI window', style: 'highlight' },
+        { text: '  Ctrl + Alt + S      : Toggle Start menu', style: 'highlight' },
+        { text: '  Ctrl + Alt + F      : Toggle browser fullscreen mode', style: 'highlight' },
+        { text: '  Alt + F4            : Close currently active application window', style: 'highlight' },
+        { text: 'Note: Shortcuts are ignored when actively typing in terminal or input fields.', style: 'muted' }
       ]
     };
   }

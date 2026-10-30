@@ -1,0 +1,8 @@
+/* Desktop Context Menu Styles */
+.desktop-context-menu {
+  min-width: 190px;
+}
+
+.context-submenu {
+  z-index: 60;
+}

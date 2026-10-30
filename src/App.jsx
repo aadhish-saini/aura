@@ -1,43 +1,146 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import SystemLauncher from './components/launcher/SystemLauncher';
 import BootScreen from './components/BootScreen';
 import Desktop from './components/desktop/Desktop';
+import SleepScreen from './components/power/SleepScreen';
+import ShutdownScreen from './components/shutdown/ShutdownScreen';
 import { useTheme } from './hooks/useTheme';
+import { useFullscreen } from './hooks/useFullscreen';
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
-  const [currentView, setCurrentView] = useState('boot'); // 'boot' | 'desktop'
+  const {
+    isFullscreen,
+    showExitToast,
+    requestFullscreen,
+    exitFullscreen,
+    toggleFullscreen,
+    dismissExitToast
+  } = useFullscreen();
+
+  // Central system screen state: 'launcher' | 'boot' | 'desktop' | 'sleep' | 'shutdown'
+  const [systemScreen, setSystemScreen] = useState('launcher');
+  const [bootNotice, setBootNotice] = useState(null);
 
   /**
-   * Navigation callback invoked when the user clicks "ENTER WORKSPACE"
-   * from the WelcomeOverlay after the boot sequence completes.
+   * Transition from System Launcher to Boot Sequence
    */
-  const handleEnterWorkspace = () => {
-    setCurrentView('desktop');
-  };
+  const handleBoot = useCallback(({ withFullscreen, notice }) => {
+    if (notice) {
+      setBootNotice(notice);
+    } else {
+      setBootNotice(null);
+    }
+    setSystemScreen('boot');
+  }, []);
 
   /**
-   * Reboot system: returns back to the interactive boot sequence.
+   * Transition from Boot / Welcome Screen to Desktop
    */
-  const handleReturnToBoot = () => {
-    setCurrentView('boot');
-  };
+  const handleEnterWorkspace = useCallback(() => {
+    setSystemScreen('desktop');
+  }, []);
+
+  /**
+   * Reboot / Restart system: return to boot screen
+   */
+  const handleRestart = useCallback(() => {
+    setBootNotice(null);
+    setSystemScreen('boot');
+  }, []);
+
+  /**
+   * Sleep mode: suspend desktop to minimal sleep overlay
+   */
+  const handleSleep = useCallback(() => {
+    setSystemScreen('sleep');
+  }, []);
+
+  /**
+   * Wake system from sleep mode
+   */
+  const handleWake = useCallback(() => {
+    setSystemScreen('desktop');
+  }, []);
+
+  /**
+   * Shut Down: begin cinematic shutdown sequence
+   */
+  const handleShutdown = useCallback(() => {
+    setSystemScreen('shutdown');
+  }, []);
+
+  /**
+   * Shutdown sequence completion: exit fullscreen and return to system launcher
+   */
+  const handleCompleteShutdown = useCallback(async () => {
+    await exitFullscreen();
+    setSystemScreen('launcher');
+  }, [exitFullscreen]);
 
   return (
-    <div className="w-full min-h-screen bg-black overflow-hidden font-sans">
-      {currentView === 'boot' ? (
+    <div
+      className="w-full min-h-screen bg-black overflow-hidden font-sans select-none"
+      style={{
+        backgroundColor: 'var(--color-bg-app)',
+        color: 'var(--color-text-primary)'
+      }}
+    >
+      {/* 1. Initial System Launcher Screen */}
+      {systemScreen === 'launcher' && (
+        <div className="w-full h-full animate-in fade-in duration-300">
+          <SystemLauncher
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            onBoot={handleBoot}
+          />
+        </div>
+      )}
+
+      {/* 2. UEFI Boot Sequence & Welcome Overlay */}
+      {systemScreen === 'boot' && (
         <div className="w-full h-full animate-in fade-in duration-300">
           <BootScreen
             theme={theme}
             onToggleTheme={toggleTheme}
             onEnterWorkspace={handleEnterWorkspace}
+            bootNotice={bootNotice}
           />
         </div>
-      ) : (
+      )}
+
+      {/* 3. Interactive Windows 11 Desktop Experience */}
+      {systemScreen === 'desktop' && (
         <div className="w-full h-full animate-in fade-in duration-300">
           <Desktop
             theme={theme}
             onToggleTheme={toggleTheme}
-            onReturnToBoot={handleReturnToBoot}
+            onReturnToBoot={handleRestart}
+            onSleep={handleSleep}
+            onRestart={handleRestart}
+            onShutdown={handleShutdown}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={toggleFullscreen}
+            onRequestFullscreen={requestFullscreen}
+            showExitToast={showExitToast}
+            onDismissExitToast={dismissExitToast}
+          />
+        </div>
+      )}
+
+      {/* 4. Low-Power Sleep Screen Overlay */}
+      {systemScreen === 'sleep' && (
+        <div className="w-full h-full animate-in fade-in duration-500">
+          <SleepScreen onWake={handleWake} />
+        </div>
+      )}
+
+      {/* 5. Cinematic Shutdown Sequence */}
+      {systemScreen === 'shutdown' && (
+        <div className="w-full h-full animate-in fade-in duration-500">
+          <ShutdownScreen
+            theme={theme}
+            onCompleteShutdown={handleCompleteShutdown}
           />
         </div>
       )}

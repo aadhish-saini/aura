@@ -1,8 +1,13 @@
 import React from 'react';
-import { Sun, Moon, Monitor, Sliders, Info, ShieldCheck } from 'lucide-react';
+import { Sun, Moon, Monitor, Sliders, Info, Keyboard, Maximize, Minimize } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../../config/portfolioData';
 
-export default function SettingsApp({ theme, onToggleTheme }) {
+export default function SettingsApp({
+  theme,
+  onToggleTheme,
+  isFullscreen,
+  onToggleFullscreen
+}) {
   const isDark = theme === 'dark';
 
   return (
@@ -20,7 +25,7 @@ export default function SettingsApp({ theme, onToggleTheme }) {
               System Settings
             </h3>
             <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-              Appearance, workstation themes, and system specifications
+              Appearance, workstation themes, display mode, and system shortcuts
             </p>
           </div>
           <span 
@@ -33,6 +38,46 @@ export default function SettingsApp({ theme, onToggleTheme }) {
           >
             ACTIVE CONFIG
           </span>
+        </div>
+
+        {/* Display & Fullscreen Mode */}
+        <div 
+          className="p-5 rounded-xl border flex flex-col gap-3"
+          style={{
+            backgroundColor: 'var(--color-btn-default-bg)',
+            borderColor: 'var(--color-border-default)'
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Monitor size={16} style={{ color: 'var(--color-status-dot)' }} />
+              <h4 className="text-sm font-semibold text-white">Display & Fullscreen Simulation</h4>
+            </div>
+            <span className="text-[10px] font-mono text-neutral-400">
+              {isFullscreen ? 'FULLSCREEN ACTIVE' : 'WINDOWED MODE'}
+            </span>
+          </div>
+
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Switch between full-screen immersive OS simulation and windowed browser mode. You can also press <kbd className="px-1.5 py-0.5 rounded bg-neutral-800 border text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-neutral-800 border text-[10px]">Alt</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-neutral-800 border text-[10px]">F</kbd> at any time.
+          </p>
+
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={onToggleFullscreen}
+              className="px-4 py-2 rounded-lg text-xs font-mono font-medium flex items-center gap-2 cursor-pointer transition-all hover:brightness-110 active:scale-95"
+              style={{
+                backgroundColor: 'var(--color-btn-accent-bg)',
+                borderColor: 'var(--color-border-strong)',
+                borderWidth: '1px',
+                color: 'var(--color-status-dot)'
+              }}
+            >
+              {isFullscreen ? <Minimize size={14} /> : <Maximize size={14} />}
+              <span>{isFullscreen ? 'EXIT FULLSCREEN' : 'ENTER FULLSCREEN'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Theme Settings Panel */}
@@ -48,7 +93,7 @@ export default function SettingsApp({ theme, onToggleTheme }) {
             <h4 className="text-sm font-semibold text-white">Appearance & Theme</h4>
           </div>
           <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Choose between AURA Obsidian Dark (authentic Stitch terminal black) and VS Code-Inspired Light mode. Theme persists in local storage across sessions.
+            Choose between AADHISH OS Obsidian Dark (authentic Stitch terminal black) and VS Code-Inspired Light mode. Theme persists in local storage across sessions.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -70,7 +115,7 @@ export default function SettingsApp({ theme, onToggleTheme }) {
                   <Moon size={16} />
                 </div>
                 <div className="text-left">
-                  <div className="text-xs font-semibold">AURA Obsidian Dark</div>
+                  <div className="text-xs font-semibold">AADHISH OS Obsidian Dark</div>
                   <div className="text-[10px] text-neutral-400 font-mono">Stitch Emerald / Black</div>
                 </div>
               </div>
@@ -108,6 +153,43 @@ export default function SettingsApp({ theme, onToggleTheme }) {
           </div>
         </div>
 
+        {/* Keyboard Shortcuts Reference */}
+        <div 
+          className="p-5 rounded-xl border flex flex-col gap-3"
+          style={{
+            backgroundColor: 'var(--color-btn-default-bg)',
+            borderColor: 'var(--color-border-default)'
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <Keyboard size={16} style={{ color: 'var(--color-status-dot)' }} />
+            <h4 className="text-sm font-semibold text-white">System Keyboard Shortcuts</h4>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono pt-1">
+            <div className="p-2.5 rounded-lg border flex items-center justify-between" style={{ backgroundColor: 'var(--color-btn-accent-bg)', borderColor: 'var(--color-border-subtle)' }}>
+              <span>Escape</span>
+              <span className="text-neutral-400 text-[11px]">Close open menus</span>
+            </div>
+            <div className="p-2.5 rounded-lg border flex items-center justify-between" style={{ backgroundColor: 'var(--color-btn-accent-bg)', borderColor: 'var(--color-border-subtle)' }}>
+              <span>Ctrl + Shift + Esc</span>
+              <span className="text-neutral-400 text-[11px]">Open Terminal</span>
+            </div>
+            <div className="p-2.5 rounded-lg border flex items-center justify-between" style={{ backgroundColor: 'var(--color-btn-accent-bg)', borderColor: 'var(--color-border-subtle)' }}>
+              <span>Ctrl + Alt + S</span>
+              <span className="text-neutral-400 text-[11px]">Toggle Start menu</span>
+            </div>
+            <div className="p-2.5 rounded-lg border flex items-center justify-between" style={{ backgroundColor: 'var(--color-btn-accent-bg)', borderColor: 'var(--color-border-subtle)' }}>
+              <span>Ctrl + Alt + F</span>
+              <span className="text-neutral-400 text-[11px]">Toggle fullscreen</span>
+            </div>
+            <div className="p-2.5 rounded-lg border flex items-center justify-between sm:col-span-2" style={{ backgroundColor: 'var(--color-btn-accent-bg)', borderColor: 'var(--color-border-subtle)' }}>
+              <span>Alt + F4</span>
+              <span className="text-neutral-400 text-[11px]">Close focused window</span>
+            </div>
+          </div>
+        </div>
+
         {/* System Specifications Info */}
         <div 
           className="p-5 rounded-xl border flex flex-col gap-3"
@@ -118,7 +200,7 @@ export default function SettingsApp({ theme, onToggleTheme }) {
         >
           <div className="flex items-center gap-2">
             <Info size={16} style={{ color: 'var(--color-status-dot)' }} />
-            <h4 className="text-sm font-semibold text-white">About AURA — Aadhish's Unified Runtime Architecture</h4>
+            <h4 className="text-sm font-semibold text-white">About AADHISH OS — Developer Environment</h4>
           </div>
 
           <div className="space-y-2 text-xs font-mono" style={{ color: 'var(--color-text-secondary)' }}>
@@ -131,12 +213,8 @@ export default function SettingsApp({ theme, onToggleTheme }) {
               <span className="text-white font-medium">{PORTFOLIO_DATA.systemInfo.kernel}</span>
             </div>
             <div className="flex justify-between py-1 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
-              <span>Engine:</span>
-              <span className="text-white font-medium">{PORTFOLIO_DATA.systemInfo.coreEngine}</span>
-            </div>
-            <div className="flex justify-between py-1 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
-              <span>Purpose:</span>
-              <span className="text-white font-medium">AWS Student Builder Challenge Portfolio</span>
+              <span>Compositor:</span>
+              <span className="text-white font-medium">Windows 11-Inspired Web Compositor</span>
             </div>
             <div className="flex justify-between py-1">
               <span>Security State:</span>

@@ -1,0 +1,25 @@
+/* Start Menu Windows 11-Inspired Styling */
+.start-menu-container {
+  width: 540px;
+  max-width: calc(100vw - 24px);
+  height: 520px;
+  max-height: calc(100vh - 80px);
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 640px) {
+  .start-menu-container {
+    width: calc(100vw - 16px);
+    left: 8px;
+    transform: none;
+    bottom: 56px;
+    height: calc(100vh - 70px);
+    padding: 1rem;
+  }
+}
+
+.start-app-item {
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
