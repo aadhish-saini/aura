@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
- * Custom hook for cross-browser Fullscreen API management.
- * Gracefully handles permissions, errors, and manual user exits (e.g. via ESC key).
+ * Custom hook for cross-browser Fullscreen API management with AURA Immersive Session support.
+ * Gracefully handles user gesture permissions, browser Escape exit, recovery notifications,
+ * and clean shutdown/reboot transitions without loops or focus trapping.
  */
-export function useFullscreen() {
+export function useFullscreen({ isDesktopActive = true } = {}) {
   const [isFullscreen, setIsFullscreen] = useState(() => {
     if (typeof document !== 'undefined') {
       return !!(
@@ -20,7 +21,25 @@ export function useFullscreen() {
   const [fullscreenError, setFullscreenError] = useState(null);
   const [showExitToast, setShowExitToast] = useState(false);
 
-  // Sync state on fullscreenchange events
+  // Tracks whether fullscreen was successfully active in the current session
+  const hasBeenFullscreenRef = useRef(false);
+  const isDesktopActiveRef = useRef(isDesktopActive);
+  const toastTimeoutRef = useRef(null);
+
+  // Keep isDesktopActiveRef up-to-date
+  useEffect(() => {
+    isDesktopActiveRef.current = isDesktopActive;
+    // If desktop is no longer active (e.g. shutdown or boot), dismiss any lingering exit toast
+    if (!isDesktopActive) {
+      setShowExitToast(false);
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = null;
+      }
+    }
+  }, [isDesktopActive]);
+
+  // Sync state on native fullscreenchange events
   useEffect(() => {
     if (typeof document === 'undefined') return;
 
@@ -34,16 +53,34 @@ export function useFullscreen() {
       const currentlyFullscreen = !!activeElement;
       setIsFullscreen(currentlyFullscreen);
 
-      if (!currentlyFullscreen) {
-        // User exited fullscreen (e.g. pressed Escape or browser control)
-        setShowExitToast(true);
-      } else {
+      if (currentlyFullscreen) {
+        // Fullscreen successfully entered
+        hasBeenFullscreenRef.current = true;
         setShowExitToast(false);
+        if (toastTimeoutRef.current) {
+          clearTimeout(toastTimeoutRef.current);
+          toastTimeoutRef.current = null;
+        }
+      } else {
+        // Fullscreen ended (e.g. user pressed Escape or browser control)
+        // Only trigger the exit notification if the user was previously in fullscreen,
+        // and the desktop is currently active (not during boot, launcher, or shutdown).
+        if (hasBeenFullscreenRef.current && isDesktopActiveRef.current) {
+          setShowExitToast(true);
+          // Auto-dismiss after 10 seconds if user does not interact
+          if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+          toastTimeoutRef.current = setTimeout(() => {
+            setShowExitToast(false);
+            toastTimeoutRef.current = null;
+          }, 10000);
+        }
+        // Reset the flag so notification is not repeatedly shown while staying in windowed mode
+        hasBeenFullscreenRef.current = false;
       }
     };
 
     const handleFullscreenError = (err) => {
-      console.warn('Fullscreen request error:', err);
+      console.warn('Fullscreen API request error:', err);
       setFullscreenError('Fullscreen was unavailable in your browser.');
     };
 
@@ -67,6 +104,10 @@ export function useFullscreen() {
       document.removeEventListener('webkitfullscreenerror', handleFullscreenError);
       document.removeEventListener('mozfullscreenerror', handleFullscreenError);
       document.removeEventListener('MSFullscreenError', handleFullscreenError);
+
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -91,7 +132,12 @@ export function useFullscreen() {
         throw new Error('Fullscreen API is not supported on this browser.');
       }
       setIsFullscreen(true);
+      hasBeenFullscreenRef.current = true;
       setShowExitToast(false);
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = null;
+      }
       return { success: true };
     } catch (err) {
       console.warn('Could not enter fullscreen mode:', err);
@@ -101,7 +147,7 @@ export function useFullscreen() {
   }, []);
 
   /**
-   * Exit browser fullscreen if currently in fullscreen.
+   * Exit browser fullscreen safely if currently in fullscreen.
    */
   const exitFullscreen = useCallback(async () => {
     try {
@@ -123,6 +169,10 @@ export function useFullscreen() {
       }
       setIsFullscreen(false);
       setShowExitToast(false);
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = null;
+      }
       return { success: true };
     } catch (err) {
       console.warn('Error exiting fullscreen:', err);
@@ -140,6 +190,10 @@ export function useFullscreen() {
 
   const dismissExitToast = useCallback(() => {
     setShowExitToast(false);
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = null;
+    }
   }, []);
 
   return {

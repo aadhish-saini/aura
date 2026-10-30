@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Maximize,
-  Minimize,
   Sun,
   Moon,
   Volume2,
@@ -12,6 +11,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import StartMenu from './StartMenu';
+import AuraSessionMenu from './AuraSessionMenu';
 import AppIcon from '../common/AppIcon';
 import { DESKTOP_APPS } from '../../config/desktopApps';
 import './Taskbar.css';
@@ -35,6 +35,7 @@ export default function Taskbar({
   theme,
   onToggleTheme,
   isFullscreen,
+  onRequestFullscreen,
   onToggleFullscreen,
   onSleep,
   onRestart,
@@ -42,6 +43,7 @@ export default function Taskbar({
 }) {
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isTrayMenuOpen, setIsTrayMenuOpen] = useState(false);
+  const [isSessionMenuOpen, setIsSessionMenuOpen] = useState(false);
   const [isSoundMuted, setIsSoundMuted] = useState(false);
   const [timeStr, setTimeStr] = useState('');
   const [dateStr, setDateStr] = useState('');
@@ -246,19 +248,28 @@ export default function Taskbar({
                 </div>
 
                 <div className="space-y-2.5 pt-2.5">
-                  {/* Fullscreen Toggle */}
+                  {/* Fullscreen Status & Control */}
                   <div className="flex items-center justify-between">
                     <span className="text-neutral-300 flex items-center gap-1.5">
                       <Monitor size={13} style={{ color: 'var(--color-status-dot)' }} />
                       <span>Fullscreen:</span>
                     </span>
-                    <button
-                      type="button"
-                      onClick={onToggleFullscreen}
-                      className="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-white font-mono text-[11px] cursor-pointer"
-                    >
-                      {isFullscreen ? 'Exit' : 'Enter'}
-                    </button>
+                    {isFullscreen ? (
+                      <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono text-[10px] font-semibold tracking-wide">
+                        Active
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsTrayMenuOpen(false);
+                          onRequestFullscreen?.();
+                        }}
+                        className="px-2 py-0.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 font-mono text-[11px] cursor-pointer"
+                      >
+                        Enter
+                      </button>
+                    )}
                   </div>
 
                   {/* Sound Toggle */}
@@ -318,15 +329,33 @@ export default function Taskbar({
             {theme === 'dark' ? <Sun size={14} className="hover:text-amber-300" /> : <Moon size={14} className="hover:text-blue-500" />}
           </button>
 
-          {/* Fullscreen Quick Toggle */}
+          {/* AURA SESSION Unobtrusive Status & System Controls */}
           <button
+            id="aura-session-button"
             type="button"
-            onClick={onToggleFullscreen}
-            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-neutral-300 hover:text-white"
-            title={isFullscreen ? 'Exit Fullscreen (Ctrl+Alt+F)' : 'Enter Fullscreen (Ctrl+Alt+F)'}
-            aria-label="Toggle Fullscreen"
+            onClick={() => setIsSessionMenuOpen(!isSessionMenuOpen)}
+            className={`aura-session-trigger flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono transition-all cursor-pointer ${
+              isSessionMenuOpen
+                ? 'bg-emerald-500/15 border-emerald-500/40 text-white'
+                : 'hover:bg-white/10 text-neutral-300 hover:text-white border-transparent'
+            }`}
+            title="AURA Session Controls"
+            aria-label="AURA Session Controls"
+            aria-expanded={isSessionMenuOpen}
           >
-            {isFullscreen ? <Minimize size={14} /> : <Maximize size={14} />}
+            <span
+              className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                isFullscreen
+                  ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]'
+                  : 'bg-amber-400/80'
+              }`}
+            />
+            <span className="font-semibold tracking-wider text-[11px] hidden sm:inline">
+              AURA SESSION
+            </span>
+            <span className="font-semibold tracking-wider text-[11px] sm:hidden">
+              SESSION
+            </span>
           </button>
 
           {/* Windows 11 Stacked Clock & Date */}
@@ -346,6 +375,16 @@ export default function Taskbar({
           </div>
         </div>
       </footer>
+
+      {/* AURA Session Menu Popover */}
+      <AuraSessionMenu
+        isOpen={isSessionMenuOpen}
+        onClose={() => setIsSessionMenuOpen(false)}
+        isFullscreen={isFullscreen}
+        onRequestFullscreen={onRequestFullscreen}
+        onRestart={onRestart}
+        onShutdown={onShutdown}
+      />
 
       {/* Start Menu Popup */}
       <StartMenu

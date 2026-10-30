@@ -12,16 +12,16 @@ const SHUTDOWN_STAGES = [
   {
     step: 2,
     title: 'Saving workspace state...',
-    sub: 'Stage 2/4 // Syncing local preferences & theme'
+    sub: 'Stage 2/4 // Syncing local preferences & session state'
   },
   {
     step: 3,
-    title: 'Shutting down AADHISH OS...',
+    title: 'Shutting down AURA...',
     sub: 'Stage 3/4 // Flushing kernel buffers & unmounting subsystems'
   },
   {
     step: 4,
-    title: 'AADHISH OS has been shut down.',
+    title: 'AURA has been shut down.',
     sub: 'System halted // Power off safe'
   }
 ];
@@ -92,10 +92,10 @@ export default function ShutdownScreen({ theme, onCompleteShutdown }) {
         <div className="flex items-center gap-2">
           <span
             className={`w-2 h-2 rounded-full ${
-              isOff ? 'bg-red-500' : 'bg-emerald-400 animate-pulse'
+              isOff ? 'bg-rose-500' : 'bg-emerald-400 animate-pulse'
             }`}
           />
-          <span>AADHISH OS // ACPI POWER_OFF SEQUENCE</span>
+          <span>AURA // ACPI POWER_OFF SEQUENCE</span>
         </div>
         <div className="text-[11px]">
           <span>RUNLEVEL: 0</span>
@@ -118,14 +118,14 @@ export default function ShutdownScreen({ theme, onCompleteShutdown }) {
             className="text-2xl md:text-3xl font-medium tracking-tight mb-2 select-none transition-colors duration-300"
             style={{ color: isOff ? '#ffffff' : 'var(--color-text-primary)' }}
           >
-            AADHISH OS
+            AURA
           </h2>
 
           <p
             className="text-xs tracking-[0.2em] uppercase font-light font-mono mb-8 select-none transition-colors duration-300"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            {isOff ? 'System Halted' : 'A Personal Developer Environment'}
+            {isOff ? 'System Halted' : "Aadhish's Unified Runtime Architecture"}
           </p>
 
           {/* Loader or Off indicator */}
@@ -185,7 +185,7 @@ export default function ShutdownScreen({ theme, onCompleteShutdown }) {
         style={{ borderColor: 'var(--color-border-subtle)' }}
       >
         <span>STATUS: {isOff ? 'HALTED' : 'SHUTDOWN_IN_PROGRESS'}</span>
-        <span>AADHISH OS 26100.WORKSTATION</span>
+        <span>AURA // WORKSTATION</span>
       </footer>
     </div>
   );

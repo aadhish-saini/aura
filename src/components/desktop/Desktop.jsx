@@ -202,44 +202,71 @@ export default function Desktop({
         BUILD 26100.WORKSTATION // READY
       </div>
 
-      {/* Fullscreen Exit Non-Intrusive Recovery Toast */}
+      {/* Fullscreen Exit Subtle Temporary Notification */}
       {showExitToast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
+        <aside
+          role="status"
+          aria-live="polite"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-3 duration-200 select-none max-w-lg w-[calc(100vw-32px)]"
+        >
           <div
-            className="px-4 py-2 rounded-xl border shadow-xl backdrop-blur-2xl flex items-center gap-3 text-xs font-mono select-none"
+            className="p-3.5 sm:p-4 rounded-2xl border shadow-2xl backdrop-blur-2xl font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3"
             style={{
               backgroundColor: 'var(--color-bg-panel)',
-              borderColor: 'var(--color-status-dot)',
+              borderColor: 'var(--color-border-strong)',
               color: 'var(--color-text-primary)'
             }}
           >
-            <span
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: 'var(--color-status-dot)' }}
-            />
-            <span>Windowed mode active.</span>
-            <button
-              type="button"
-              onClick={onRequestFullscreen}
-              className="px-2 py-0.5 rounded font-semibold text-[11px] cursor-pointer hover:brightness-110 flex items-center gap-1"
-              style={{
-                backgroundColor: 'var(--color-btn-accent-bg)',
-                color: 'var(--color-status-dot)'
-              }}
-            >
-              <Maximize size={12} />
-              <span>Enter Fullscreen</span>
-            </button>
-            <button
-              type="button"
-              onClick={onDismissExitToast}
-              className="p-1 hover:bg-white/10 rounded cursor-pointer text-neutral-400 hover:text-white"
-              title="Dismiss notice"
-            >
-              <X size={13} />
-            </button>
+            <div className="flex items-start gap-2.5">
+              <span
+                className="w-2 h-2 rounded-full mt-1 shrink-0"
+                style={{
+                  backgroundColor: 'var(--color-status-dot)',
+                  boxShadow: 'var(--color-status-glow)'
+                }}
+              />
+              <div className="flex flex-col">
+                <span className="font-semibold text-white tracking-wide">
+                  Immersive mode ended
+                </span>
+                <span
+                  className="text-[11px] mt-0.5"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  AURA is still running in windowed mode.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              <button
+                type="button"
+                onClick={onRequestFullscreen}
+                className="px-3 py-1.5 rounded-xl font-semibold text-[11px] cursor-pointer transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                style={{
+                  backgroundColor: 'var(--color-progress-fill)',
+                  color: '#050706'
+                }}
+              >
+                <Maximize size={12} />
+                <span>Return to Fullscreen</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={onDismissExitToast}
+                className="px-2.5 py-1.5 rounded-xl border text-[11px] cursor-pointer transition-colors hover:bg-white/10 active:scale-95"
+                style={{
+                  backgroundColor: 'var(--color-btn-default-bg)',
+                  borderColor: 'var(--color-border-subtle)',
+                  color: 'var(--color-text-secondary)'
+                }}
+              >
+                Continue in Windowed Mode
+              </button>
+            </div>
           </div>
-        </div>
+        </aside>
       )}
 
       {/* Main Desktop Stage */}
@@ -319,6 +346,7 @@ export default function Desktop({
         theme={theme}
         onToggleTheme={onToggleTheme}
         isFullscreen={isFullscreen}
+        onRequestFullscreen={onRequestFullscreen}
         onToggleFullscreen={onToggleFullscreen}
         onSleep={onSleep}
         onRestart={onRestart}

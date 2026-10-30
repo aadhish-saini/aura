@@ -1,11 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import {
-  Minus,
-  Square,
-  Copy,
-  X
-} from 'lucide-react';
 import AppIcon from '../common/AppIcon';
+import './AppWindow.css';
 
 export default function AppWindow({
   window: win,
@@ -32,7 +27,7 @@ export default function AppWindow({
     if (e.button !== 0 || win.isMaximized) return;
 
     // Don't drag if clicked on a button or control
-    if (e.target.closest('button') || e.target.closest('[role="button"]')) return;
+    if (e.target.closest('button') || e.target.closest('[role="button"]') || e.target.closest('.aura-control-btn')) return;
 
     isDragging.current = true;
     dragStart.current = {
@@ -114,16 +109,12 @@ export default function AppWindow({
       {/* Title Bar / Draggable Chrome */}
       <div
         onMouseDown={handleMouseDown}
-        className={`h-9 px-3.5 flex items-center justify-between border-b select-none transition-colors ${
+        className={`aura-window-titlebar select-none transition-colors ${
           win.isMaximized || isSmallScreen ? 'cursor-default' : 'cursor-move'
         }`}
-        style={{
-          backgroundColor: 'var(--color-btn-default-bg)',
-          borderColor: 'var(--color-border-subtle)',
-        }}
       >
         {/* App Title & Icon */}
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 pr-3">
           <AppIcon
             app={win}
             appId={win.id}
@@ -138,62 +129,105 @@ export default function AppWindow({
             {win.title}
           </span>
           <span
-            className="text-[9px] font-mono ml-2 hidden sm:inline"
+            className="text-[9px] font-mono ml-2 hidden sm:inline shrink-0"
             style={{ color: 'var(--color-text-muted)' }}
           >
             PID: 884{win.id.charCodeAt(0) % 10}
           </span>
         </div>
 
-        {/* Window Controls (Minimize, Maximize/Restore, Close) */}
-        <div className="flex items-center gap-1.5 shrink-0 ml-3">
+        {/* Unique Floating Minimal Window Controls for AURA */}
+        <div className="aura-window-controls">
           {/* Minimize */}
           <button
             type="button"
+            onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               onMinimize(win.id);
             }}
             title="Minimize"
             aria-label="Minimize Window"
-            className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-colors cursor-pointer group"
-            style={{ backgroundColor: 'var(--color-btn-accent-bg)' }}
+            className="aura-control-btn aura-control-minimize"
           >
-            <Minus size={9} className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--color-text-primary)' }} />
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="shrink-0"
+              aria-hidden="true"
+            >
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
           </button>
 
           {/* Maximize / Restore */}
           <button
             type="button"
+            onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               onMaximize(win.id);
             }}
             title={win.isMaximized ? 'Restore' : 'Maximize'}
-            aria-label="Maximize or Restore Window"
-            className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-colors cursor-pointer group"
-            style={{ backgroundColor: 'var(--color-btn-accent-bg)' }}
+            aria-label={win.isMaximized ? 'Restore Window' : 'Maximize Window'}
+            className="aura-control-btn aura-control-maximize"
           >
             {win.isMaximized ? (
-              <Copy size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--color-text-primary)' }} />
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="shrink-0"
+                aria-hidden="true"
+              >
+                <path d="M4.5 1.5V4.5H1.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M7.5 1.5V4.5H10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M1.5 7.5H4.5V10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M10.5 7.5H7.5V10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             ) : (
-              <Square size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--color-text-primary)' }} />
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="shrink-0"
+                aria-hidden="true"
+              >
+                <rect x="2" y="2" width="8" height="8" rx="1.75" stroke="currentColor" strokeWidth="1.4" />
+              </svg>
             )}
           </button>
 
           {/* Close */}
           <button
             type="button"
+            onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               onClose(win.id);
             }}
             title="Close"
             aria-label="Close Window"
-            className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-colors cursor-pointer group hover:!bg-red-500"
-            style={{ backgroundColor: 'var(--color-btn-accent-bg)' }}
+            className="aura-control-btn aura-control-close"
           >
-            <X size={9} className="opacity-0 group-hover:opacity-100 text-white transition-opacity" />
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="shrink-0"
+              aria-hidden="true"
+            >
+              <path d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         </div>
       </div>

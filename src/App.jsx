@@ -9,6 +9,10 @@ import { useFullscreen } from './hooks/useFullscreen';
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
+  // Central system screen state: 'launcher' | 'boot' | 'desktop' | 'sleep' | 'shutdown'
+  const [systemScreen, setSystemScreen] = useState('launcher');
+  const [bootNotice, setBootNotice] = useState(null);
+
   const {
     isFullscreen,
     showExitToast,
@@ -16,11 +20,7 @@ export default function App() {
     exitFullscreen,
     toggleFullscreen,
     dismissExitToast
-  } = useFullscreen();
-
-  // Central system screen state: 'launcher' | 'boot' | 'desktop' | 'sleep' | 'shutdown'
-  const [systemScreen, setSystemScreen] = useState('launcher');
-  const [bootNotice, setBootNotice] = useState(null);
+  } = useFullscreen({ isDesktopActive: systemScreen === 'desktop' });
 
   /**
    * Transition from System Launcher to Boot Sequence
@@ -80,7 +80,7 @@ export default function App() {
 
   return (
     <div
-      className="w-full min-h-screen bg-black overflow-hidden font-sans select-none"
+      className="w-screen h-screen overflow-hidden fixed inset-0 bg-black font-sans select-none"
       style={{
         backgroundColor: 'var(--color-bg-app)',
         color: 'var(--color-text-primary)'
@@ -93,6 +93,7 @@ export default function App() {
             theme={theme}
             onToggleTheme={toggleTheme}
             onBoot={handleBoot}
+            onRequestFullscreen={requestFullscreen}
           />
         </div>
       )}

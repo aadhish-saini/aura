@@ -7,13 +7,14 @@ import './SystemLauncher.css';
 export default function SystemLauncher({
   theme,
   onToggleTheme,
-  onBoot
+  onBoot,
+  onRequestFullscreen
 }) {
   const [fullscreenNotice, setFullscreenNotice] = useState(null);
   const [isBooting, setIsBooting] = useState(false);
 
   /**
-   * Primary action: Request Fullscreen and boot
+   * Primary action: Request Fullscreen through Fullscreen API and boot
    */
   const handleBootSystem = async () => {
     if (isBooting) return;
@@ -21,34 +22,22 @@ export default function SystemLauncher({
 
     let fsSucceeded = false;
     try {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        await elem.requestFullscreen();
-        fsSucceeded = true;
-      } else if (elem.webkitRequestFullscreen) {
-        await elem.webkitRequestFullscreen();
-        fsSucceeded = true;
-      } else if (elem.mozRequestFullScreen) {
-        await elem.mozRequestFullScreen();
-        fsSucceeded = true;
-      } else if (elem.msRequestFullscreen) {
-        await elem.msRequestFullscreen();
-        fsSucceeded = true;
+      if (onRequestFullscreen) {
+        const res = await onRequestFullscreen();
+        fsSucceeded = res?.success ?? false;
       }
     } catch (err) {
       console.warn('Browser denied or does not support fullscreen request:', err);
-      setFullscreenNotice('Fullscreen was unavailable. Continuing in standard window mode.');
       fsSucceeded = false;
     }
 
-    // Small delay to allow fullscreen resize/layout settle, then transition
-    setTimeout(() => {
-      onBoot({ withFullscreen: fsSucceeded, notice: !fsSucceeded ? 'Fullscreen unavailable. Booted in standard window mode.' : null });
-    }, 250);
+    // Immediately start the boot animation after fullscreen request is initiated
+    // Continues smoothly even if fullscreen is denied or unavailable
+    onBoot({ withFullscreen: fsSucceeded });
   };
 
   /**
-   * Secondary action: Boot directly without requesting fullscreen
+   * Secondary action: Boot directly in windowed mode
    */
   const handleSkipFullscreen = () => {
     if (isBooting) return;

@@ -21,6 +21,11 @@
   --color-btn-default-active: rgba(255, 255, 255, 0.15);
   --color-btn-default-text: #d4d4d4;
   --color-btn-default-text-hover: #ffffff;
+  --color-window-control: #e5e5e5;
+  --color-window-control-hover: rgba(255, 255, 255, 0.12);
+  --color-window-control-active: rgba(255, 255, 255, 0.22);
+  --color-aura-ctrl-bg: rgba(255, 255, 255, 0.05);
+  --color-aura-ctrl-text: #e5e5e5;
   --color-btn-accent-bg: rgba(255, 255, 255, 0.08);
   --color-btn-accent-hover: rgba(255, 255, 255, 0.16);
   --color-btn-accent-active: rgba(255, 255, 255, 0.22);
@@ -72,6 +77,11 @@
   --color-btn-default-active: #E4E8F0;
   --color-btn-default-text: #4a5165;
   --color-btn-default-text-hover: #242938;
+  --color-window-control: #374151;
+  --color-window-control-hover: rgba(0, 0, 0, 0.06);
+  --color-window-control-active: rgba(0, 0, 0, 0.12);
+  --color-aura-ctrl-bg: rgba(0, 0, 0, 0.04);
+  --color-aura-ctrl-text: #374151;
   --color-btn-accent-bg: #FFFFFF;
   --color-btn-accent-hover: #F1F3F8;
   --color-btn-accent-active: #E4E8F0;

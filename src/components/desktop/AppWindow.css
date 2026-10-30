@@ -1,0 +1,156 @@
+/* Unique Minimal Floating Window Controls for AURA */
+
+.aura-window-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding-left: 14px;
+  padding-right: 12px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background-color: var(--color-btn-default-bg);
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color 200ms ease;
+}
+
+/* Floating Controls Container */
+.aura-window-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Individual Floating Capsule Button */
+.aura-control-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  margin: 0;
+  border-radius: 7px;
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-aura-ctrl-bg);
+  color: var(--color-aura-ctrl-text);
+  cursor: pointer;
+  outline: none;
+  opacity: 1;
+  visibility: visible;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Permanent visibility on child SVGs */
+.aura-control-btn svg {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  stroke: currentColor;
+  pointer-events: none;
+  transition: stroke 180ms ease, transform 180ms ease;
+}
+
+/* Pressed / Active micro-interaction */
+.aura-control-btn:active {
+  transform: scale(0.92);
+}
+
+/* Accessible focus ring */
+.aura-control-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-status-dot);
+}
+
+/* 1. Minimize: Subtle emerald-tinted background on hover */
+.aura-control-minimize:hover {
+  background-color: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: var(--color-status-dot);
+}
+
+.aura-control-minimize:hover svg {
+  color: var(--color-status-dot);
+  stroke: var(--color-status-dot);
+}
+
+/* 2. Maximize / Restore: Restrained emerald accent on hover */
+.aura-control-maximize:hover {
+  background-color: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: var(--color-status-dot);
+}
+
+.aura-control-maximize:hover svg {
+  color: var(--color-status-dot);
+  stroke: var(--color-status-dot);
+}
+
+/* 3. Close: Muted coral / soft red tint on hover (distinct, but not a solid Windows red rectangle) */
+.aura-control-close:hover {
+  background-color: rgba(244, 63, 94, 0.14);
+  border-color: rgba(244, 63, 94, 0.35);
+  color: #fb7185;
+}
+
+.aura-control-close:hover svg {
+  color: #fb7185;
+  stroke: #fb7185;
+}
+
+.aura-control-close:active {
+  background-color: rgba(244, 63, 94, 0.22);
+}
+
+.aura-control-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fb7185;
+}
+
+/* Light Mode Overrides for Restrained Tinting */
+[data-theme="light"] .aura-control-minimize:hover,
+[data-theme="light"] .aura-control-maximize:hover {
+  background-color: rgba(57, 134, 90, 0.12);
+  border-color: rgba(57, 134, 90, 0.35);
+  color: #39865a;
+}
+
+[data-theme="light"] .aura-control-minimize:hover svg,
+[data-theme="light"] .aura-control-maximize:hover svg {
+  color: #39865a;
+  stroke: #39865a;
+}
+
+[data-theme="light"] .aura-control-close:hover {
+  background-color: rgba(225, 29, 72, 0.1);
+  border-color: rgba(225, 29, 72, 0.3);
+  color: #e11d48;
+}
+
+[data-theme="light"] .aura-control-close:hover svg {
+  color: #e11d48;
+  stroke: #e11d48;
+}
+
+/* Responsive adjustments for mobile and tablets */
+@media (max-width: 640px) {
+  .aura-window-titlebar {
+    padding-left: 10px;
+    padding-right: 8px;
+    height: 36px;
+  }
+
+  .aura-window-controls {
+    gap: 5px;
+  }
+
+  .aura-control-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+  }
+}

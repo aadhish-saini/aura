@@ -59,24 +59,43 @@ export default function SettingsApp({
           </div>
 
           <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Switch between full-screen immersive OS simulation and windowed browser mode. You can also press <kbd className="px-1.5 py-0.5 rounded bg-neutral-800 border text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-neutral-800 border text-[10px]">Alt</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-neutral-800 border text-[10px]">F</kbd> at any time.
+            AURA operates as an immersive workstation. When in windowed mode, you can expand to fullscreen below or via the <span className="font-semibold text-white">AURA SESSION</span> menu in the taskbar.
           </p>
 
           <div className="pt-1">
-            <button
-              type="button"
-              onClick={onToggleFullscreen}
-              className="px-4 py-2 rounded-lg text-xs font-mono font-medium flex items-center gap-2 cursor-pointer transition-all hover:brightness-110 active:scale-95"
-              style={{
-                backgroundColor: 'var(--color-btn-accent-bg)',
-                borderColor: 'var(--color-border-strong)',
-                borderWidth: '1px',
-                color: 'var(--color-status-dot)'
-              }}
-            >
-              {isFullscreen ? <Minimize size={14} /> : <Maximize size={14} />}
-              <span>{isFullscreen ? 'EXIT FULLSCREEN' : 'ENTER FULLSCREEN'}</span>
-            </button>
+            {isFullscreen ? (
+              <div
+                className="px-4 py-2.5 rounded-lg text-xs font-mono flex items-center justify-between border"
+                style={{
+                  backgroundColor: 'rgba(52, 211, 153, 0.08)',
+                  borderColor: 'rgba(52, 211, 153, 0.25)',
+                  color: 'var(--color-status-dot)'
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                  <span className="font-semibold">IMMERSIVE FULLSCREEN ACTIVE</span>
+                </div>
+                <span className="text-[10px] text-neutral-400">
+                  Shut down via Start Menu or press Esc
+                </span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={onToggleFullscreen}
+                className="px-4 py-2 rounded-lg text-xs font-mono font-medium flex items-center gap-2 cursor-pointer transition-all hover:brightness-110 active:scale-95"
+                style={{
+                  backgroundColor: 'var(--color-btn-accent-bg)',
+                  borderColor: 'var(--color-border-strong)',
+                  borderWidth: '1px',
+                  color: 'var(--color-status-dot)'
+                }}
+              >
+                <Maximize size={14} />
+                <span>ENTER FULLSCREEN</span>
+              </button>
+            )}
           </div>
         </div>
 

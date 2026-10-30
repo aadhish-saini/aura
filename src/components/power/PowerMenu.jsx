@@ -102,10 +102,10 @@ export default function PowerMenu({
         </div>
         <div className="flex flex-col">
           <span className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
-            Restart
+            Restart AURA
           </span>
           <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-            Reboots AADHISH OS
+            Reboots system environment
           </span>
         </div>
       </button>
@@ -120,19 +120,19 @@ export default function PowerMenu({
           onClose();
           onShutdown();
         }}
-        className="w-full px-3 py-2 rounded-lg text-xs flex items-center gap-2.5 transition-colors cursor-pointer hover:bg-red-500/15 text-left group"
+        className="w-full px-3 py-2 rounded-lg text-xs flex items-center gap-2.5 transition-colors cursor-pointer hover:bg-rose-500/15 text-left group"
       >
         <div
-          className="w-7 h-7 rounded-md border border-red-500/30 flex items-center justify-center shrink-0 text-red-400 bg-red-500/10 transition-transform group-hover:scale-105"
+          className="w-7 h-7 rounded-md border border-rose-500/30 flex items-center justify-center shrink-0 text-rose-400 bg-rose-500/10 transition-transform group-hover:scale-105"
         >
           <Power size={13} />
         </div>
         <div className="flex flex-col">
-          <span className="font-semibold text-red-400 group-hover:text-red-300 transition-colors">
-            Shut Down
+          <span className="font-semibold text-rose-400 group-hover:text-rose-300 transition-colors">
+            Shut Down AURA
           </span>
           <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-            Closes workspace & exits
+            Exit session & power down
           </span>
         </div>
       </button>
