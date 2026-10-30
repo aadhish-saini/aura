@@ -5,7 +5,6 @@ import OrbitalLoader from './OrbitalLoader';
 import BootStatus from './BootStatus';
 import BootProgress from './BootProgress';
 import SystemFooter from './SystemFooter';
-import WelcomeOverlay from './WelcomeOverlay';
 import { useBootSequence } from '../hooks/useBootSequence';
 import '../styles/boot-screen.css';
 
@@ -13,11 +12,11 @@ export default function BootScreen({ theme, onToggleTheme, onEnterWorkspace, boo
   const {
     progress,
     currentStage,
-    showWelcome,
+    isCompleted,
     restartBoot,
     completeBoot,
     handleLogoClick,
-  } = useBootSequence();
+  } = useBootSequence({ onComplete: onEnterWorkspace });
 
   return (
     <div
@@ -30,7 +29,7 @@ export default function BootScreen({ theme, onToggleTheme, onEnterWorkspace, boo
       {/* Top System Bar */}
       <SystemHeader
         onRestart={restartBoot}
-        onSkip={completeBoot}
+        onSkip={() => completeBoot(true)}
         theme={theme}
         onToggleTheme={onToggleTheme}
       />
@@ -57,7 +56,7 @@ export default function BootScreen({ theme, onToggleTheme, onEnterWorkspace, boo
           {/* Centered AURA Monogram Brandmark */}
           <BrandLogo
             onClick={handleLogoClick}
-            disabled={showWelcome}
+            disabled={isCompleted}
           />
 
           {/* Main Typography Header */}
@@ -91,12 +90,6 @@ export default function BootScreen({ theme, onToggleTheme, onEnterWorkspace, boo
 
       {/* Bottom Diagnostics & Watermark Bar */}
       <SystemFooter />
-
-      {/* Welcome / Workspace Transition Modal Overlay */}
-      <WelcomeOverlay
-        isVisible={showWelcome}
-        onEnterWorkspace={onEnterWorkspace}
-      />
     </div>
   );
 }

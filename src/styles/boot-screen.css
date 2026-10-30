@@ -89,8 +89,3 @@
 .brand-glow {
   animation: brandPulse 4s ease-in-out infinite;
 }
-
-/* Welcome screen transition */
-.welcome-screen-overlay {
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}

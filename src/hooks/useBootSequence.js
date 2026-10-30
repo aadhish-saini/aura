@@ -28,38 +28,38 @@ export const BOOT_STAGES = [
   }
 ];
 
-export function useBootSequence() {
+export function useBootSequence({ onComplete } = {}) {
   const [progress, setProgress] = useState(12);
   const [stageIndex, setStageIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
 
   const timerRef = useRef(null);
-  const welcomeTimeoutRef = useRef(null);
+  const transitionTimeoutRef = useRef(null);
   const isCompletedRef = useRef(false);
-  const showWelcomeRef = useRef(false);
+  const onCompleteRef = useRef(onComplete);
 
-  // Keep refs in sync with state for event listeners
+  // Keep onComplete ref up to date
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  // Keep ref in sync with state for event listeners
   useEffect(() => {
     isCompletedRef.current = isCompleted;
   }, [isCompleted]);
-
-  useEffect(() => {
-    showWelcomeRef.current = showWelcome;
-  }, [showWelcome]);
 
   const clearTimers = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    if (welcomeTimeoutRef.current) {
-      clearTimeout(welcomeTimeoutRef.current);
-      welcomeTimeoutRef.current = null;
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+      transitionTimeoutRef.current = null;
     }
   }, []);
 
-  const completeBoot = useCallback(() => {
+  const completeBoot = useCallback((immediate = false) => {
     if (isCompletedRef.current) return;
     isCompletedRef.current = true;
     setIsCompleted(true);
@@ -68,18 +68,18 @@ export function useBootSequence() {
     setProgress(100);
     setStageIndex(BOOT_STAGES.length - 1);
 
-    welcomeTimeoutRef.current = setTimeout(() => {
-      setShowWelcome(true);
-      showWelcomeRef.current = true;
-    }, 550);
+    // Transition directly to the desktop once booting finishes
+    transitionTimeoutRef.current = setTimeout(() => {
+      if (onCompleteRef.current) {
+        onCompleteRef.current();
+      }
+    }, immediate ? 120 : 450);
   }, [clearTimers]);
 
   const startBoot = useCallback(() => {
     clearTimers();
     isCompletedRef.current = false;
-    showWelcomeRef.current = false;
     setIsCompleted(false);
-    setShowWelcome(false);
     setProgress(10);
     setStageIndex(0);
 
@@ -131,9 +131,9 @@ export function useBootSequence() {
     startBoot();
   }, [startBoot]);
 
-  // Handle Logo click (only restarts if welcome overlay is not active)
+  // Handle Logo click (only restarts if not completed)
   const handleLogoClick = useCallback(() => {
-    if (!showWelcomeRef.current) {
+    if (!isCompletedRef.current) {
       restartBoot();
     }
   }, [restartBoot]);
@@ -142,9 +142,9 @@ export function useBootSequence() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' || e.key === 'F8') {
-        if (!showWelcomeRef.current) {
+        if (!isCompletedRef.current) {
           e.preventDefault();
-          completeBoot();
+          completeBoot(true);
         }
       }
     };
@@ -171,7 +171,6 @@ export function useBootSequence() {
     currentStage,
     stageIndex,
     isCompleted,
-    showWelcome,
     restartBoot,
     completeBoot,
     handleLogoClick,

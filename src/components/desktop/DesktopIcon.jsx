@@ -49,8 +49,8 @@ export default function DesktopIcon({ app, isOpen, isActive, onOpen, iconSize = 
       </div>
 
       <span 
-        className={`font-mono ${sizeClasses.font} font-medium tracking-tight truncate max-w-[80px]`}
-        style={{ color: isOpen ? 'var(--color-status-dot)' : 'var(--color-text-secondary)' }}
+        className={`font-mono ${sizeClasses.font} font-medium tracking-tight truncate max-w-[80px] drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] select-none`}
+        style={{ color: isOpen ? 'var(--color-status-dot)' : '#f1f5f9' }}
       >
         {app.shortTitle || app.title}
       </span>

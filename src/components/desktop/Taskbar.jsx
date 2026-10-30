@@ -49,6 +49,31 @@ export default function Taskbar({
   const [dateStr, setDateStr] = useState('');
   const trayMenuRef = useRef(null);
 
+  // Global shortcut to toggle Start Menu (Ctrl+Alt+S or Meta)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't intercept if user is typing in form inputs
+      const activeEl = document.activeElement;
+      if (
+        activeEl &&
+        (activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          activeEl.isContentEditable ||
+          activeEl.classList.contains('terminal-input'))
+      ) {
+        return;
+      }
+
+      if ((e.ctrlKey && e.altKey && (e.key === 's' || e.key === 'S')) || (e.key === 'Meta' && !e.repeat)) {
+        e.preventDefault();
+        setIsStartOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Live Windows 11-style 2-line clock
   useEffect(() => {
     const updateTime = () => {
@@ -99,7 +124,7 @@ export default function Taskbar({
   return (
     <>
       <footer
-        className="windows-taskbar fixed bottom-0 left-0 right-0 h-12 md:h-13 z-50 px-2 sm:px-3 flex items-center justify-between border-t backdrop-blur-xl select-none transition-colors duration-200"
+        className="windows-taskbar fixed bottom-0 left-0 right-0 h-12 md:h-13 z-50 px-3 flex items-center justify-between border-t backdrop-blur-xl select-none"
         style={{
           backgroundColor: 'var(--color-bg-panel)',
           borderColor: 'var(--color-border-subtle)',
@@ -108,37 +133,41 @@ export default function Taskbar({
         role="navigation"
         aria-label="Windows Taskbar"
       >
-        {/* Left Section: Start Button */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            id="start-menu-button"
-            type="button"
-            onClick={() => setIsStartOpen(!isStartOpen)}
-            className={`start-trigger-btn flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
-              isStartOpen
-                ? 'bg-white/15 shadow-inner scale-95'
-                : 'hover:bg-white/10 active:scale-95'
-            }`}
-            title="AURA Start Menu (Ctrl+Alt+S)"
-            aria-label="AURA Start Menu"
-            aria-expanded={isStartOpen}
-          >
-            {/* Authentic AURA Application Icon */}
-            <img
-              src="/AURA-icon.png"
-              alt="AURA"
-              className="w-5 h-5 object-contain transition-transform duration-300 group-hover:scale-110 select-none pointer-events-none"
-            />
-
-            <span className="text-xs font-mono font-bold tracking-wider hidden sm:inline text-white">
-              AURA
-            </span>
-          </button>
+        {/* Left Section: Subtle Station Telemetry Decal */}
+        <div className="flex items-center gap-2 shrink-0 min-w-0 opacity-40 hidden lg:flex text-[10px] font-mono pointer-events-none">
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+          <span>AURA // WORKSTATION</span>
         </div>
 
-        {/* Center Section: Windows 11 App Icons & Running Indicators */}
-        <div className="flex-1 flex items-center justify-center overflow-x-auto max-w-[calc(100vw-220px)] sm:max-w-none px-2 py-0.5">
-          <div className="flex items-center gap-1 sm:gap-1.5">
+        {/* Center Section: Centered Unified Cluster (Start button → clear horizontal gap → pinned applications) */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 flex items-center justify-center max-w-[calc(100vw-220px)] overflow-x-auto no-scrollbar py-0.5 z-10">
+          <div className="flex items-center">
+            {/* Standalone Rectangular AURA Start Button */}
+            <button
+              id="start-menu-button"
+              type="button"
+              onClick={() => setIsStartOpen(!isStartOpen)}
+              className="start-trigger-btn flex items-center justify-center cursor-pointer outline-none border-0 bg-transparent p-0 m-0 shadow-none transition-opacity duration-200 select-none shrink-0"
+              title="AURA Start Menu (Ctrl+Alt+S)"
+              aria-label="AURA Start Menu"
+              aria-expanded={isStartOpen}
+            >
+              <img
+                src="/aura-start-icon.png"
+                alt="AURA Start Menu"
+                className={`h-[30px] sm:h-[32px] md:h-[34px] w-auto object-contain select-none pointer-events-none transition-all duration-200 ${
+                  isStartOpen
+                    ? 'brightness-125 drop-shadow-[0_0_12px_rgba(192,38,211,0.55)]'
+                    : 'brightness-100 hover:brightness-115'
+                }`}
+              />
+            </button>
+
+            {/* Clear Horizontal Gap establishing visual distinction through spacing alone */}
+            <div className="w-4 sm:w-5 md:w-6 shrink-0" aria-hidden="true" />
+
+            {/* Pinned & Running Applications Group */}
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {allTaskbarAppIds.map((appId) => {
               const app = DESKTOP_APPS[appId];
               if (!app) return null;
@@ -184,11 +213,12 @@ export default function Taskbar({
                 </button>
               );
             })}
+            </div>
           </div>
         </div>
 
-        {/* Right Section: System Tray & Clock */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+        {/* Right Section: System Tray & Clock (Permanently Pinned Right) */}
+        <div className="ml-auto flex items-center gap-1 sm:gap-2 shrink-0 z-20">
           {/* Quick Settings Flyout Trigger */}
           <div className="relative">
             <button

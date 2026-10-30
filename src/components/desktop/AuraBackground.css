@@ -1,0 +1,20 @@
+/* AURA Original Particle Background Styles */
+.aura-bg-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at 50% 46%, #11102b 0%, #070914 42%, #020309 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aura-bg-canvas {
+  width: min(96vmin, 100vw);
+  height: min(96vmin, 100vh);
+  display: block;
+  pointer-events: none;
+}

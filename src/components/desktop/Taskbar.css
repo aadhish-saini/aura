@@ -1,10 +1,25 @@
-/* Windows 11-Inspired Taskbar Styles */
+/* Windows 11-Inspired Fixed Centered Taskbar Styles */
 .windows-taskbar {
-  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.45);
 }
 
+/* Standalone Start Icon Button: completely borderless and backgroundless */
 .start-trigger-btn {
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.start-trigger-btn:hover,
+.start-trigger-btn:focus,
+.start-trigger-btn:active {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .taskbar-icon-btn {
@@ -22,4 +37,13 @@
 .taskbar-indicator {
   left: 50%;
   transform: translateX(-50%);
+}
+
+/* Hide scrollbar for taskbar center cluster */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

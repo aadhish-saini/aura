@@ -4,20 +4,9 @@ import { DESKTOP_APPS } from '../config/desktopApps';
 const BASE_Z_INDEX = 30;
 
 export function useWindowManager() {
-  const [openWindows, setOpenWindows] = useState([
-    // By default, as in the Stitch design, the 'about' window is open on desktop startup!
-    {
-      id: 'about',
-      ...DESKTOP_APPS.about,
-      isMinimized: false,
-      isMaximized: false,
-      position: { x: 360, y: 70 },
-      size: { width: 720, height: 580 },
-      zIndex: BASE_Z_INDEX + 1
-    }
-  ]);
-
-  const [activeWindowId, setActiveWindowId] = useState('about');
+  // Clean boot: every boot starts with all application windows closed
+  const [openWindows, setOpenWindows] = useState([]);
+  const [activeWindowId, setActiveWindowId] = useState(null);
   const zIndexCounter = useRef(BASE_Z_INDEX + 2);
 
   // Focus a window and bring it to top

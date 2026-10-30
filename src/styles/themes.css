@@ -77,17 +77,6 @@
 
   --brand-pulse-filter-1: drop-shadow(0 0 18px rgba(192, 38, 211, 0.4)) drop-shadow(0 0 32px rgba(56, 189, 248, 0.28));
   --brand-pulse-filter-2: drop-shadow(0 0 28px rgba(192, 38, 211, 0.6)) drop-shadow(0 0 48px rgba(56, 189, 248, 0.45));
-
-  --welcome-overlay-bg: #06070a;
-  --welcome-avatar-border: rgba(56, 189, 248, 0.45);
-  --welcome-avatar-glow: 0 0 32px rgba(99, 102, 241, 0.4), 0 0 16px rgba(56, 189, 248, 0.3);
-  --welcome-avatar-from: #1e1035;
-  --welcome-avatar-to: #0c1527;
-  --welcome-avatar-text: #38bdf8;
-  --welcome-btn-bg: linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #0284c7 100%);
-  --welcome-btn-hover: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #0ea5e9 100%);
-  --welcome-btn-active: #1d4ed8;
-  --welcome-btn-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.5), 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
 [data-theme="light"] {
@@ -163,15 +152,4 @@
 
   --brand-pulse-filter-1: drop-shadow(0 4px 14px rgba(124, 58, 237, 0.2)) drop-shadow(0 0 24px rgba(2, 132, 199, 0.16));
   --brand-pulse-filter-2: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.32)) drop-shadow(0 0 36px rgba(2, 132, 199, 0.24));
-
-  --welcome-overlay-bg: #f8fafc;
-  --welcome-avatar-border: rgba(2, 132, 199, 0.4);
-  --welcome-avatar-glow: 0 0 30px rgba(2, 132, 199, 0.2);
-  --welcome-avatar-from: #ffffff;
-  --welcome-avatar-to: #f0f9ff;
-  --welcome-avatar-text: #0284c7;
-  --welcome-btn-bg: linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #0284c7 100%);
-  --welcome-btn-hover: linear-gradient(135deg, #6d28d9 0%, #1d4ed8 50%, #0369a1 100%);
-  --welcome-btn-active: #1d4ed8;
-  --welcome-btn-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.4);
 }
