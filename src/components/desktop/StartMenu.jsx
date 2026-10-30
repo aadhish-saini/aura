@@ -128,25 +128,19 @@ export default function StartMenu({
         color: 'var(--color-text-primary)'
       }}
       role="dialog"
-      aria-label="AADHISH OS Start Menu"
+      aria-label="AURA Start Menu"
     >
       {/* Top Header & Search Bar */}
       <div className="flex flex-col gap-3">
         {/* Brand Bar */}
         <div className="flex items-center justify-between pb-1">
           <div className="flex items-center gap-2">
-            {/* Custom Monogram Emblem */}
-            <div
-              className="w-6 h-6 rounded-md flex items-center justify-center font-mono font-bold text-xs"
-              style={{
-                backgroundColor: 'var(--color-status-dot)',
-                color: '#050706'
-              }}
-            >
-              A
+            {/* Authentic AURA Emblem */}
+            <div className="w-6 h-6 rounded-md flex items-center justify-center p-0.5">
+              <img src="/AURA-icon.png" alt="AURA" className="w-full h-full object-contain select-none pointer-events-none" />
             </div>
             <span className="text-xs font-mono font-bold tracking-wider uppercase text-white">
-              AADHISH OS
+              AURA
             </span>
           </div>
 
@@ -163,7 +157,7 @@ export default function StartMenu({
 
         {/* Working Search Input */}
         <div
-          className="px-3.5 py-2.5 rounded-xl border flex items-center gap-2.5 transition-all focus-within:ring-2 focus-within:ring-emerald-400"
+          className="px-3.5 py-2.5 rounded-xl border flex items-center gap-2.5 transition-all focus-within:ring-2 focus-within:ring-sky-400"
           style={{
             backgroundColor: 'var(--color-btn-default-bg)',
             borderColor: 'var(--color-border-default)'
@@ -251,7 +245,7 @@ export default function StartMenu({
                 className="text-[11px] font-mono font-semibold tracking-wider uppercase flex items-center gap-1.5"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                <Sparkles size={12} className="text-emerald-400" />
+                <Sparkles size={12} className="text-sky-400" />
                 <span>Recommended</span>
               </span>
             </div>
@@ -276,7 +270,7 @@ export default function StartMenu({
                   <AppIcon appId="projects" size={18} />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
+                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-sky-400 transition-colors">
                     DhruvNetra 3D Twin
                   </div>
                   <div className="text-[9px] font-mono text-neutral-400 truncate">
@@ -304,7 +298,7 @@ export default function StartMenu({
                   <AppIcon appId="about" size={18} />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
+                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-sky-400 transition-colors">
                     About Me
                   </div>
                   <div className="text-[9px] font-mono text-neutral-400 truncate">
@@ -332,7 +326,7 @@ export default function StartMenu({
                   <AppIcon appId="resume" size={18} />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
+                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-sky-400 transition-colors">
                     Curriculum Vitae
                   </div>
                   <div className="text-[9px] font-mono text-neutral-400 truncate">
@@ -360,7 +354,7 @@ export default function StartMenu({
                   <AppIcon appId="terminal" size={18} />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
+                  <div className="text-[11px] font-semibold text-white truncate group-hover:text-sky-400 transition-colors">
                     Interactive Shell
                   </div>
                   <div className="text-[9px] font-mono text-neutral-400 truncate">
@@ -389,14 +383,14 @@ export default function StartMenu({
           title="Open Developer Profile"
         >
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center font-mono font-bold text-sm border shrink-0"
+            className="w-9 h-9 rounded-full flex items-center justify-center font-mono font-bold text-sm border shrink-0 overflow-hidden p-1.5 shadow-sm"
             style={{
               backgroundColor: 'var(--color-btn-accent-bg)',
               borderColor: 'var(--color-border-default)',
               color: 'var(--color-status-dot)'
             }}
           >
-            A
+            <img src="/AURA-icon.png" alt="AURA Profile" className="w-full h-full object-contain pointer-events-none select-none" />
           </div>
           <div className="min-w-0">
             <div className="text-xs font-semibold text-white truncate">

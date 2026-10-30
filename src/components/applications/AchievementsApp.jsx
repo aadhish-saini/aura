@@ -24,8 +24,8 @@ export default function AchievementsApp() {
           <span 
             className="px-2 py-0.5 rounded text-[10px] font-mono border"
             style={{
-              backgroundColor: 'rgba(52, 211, 153, 0.1)',
-              borderColor: 'rgba(52, 211, 153, 0.25)',
+              backgroundColor: 'var(--color-badge-bg)',
+              borderColor: 'var(--color-btn-accent-border)',
               color: 'var(--color-status-dot)'
             }}
           >
@@ -47,8 +47,8 @@ export default function AchievementsApp() {
               <div 
                 className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border"
                 style={{
-                  backgroundColor: 'rgba(52, 211, 153, 0.12)',
-                  borderColor: 'rgba(52, 211, 153, 0.3)',
+                  backgroundColor: 'var(--color-badge-bg)',
+                  borderColor: 'var(--color-btn-accent-border)',
                   color: 'var(--color-status-dot)'
                 }}
               >

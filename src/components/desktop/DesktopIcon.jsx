@@ -21,7 +21,7 @@ export default function DesktopIcon({ app, isOpen, isActive, onOpen, iconSize = 
       type="button"
       onClick={() => onOpen(app.id)}
       onKeyDown={handleKeyDown}
-      className={`group flex sm:flex-col items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-xl transition-all cursor-pointer text-left sm:text-center w-full sm:w-20 outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+      className={`group flex sm:flex-col items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-xl transition-all cursor-pointer text-left sm:text-center w-full sm:w-20 outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
         isActive
           ? 'bg-white/10 shadow-sm'
           : 'hover:bg-white/5 active:scale-95'
@@ -42,7 +42,7 @@ export default function DesktopIcon({ app, isOpen, isActive, onOpen, iconSize = 
         {/* Running app indicator dot */}
         {isOpen && (
           <span 
-            className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-black shadow-[0_0_6px_rgba(52,211,153,0.8)]"
+            className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-black shadow-[0_0_8px_rgba(56,189,248,0.85)]"
             style={{ backgroundColor: 'var(--color-status-dot)' }}
           />
         )}

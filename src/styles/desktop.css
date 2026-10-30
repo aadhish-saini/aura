@@ -10,29 +10,29 @@
   -webkit-user-select: none;
 }
 
-/* Ambient Radial Glows */
+/* Ambient Radial Glows derived from AURA Icon (Violet & Cyan) */
 .desktop-glow-1 {
   position: absolute;
   top: -160px;
-  left: 33%;
-  width: 600px;
-  height: 600px;
+  left: 28%;
+  width: 650px;
+  height: 650px;
   border-radius: 50%;
-  background-color: var(--color-status-dot);
-  opacity: 0.05;
-  filter: blur(120px);
+  background-color: var(--color-accent-violet, #c026d3);
+  opacity: 0.08;
+  filter: blur(140px);
   pointer-events: none;
 }
 
 .desktop-glow-2 {
   position: absolute;
   bottom: -80px;
-  right: 40px;
-  width: 500px;
-  height: 500px;
+  right: 50px;
+  width: 550px;
+  height: 550px;
   border-radius: 50%;
-  background-color: var(--color-progress-fill);
-  opacity: 0.05;
+  background-color: var(--color-status-dot, #38bdf8);
+  opacity: 0.08;
   filter: blur(140px);
   pointer-events: none;
 }

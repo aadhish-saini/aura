@@ -71,7 +71,7 @@ export default function PowerMenu({
           <Moon size={13} className="group-hover:text-amber-400 transition-colors" />
         </div>
         <div className="flex flex-col">
-          <span className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
+          <span className="font-semibold text-white group-hover:text-sky-400 transition-colors">
             Sleep
           </span>
           <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
@@ -101,7 +101,7 @@ export default function PowerMenu({
           <RotateCw size={13} className="group-hover:text-blue-400 transition-colors" />
         </div>
         <div className="flex flex-col">
-          <span className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
+          <span className="font-semibold text-white group-hover:text-sky-400 transition-colors">
             Restart AURA
           </span>
           <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>

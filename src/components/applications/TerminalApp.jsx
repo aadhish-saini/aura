@@ -79,8 +79,8 @@ export default function TerminalApp({ openApp }) {
   const renderStyledText = (item, idx) => {
     let colorClass = 'text-white';
     if (item.style === 'muted') colorClass = 'text-neutral-500';
-    if (item.style === 'accent') colorClass = 'text-emerald-400 font-semibold';
-    if (item.style === 'secondary') colorClass = 'text-emerald-300';
+    if (item.style === 'accent') colorClass = 'text-sky-400 font-semibold';
+    if (item.style === 'secondary') colorClass = 'text-cyan-300';
     if (item.style === 'highlight') colorClass = 'text-neutral-200';
     if (item.style === 'quote') colorClass = 'text-neutral-300 italic';
     if (item.style === 'tip') colorClass = 'text-amber-300/80 text-[11px]';
@@ -96,7 +96,7 @@ export default function TerminalApp({ openApp }) {
   return (
     <div
       onClick={handleContainerClick}
-      className="flex flex-col h-full bg-[#080d0a] text-neutral-200 font-mono text-xs select-text overflow-hidden cursor-text"
+      className="flex flex-col h-full bg-[#07070d] text-neutral-200 font-mono text-xs select-text overflow-hidden cursor-text"
     >
       {/* Terminal Output Area */}
       <div className="flex-1 p-4 overflow-y-auto space-y-3">
@@ -104,7 +104,7 @@ export default function TerminalApp({ openApp }) {
           <div key={idx} className="space-y-1">
             {entry.type === 'user' && (
               <div className="flex items-center gap-2">
-                <span className="text-emerald-400 font-semibold select-none">
+                <span className="text-sky-400 font-semibold select-none">
                   guest@aura:~$
                 </span>
                 <span className="text-white font-medium">{entry.command}</span>
@@ -118,7 +118,7 @@ export default function TerminalApp({ openApp }) {
             )}
 
             {entry.response && entry.response.content && (
-              <div className="pl-2 border-l border-emerald-900/50 space-y-0.5 py-1">
+              <div className="pl-2 border-l border-sky-900/50 space-y-0.5 py-1">
                 {entry.response.content.map((item, i) => renderStyledText(item, i))}
               </div>
             )}
@@ -127,7 +127,7 @@ export default function TerminalApp({ openApp }) {
 
         {/* Input prompt line */}
         <div className="flex items-center gap-2 pt-1">
-          <span className="text-emerald-400 font-semibold select-none">
+          <span className="text-sky-400 font-semibold select-none">
             guest@aura:~$
           </span>
           <input
@@ -137,7 +137,7 @@ export default function TerminalApp({ openApp }) {
             onChange={(e) => setInputVal(e.target.value)}
             onKeyDown={handleKeyDown}
             autoFocus
-            className="flex-1 bg-transparent text-white outline-none border-none p-0 font-mono text-xs caret-emerald-400"
+            className="flex-1 bg-transparent text-white outline-none border-none p-0 font-mono text-xs caret-sky-400"
             placeholder="Type a command (try 'help')..."
             spellCheck={false}
             autoComplete="off"

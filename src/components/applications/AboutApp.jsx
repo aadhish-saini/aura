@@ -65,8 +65,8 @@ export default function AboutApp({ openApp }) {
             <div 
               className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
               style={{
-                backgroundColor: 'rgba(52, 211, 153, 0.1)',
-                borderColor: 'rgba(52, 211, 153, 0.25)',
+                backgroundColor: 'var(--color-badge-bg)',
+                borderColor: 'var(--color-btn-accent-border)',
                 color: 'var(--color-status-dot)'
               }}
             >
@@ -96,8 +96,8 @@ export default function AboutApp({ openApp }) {
             <div 
               className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
               style={{
-                backgroundColor: 'rgba(52, 211, 153, 0.1)',
-                borderColor: 'rgba(52, 211, 153, 0.25)',
+                backgroundColor: 'var(--color-badge-bg)',
+                borderColor: 'var(--color-btn-accent-border)',
                 color: 'var(--color-status-dot)'
               }}
             >
@@ -127,8 +127,8 @@ export default function AboutApp({ openApp }) {
             <div 
               className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
               style={{
-                backgroundColor: 'rgba(52, 211, 153, 0.1)',
-                borderColor: 'rgba(52, 211, 153, 0.25)',
+                backgroundColor: 'var(--color-badge-bg)',
+                borderColor: 'var(--color-btn-accent-border)',
                 color: 'var(--color-status-dot)'
               }}
             >

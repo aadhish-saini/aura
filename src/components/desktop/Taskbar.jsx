@@ -114,51 +114,24 @@ export default function Taskbar({
             id="start-menu-button"
             type="button"
             onClick={() => setIsStartOpen(!isStartOpen)}
-            className={`start-trigger-btn flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+            className={`start-trigger-btn flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
               isStartOpen
                 ? 'bg-white/15 shadow-inner scale-95'
                 : 'hover:bg-white/10 active:scale-95'
             }`}
-            title="AADHISH OS Start Menu (Ctrl+Alt+S)"
-            aria-label="AADHISH OS Start Menu"
+            title="AURA Start Menu (Ctrl+Alt+S)"
+            aria-label="AURA Start Menu"
             aria-expanded={isStartOpen}
           >
-            {/* Custom 4-Pane AADHISH OS Geometric Emblem */}
-            <svg
-              className="w-5 h-5 transition-transform duration-300 group-hover:scale-105"
-              fill="none"
-              viewBox="0 0 64 64"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <linearGradient gradientUnits="userSpaceOnUse" id="tbTileGrad1" x1="6" x2="30" y1="6" y2="30">
-                  <stop stopColor="#abf2c6" />
-                  <stop offset="1" stopColor="#256a48" />
-                </linearGradient>
-                <linearGradient gradientUnits="userSpaceOnUse" id="tbTileGrad2" x1="34" x2="58" y1="6" y2="30">
-                  <stop stopColor="#ffffff" />
-                  <stop offset="1" stopColor="#90d5ac" />
-                </linearGradient>
-                <linearGradient gradientUnits="userSpaceOnUse" id="tbTileGrad3" x1="6" x2="30" y1="34" y2="58">
-                  <stop stopColor="#256a48" />
-                  <stop offset="1" stopColor="#143c28" />
-                </linearGradient>
-                <linearGradient gradientUnits="userSpaceOnUse" id="tbTileGrad4" x1="34" x2="58" y1="34" y2="58">
-                  <stop stopColor="#abf2c6" />
-                  <stop offset="1" stopColor="#256a48" />
-                </linearGradient>
-              </defs>
-
-              <path d="M7 9C7 7.89543 7.89543 7 9 7H28C29.1046 7 30 7.89543 30 9V28C30 29.1046 29.1046 30 28 30H9C7.89543 30 7 29.1046 7 28V9Z" fill="url(#tbTileGrad1)" fillOpacity="0.95" />
-              <path d="M34 9C34 7.89543 34.8954 7 36 7H55C56.1046 7 57 7.89543 57 9V28C57 29.1046 56.1046 30 55 30H36C34.8954 30 34 29.1046 34 28V9Z" fill="url(#tbTileGrad2)" fillOpacity="0.85" />
-              <path d="M7 36C7 34.8954 7.89543 34 9 34H28C29.1046 34 30 34.8954 30 36V55C30 56.1046 29.1046 57 28 57H9C7.89543 57 7 56.1046 7 55V36Z" fill="url(#tbTileGrad3)" fillOpacity="0.9" />
-              <path d="M34 36C34 34.8954 34.8954 34 36 34H55C56.1046 34 57 34.8954 57 36V55C57 56.1046 56.1046 57 55 57H36C34.8954 57 34 56.1046 34 55V36Z" fill="url(#tbTileGrad4)" fillOpacity="0.95" />
-              <path d="M32 17L22 47H27.5L29.5 41.5H34.5L36.5 47H42L32 17ZM30.8 37L32 30.5L33.2 37H30.8Z" fill="#000000" fillOpacity="0.88" />
-              <circle cx="32" cy="34" fill="#abf2c6" r="1.8" />
-            </svg>
+            {/* Authentic AURA Application Icon */}
+            <img
+              src="/AURA-icon.png"
+              alt="AURA"
+              className="w-5 h-5 object-contain transition-transform duration-300 group-hover:scale-110 select-none pointer-events-none"
+            />
 
             <span className="text-xs font-mono font-bold tracking-wider hidden sm:inline text-white">
-              START
+              AURA
             </span>
           </button>
         </div>
@@ -244,7 +217,7 @@ export default function Taskbar({
               >
                 <div className="flex items-center justify-between pb-2 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
                   <span className="font-semibold text-white">System Preferences</span>
-                  <span className="text-[10px] text-neutral-400">AADHISH OS</span>
+                  <span className="text-[10px] text-neutral-400">AURA</span>
                 </div>
 
                 <div className="space-y-2.5 pt-2.5">
@@ -255,7 +228,7 @@ export default function Taskbar({
                       <span>Fullscreen:</span>
                     </span>
                     {isFullscreen ? (
-                      <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono text-[10px] font-semibold tracking-wide">
+                      <span className="px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 font-mono text-[10px] font-semibold tracking-wide">
                         Active
                       </span>
                     ) : (
@@ -265,7 +238,7 @@ export default function Taskbar({
                           setIsTrayMenuOpen(false);
                           onRequestFullscreen?.();
                         }}
-                        className="px-2 py-0.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 font-mono text-[11px] cursor-pointer"
+                        className="px-2 py-0.5 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 font-mono text-[11px] cursor-pointer"
                       >
                         Enter
                       </button>
@@ -298,7 +271,7 @@ export default function Taskbar({
                       onClick={onToggleTheme}
                       className="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-white font-mono text-[11px] cursor-pointer"
                     >
-                      {theme === 'dark' ? 'Obsidian Dark' : 'VS Code Light'}
+                      {theme === 'dark' ? 'AURA Dark' : 'AURA Light'}
                     </button>
                   </div>
 
@@ -309,7 +282,7 @@ export default function Taskbar({
                       setIsTrayMenuOpen(false);
                       openApp('settings');
                     }}
-                    className="w-full mt-1 py-1.5 rounded-lg border border-white/10 hover:bg-white/10 text-center text-[11px] text-emerald-400 font-semibold cursor-pointer block"
+                    className="w-full mt-1 py-1.5 rounded-lg border border-white/10 hover:bg-white/10 text-center text-[11px] text-sky-400 font-semibold cursor-pointer block"
                   >
                     Open Full Settings
                   </button>
@@ -326,7 +299,7 @@ export default function Taskbar({
             title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
             aria-label="Toggle Theme"
           >
-            {theme === 'dark' ? <Sun size={14} className="hover:text-amber-300" /> : <Moon size={14} className="hover:text-blue-500" />}
+            {theme === 'dark' ? <Sun size={14} className="hover:text-amber-300" /> : <Moon size={14} className="hover:text-sky-400" />}
           </button>
 
           {/* AURA SESSION Unobtrusive Status & System Controls */}
@@ -336,7 +309,7 @@ export default function Taskbar({
             onClick={() => setIsSessionMenuOpen(!isSessionMenuOpen)}
             className={`aura-session-trigger flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono transition-all cursor-pointer ${
               isSessionMenuOpen
-                ? 'bg-emerald-500/15 border-emerald-500/40 text-white'
+                ? 'bg-sky-500/15 border-sky-500/40 text-white'
                 : 'hover:bg-white/10 text-neutral-300 hover:text-white border-transparent'
             }`}
             title="AURA Session Controls"
@@ -346,8 +319,8 @@ export default function Taskbar({
             <span
               className={`w-1.5 h-1.5 rounded-full transition-colors ${
                 isFullscreen
-                  ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]'
-                  : 'bg-amber-400/80'
+                  ? 'bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.9)]'
+                  : 'bg-violet-400/80 shadow-[0_0_6px_rgba(168,85,247,0.6)]'
               }`}
             />
             <span className="font-semibold tracking-wider text-[11px] hidden sm:inline">

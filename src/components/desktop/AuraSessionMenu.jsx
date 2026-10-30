@@ -108,7 +108,7 @@ export default function AuraSessionMenu({
           <span
             className="text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wider"
             style={{
-              backgroundColor: isFullscreen ? 'rgba(52, 211, 153, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+              backgroundColor: isFullscreen ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.08)',
               color: isFullscreen ? 'var(--color-status-dot)' : 'var(--color-text-secondary)'
             }}
           >
@@ -131,8 +131,8 @@ export default function AuraSessionMenu({
               <div
                 className="w-6 h-6 rounded-lg border flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"
                 style={{
-                  backgroundColor: 'rgba(52, 211, 153, 0.1)',
-                  borderColor: 'rgba(52, 211, 153, 0.3)',
+                  backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                  borderColor: 'rgba(56, 189, 248, 0.35)',
                   color: 'var(--color-status-dot)'
                 }}
               >
@@ -141,7 +141,7 @@ export default function AuraSessionMenu({
                 </svg>
               </div>
               <div className="flex flex-col">
-                <span className="font-semibold text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                <span className="font-semibold text-sky-400 group-hover:text-sky-300 transition-colors">
                   Enter Fullscreen
                 </span>
                 <span className="text-[9px]" style={{ color: 'var(--color-text-muted)' }}>
@@ -149,7 +149,7 @@ export default function AuraSessionMenu({
                 </span>
               </div>
             </div>
-            <span className="text-[10px] text-emerald-400 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-[10px] text-sky-400 group-hover:translate-x-0.5 transition-transform">
               →
             </span>
           </button>
@@ -176,12 +176,12 @@ export default function AuraSessionMenu({
               color: 'var(--color-text-secondary)'
             }}
           >
-            <svg className="w-3.5 h-3.5 group-hover:text-blue-400 transition-colors" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-3.5 h-3.5 group-hover:text-sky-400 transition-colors" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M13.5 8A5.5 5.5 0 1 1 11.6 4.1L13.5 6M13.5 2V6H9.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
+            <span className="font-semibold text-white group-hover:text-sky-400 transition-colors">
               Restart AURA
             </span>
             <span className="text-[9px]" style={{ color: 'var(--color-text-muted)' }}>

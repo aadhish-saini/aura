@@ -44,7 +44,7 @@ export default function SleepScreen({ onWake }) {
       <div className="w-full flex justify-between items-center text-xs font-mono opacity-50">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-          <span>AADHISH OS // SLEEP MODE (STANDBY)</span>
+          <span>AURA // SLEEP MODE (STANDBY)</span>
         </div>
         <div>
           <span>STATE PRESERVED IN RAM</span>
@@ -62,7 +62,7 @@ export default function SleepScreen({ onWake }) {
           {timeStr || '12:00'}
         </div>
 
-        <h2 className="text-lg font-mono font-medium tracking-wider text-emerald-400 mb-1">
+        <h2 className="text-lg font-mono font-medium tracking-wider text-sky-400 mb-1">
           SYSTEM ASLEEP
         </h2>
 
@@ -88,7 +88,7 @@ export default function SleepScreen({ onWake }) {
       {/* Bottom Status */}
       <div className="w-full flex justify-between items-center text-[11px] font-mono text-neutral-600">
         <span>SESSION: LOCALHOST</span>
-        <span>AADHISH OS 26100</span>
+        <span>AURA RUNTIME</span>
       </div>
     </div>
   );

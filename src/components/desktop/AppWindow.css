@@ -66,10 +66,10 @@
   box-shadow: 0 0 0 2px var(--color-status-dot);
 }
 
-/* 1. Minimize: Subtle emerald-tinted background on hover */
+/* 1. Minimize: Subtle Cyan-tinted background on hover */
 .aura-control-minimize:hover {
-  background-color: rgba(52, 211, 153, 0.12);
-  border-color: rgba(52, 211, 153, 0.35);
+  background-color: rgba(56, 189, 248, 0.16);
+  border-color: rgba(56, 189, 248, 0.4);
   color: var(--color-status-dot);
 }
 
@@ -78,19 +78,19 @@
   stroke: var(--color-status-dot);
 }
 
-/* 2. Maximize / Restore: Restrained emerald accent on hover */
+/* 2. Maximize / Restore: Restrained Violet accent on hover */
 .aura-control-maximize:hover {
-  background-color: rgba(52, 211, 153, 0.12);
-  border-color: rgba(52, 211, 153, 0.35);
-  color: var(--color-status-dot);
+  background-color: rgba(192, 38, 211, 0.16);
+  border-color: rgba(192, 38, 211, 0.4);
+  color: var(--color-accent-violet);
 }
 
 .aura-control-maximize:hover svg {
-  color: var(--color-status-dot);
-  stroke: var(--color-status-dot);
+  color: var(--color-accent-violet);
+  stroke: var(--color-accent-violet);
 }
 
-/* 3. Close: Muted coral / soft red tint on hover (distinct, but not a solid Windows red rectangle) */
+/* 3. Close: Muted coral / soft red tint on hover */
 .aura-control-close:hover {
   background-color: rgba(244, 63, 94, 0.14);
   border-color: rgba(244, 63, 94, 0.35);
@@ -111,18 +111,27 @@
   box-shadow: 0 0 0 2px #fb7185;
 }
 
-/* Light Mode Overrides for Restrained Tinting */
-[data-theme="light"] .aura-control-minimize:hover,
-[data-theme="light"] .aura-control-maximize:hover {
-  background-color: rgba(57, 134, 90, 0.12);
-  border-color: rgba(57, 134, 90, 0.35);
-  color: #39865a;
+/* Light Mode Overrides */
+[data-theme="light"] .aura-control-minimize:hover {
+  background-color: rgba(2, 132, 199, 0.14);
+  border-color: rgba(2, 132, 199, 0.4);
+  color: #0284c7;
 }
 
-[data-theme="light"] .aura-control-minimize:hover svg,
+[data-theme="light"] .aura-control-minimize:hover svg {
+  color: #0284c7;
+  stroke: #0284c7;
+}
+
+[data-theme="light"] .aura-control-maximize:hover {
+  background-color: rgba(124, 58, 237, 0.14);
+  border-color: rgba(124, 58, 237, 0.4);
+  color: #7c3aed;
+}
+
 [data-theme="light"] .aura-control-maximize:hover svg {
-  color: #39865a;
-  stroke: #39865a;
+  color: #7c3aed;
+  stroke: #7c3aed;
 }
 
 [data-theme="light"] .aura-control-close:hover {

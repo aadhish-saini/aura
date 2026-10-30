@@ -31,8 +31,8 @@ export default function SettingsApp({
           <span 
             className="px-2 py-0.5 rounded text-[10px] font-mono border"
             style={{
-              backgroundColor: 'rgba(52, 211, 153, 0.1)',
-              borderColor: 'rgba(52, 211, 153, 0.25)',
+              backgroundColor: 'var(--color-badge-bg)',
+              borderColor: 'var(--color-btn-accent-border)',
               color: 'var(--color-status-dot)'
             }}
           >
@@ -67,13 +67,13 @@ export default function SettingsApp({
               <div
                 className="px-4 py-2.5 rounded-lg text-xs font-mono flex items-center justify-between border"
                 style={{
-                  backgroundColor: 'rgba(52, 211, 153, 0.08)',
-                  borderColor: 'rgba(52, 211, 153, 0.25)',
+                  backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                  borderColor: 'rgba(56, 189, 248, 0.25)',
                   color: 'var(--color-status-dot)'
                 }}
               >
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                  <span className="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.85)]" />
                   <span className="font-semibold">IMMERSIVE FULLSCREEN ACTIVE</span>
                 </div>
                 <span className="text-[10px] text-neutral-400">
@@ -112,7 +112,7 @@ export default function SettingsApp({
             <h4 className="text-sm font-semibold text-white">Appearance & Theme</h4>
           </div>
           <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Choose between AADHISH OS Obsidian Dark (authentic Stitch terminal black) and VS Code-Inspired Light mode. Theme persists in local storage across sessions.
+            Choose between AURA Obsidian Dark (deep cosmic violet and cyan) and AURA Clean Light mode. Theme persists in local storage across sessions.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -121,25 +121,25 @@ export default function SettingsApp({
               type="button"
               onClick={() => isDark ? null : onToggleTheme()}
               className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                isDark ? 'ring-2 ring-emerald-400 brightness-110' : 'opacity-70 hover:opacity-100'
+                isDark ? 'ring-2 ring-sky-400 brightness-110' : 'opacity-70 hover:opacity-100'
               }`}
               style={{
-                backgroundColor: '#050706',
+                backgroundColor: '#06070a',
                 borderColor: isDark ? 'var(--color-status-dot)' : 'var(--color-border-subtle)',
                 color: '#ffffff'
               }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center text-emerald-400">
+                <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center text-sky-400">
                   <Moon size={16} />
                 </div>
                 <div className="text-left">
-                  <div className="text-xs font-semibold">AADHISH OS Obsidian Dark</div>
-                  <div className="text-[10px] text-neutral-400 font-mono">Stitch Emerald / Black</div>
+                  <div className="text-xs font-semibold">AURA Obsidian Dark</div>
+                  <div className="text-[10px] text-neutral-400 font-mono">Cosmic Violet & Cyan</div>
                 </div>
               </div>
               {isDark && (
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                <span className="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.85)]" />
               )}
             </button>
 
@@ -148,16 +148,16 @@ export default function SettingsApp({
               type="button"
               onClick={() => !isDark ? null : onToggleTheme()}
               className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                !isDark ? 'ring-2 ring-blue-500 brightness-105' : 'opacity-70 hover:opacity-100'
+                !isDark ? 'ring-2 ring-sky-500 brightness-105' : 'opacity-70 hover:opacity-100'
               }`}
               style={{
-                backgroundColor: '#F8F9FC',
-                borderColor: !isDark ? '#356AC3' : 'var(--color-border-subtle)',
-                color: '#242938'
+                backgroundColor: '#F8FAFC',
+                borderColor: !isDark ? 'var(--color-status-dot)' : 'var(--color-border-subtle)',
+                color: '#0f172a'
               }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white border border-neutral-300 flex items-center justify-center text-blue-600">
+                <div className="w-8 h-8 rounded-lg bg-white border border-neutral-300 flex items-center justify-center text-sky-600">
                   <Sun size={16} />
                 </div>
                 <div className="text-left">
@@ -237,7 +237,7 @@ export default function SettingsApp({
             </div>
             <div className="flex justify-between py-1">
               <span>Security State:</span>
-              <span className="text-emerald-400 font-medium">UEFI SECURE BOOT VERIFIED</span>
+              <span className="text-sky-400 font-medium">UEFI SECURE BOOT VERIFIED</span>
             </div>
           </div>
         </div>

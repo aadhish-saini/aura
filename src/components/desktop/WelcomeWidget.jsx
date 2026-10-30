@@ -19,7 +19,7 @@ export default function WelcomeWidget({ openApp }) {
         {/* Subtle Ambient Radial Glow */}
         <div 
           className="absolute -right-10 -top-10 w-36 h-36 rounded-full blur-3xl pointer-events-none"
-          style={{ backgroundColor: 'rgba(52, 211, 153, 0.12)' }}
+          style={{ backgroundColor: 'rgba(56, 189, 248, 0.15)' }}
         />
 
         <div className="flex items-center justify-between mb-2">
@@ -96,8 +96,8 @@ export default function WelcomeWidget({ openApp }) {
             <span 
               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-mono border"
               style={{
-                backgroundColor: 'rgba(52, 211, 153, 0.1)',
-                borderColor: 'rgba(52, 211, 153, 0.25)',
+                backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                borderColor: 'rgba(56, 189, 248, 0.3)',
                 color: 'var(--color-status-dot)'
               }}
             >

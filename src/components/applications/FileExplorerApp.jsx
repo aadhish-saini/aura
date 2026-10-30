@@ -147,7 +147,7 @@ export default function FileExplorerApp({ openApp }) {
               }}
             >
               <div 
-                className="w-12 h-12 rounded-xl flex items-center justify-center border transition-colors group-hover:border-emerald-500/40 p-1.5"
+                className="w-12 h-12 rounded-xl flex items-center justify-center border transition-colors group-hover:border-sky-500/40 p-1.5"
                 style={{
                   backgroundColor: 'var(--color-btn-accent-bg)',
                   borderColor: 'var(--color-border-subtle)',
@@ -155,7 +155,7 @@ export default function FileExplorerApp({ openApp }) {
                 }}
               >
                 {item.type === 'dir' ? (
-                  <Folder size={24} className="fill-emerald-400/20" />
+                  <Folder size={24} className="fill-sky-400/20 text-sky-400" />
                 ) : item.appTarget ? (
                   <AppIcon appId={item.appTarget} size={24} />
                 ) : (

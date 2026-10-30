@@ -95,7 +95,7 @@ export default function AppWindow({
       onMouseDown={onFocus}
       className={`rounded-xl flex flex-col overflow-hidden backdrop-blur-2xl transition-shadow select-none ${
         isActive
-          ? 'shadow-[0_20px_50px_rgba(0,0,0,0.6)] ring-1 ring-emerald-500/30'
+          ? 'shadow-[0_20px_50px_rgba(0,0,0,0.6)] ring-1 ring-sky-500/35'
           : 'shadow-xl opacity-95'
       }`}
       style={{

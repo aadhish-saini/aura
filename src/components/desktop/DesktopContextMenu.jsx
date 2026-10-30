@@ -93,7 +93,7 @@ export default function DesktopContextMenu({
               onClose();
             }}
             className={`w-full px-2 py-1 text-left rounded text-[11px] flex items-center justify-between hover:bg-white/10 ${
-              iconSize === 'large' ? 'text-emerald-400 font-semibold' : ''
+              iconSize === 'large' ? 'text-sky-400 font-semibold' : ''
             }`}
           >
             <span>Large icons</span>
@@ -106,7 +106,7 @@ export default function DesktopContextMenu({
               onClose();
             }}
             className={`w-full px-2 py-1 text-left rounded text-[11px] flex items-center justify-between hover:bg-white/10 ${
-              iconSize === 'medium' ? 'text-emerald-400 font-semibold' : ''
+              iconSize === 'medium' ? 'text-sky-400 font-semibold' : ''
             }`}
           >
             <span>Medium icons</span>
@@ -119,7 +119,7 @@ export default function DesktopContextMenu({
               onClose();
             }}
             className={`w-full px-2 py-1 text-left rounded text-[11px] flex items-center justify-between hover:bg-white/10 ${
-              iconSize === 'small' ? 'text-emerald-400 font-semibold' : ''
+              iconSize === 'small' ? 'text-sky-400 font-semibold' : ''
             }`}
           >
             <span>Small icons</span>
@@ -156,7 +156,7 @@ export default function DesktopContextMenu({
               onClose();
             }}
             className={`w-full px-2 py-1 text-left rounded text-[11px] flex items-center justify-between hover:bg-white/10 ${
-              sortBy === 'name' ? 'text-emerald-400 font-semibold' : ''
+              sortBy === 'name' ? 'text-sky-400 font-semibold' : ''
             }`}
           >
             <span>Name</span>
@@ -169,7 +169,7 @@ export default function DesktopContextMenu({
               onClose();
             }}
             className={`w-full px-2 py-1 text-left rounded text-[11px] flex items-center justify-between hover:bg-white/10 ${
-              sortBy === 'default' ? 'text-emerald-400 font-semibold' : ''
+              sortBy === 'default' ? 'text-sky-400 font-semibold' : ''
             }`}
           >
             <span>Default</span>

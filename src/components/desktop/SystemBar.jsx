@@ -23,15 +23,11 @@ export default function SystemBar({
       {/* Left: Branding & Node Telemetry */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <div 
-            className="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
-            style={{
-              backgroundColor: 'var(--color-status-dot)',
-              color: '#050706'
-            }}
-          >
-            A
-          </div>
+          <img 
+            src="/AURA-icon.png" 
+            alt="AURA" 
+            className="w-5 h-5 object-contain"
+          />
           <span className="font-mono text-xs font-bold tracking-tight uppercase">
             AURA
           </span>
@@ -64,7 +60,7 @@ export default function SystemBar({
           onClick={() => openApp('projects')}
           className={`px-2.5 py-1 rounded transition-colors cursor-pointer ${
             activeWindowId === 'projects'
-              ? 'bg-emerald-500/15 text-emerald-400 font-medium'
+              ? 'bg-sky-500/15 text-sky-400 font-medium'
               : 'hover:bg-white/5'
           }`}
           style={{ color: activeWindowId === 'projects' ? 'var(--color-status-dot)' : 'var(--color-text-secondary)' }}
@@ -77,7 +73,7 @@ export default function SystemBar({
           onClick={() => openApp('terminal')}
           className={`px-2.5 py-1 rounded transition-colors cursor-pointer ${
             activeWindowId === 'terminal'
-              ? 'bg-emerald-500/15 text-emerald-400 font-medium'
+              ? 'bg-sky-500/15 text-sky-400 font-medium'
               : 'hover:bg-white/5'
           }`}
           style={{ color: activeWindowId === 'terminal' ? 'var(--color-status-dot)' : 'var(--color-text-secondary)' }}
@@ -90,7 +86,7 @@ export default function SystemBar({
           onClick={() => openApp('skills')}
           className={`px-2.5 py-1 rounded transition-colors cursor-pointer ${
             activeWindowId === 'skills'
-              ? 'bg-emerald-500/15 text-emerald-400 font-medium'
+              ? 'bg-sky-500/15 text-sky-400 font-medium'
               : 'hover:bg-white/5'
           }`}
           style={{ color: activeWindowId === 'skills' ? 'var(--color-status-dot)' : 'var(--color-text-secondary)' }}

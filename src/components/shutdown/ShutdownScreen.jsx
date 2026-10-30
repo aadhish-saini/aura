@@ -92,7 +92,7 @@ export default function ShutdownScreen({ theme, onCompleteShutdown }) {
         <div className="flex items-center gap-2">
           <span
             className={`w-2 h-2 rounded-full ${
-              isOff ? 'bg-rose-500' : 'bg-emerald-400 animate-pulse'
+              isOff ? 'bg-rose-500' : 'bg-sky-400 animate-pulse'
             }`}
           />
           <span>AURA // ACPI POWER_OFF SEQUENCE</span>
