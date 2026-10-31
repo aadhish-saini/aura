@@ -1,186 +1,132 @@
-import React from 'react';
-import { Target, Brain, Compass, Code, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { PORTFOLIO_DATA } from '../../config/portfolioData';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import AboutHero from './about/AboutHero';
+import AboutStory from './about/AboutStory';
+import AboutLearning from './about/AboutLearning';
+import AboutCraft from './about/AboutCraft';
+import AboutBeyond from './about/AboutBeyond';
+import AboutTechJourney from './about/AboutTechJourney';
+import AboutVision from './about/AboutVision';
+import AboutClosing from './about/AboutClosing';
+import AboutNav from './about/AboutNav';
+import { isReducedMotion } from '../../utils/windowAnimations';
+import './about/AboutApp.css';
 
 export default function AboutApp({ openApp }) {
-  const { identity } = PORTFOLIO_DATA;
+  const containerRef = useRef(null);
+  const [activeChapter, setActiveChapter] = useState('story-section-01');
+
+  // Scroll to section helper
+  const scrollToChapter = useCallback((chapterId) => {
+    const el = containerRef.current?.querySelector(`#${chapterId}`);
+    if (el) {
+      el.scrollIntoView({
+        behavior: isReducedMotion() ? 'auto' : 'smooth',
+        block: 'start'
+      });
+      setActiveChapter(chapterId);
+    }
+  }, []);
+
+  const scrollToStory = useCallback(() => {
+    scrollToChapter('story-section-01');
+  }, [scrollToChapter]);
+
+  // Progressive scroll-reveal using IntersectionObserver
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const sections = container.querySelectorAll('.about-section');
+    if (isReducedMotion()) {
+      sections.forEach((sec) => sec.classList.add('is-revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            entry.target.classList.remove('not-revealed');
+            if (entry.target.id) {
+              setActiveChapter(entry.target.id);
+            }
+          }
+        });
+      },
+      {
+        root: container,
+        threshold: 0.15,
+        rootMargin: '0px 0px -10% 0px'
+      }
+    );
+
+    sections.forEach((sec) => {
+      sec.classList.add('not-revealed');
+      observer.observe(sec);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto font-sans select-text">
-      <div className="p-5 md:p-6 flex flex-col gap-5 flex-1">
-        {/* Profile Identity Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <span 
-              className="text-[10px] font-mono tracking-widest uppercase font-semibold"
-              style={{ color: 'var(--color-status-dot)' }}
-            >
-              IDENTITY SPECIFICATION
-            </span>
-            <h3 className="text-2xl font-semibold tracking-tight text-white mt-1">
-              {identity.name}
-            </h3>
-            <p className="text-xs font-mono mt-1" style={{ color: 'var(--color-text-secondary)' }}>
-              {identity.degree}
-            </p>
-          </div>
-          <div 
-            className="w-12 h-12 rounded-xl flex items-center justify-center border shadow-inner shrink-0"
-            style={{
-              backgroundColor: 'var(--color-btn-default-bg)',
-              borderColor: 'var(--color-border-default)',
-              color: 'var(--color-status-dot)'
-            }}
-          >
-            <Code size={24} />
-          </div>
-        </div>
+    <div
+      ref={containerRef}
+      className="about-app-container flex flex-col h-full overflow-y-auto select-text font-sans about-grid-texture"
+      role="article"
+      aria-label="About Aadhish Saini"
+    >
+      {/* Section 01: Hero / Introduction */}
+      <AboutHero onScrollToStory={scrollToStory} />
 
-        {/* Profile Narrative Abstract */}
-        <div 
-          className="p-4 rounded-xl border backdrop-blur-sm"
-          style={{
-            backgroundColor: 'var(--color-btn-default-bg)',
-            borderColor: 'var(--color-border-subtle)',
-          }}
-        >
-          <p 
-            className="text-sm leading-relaxed italic"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            "{identity.introduction}"
-          </p>
-        </div>
+      {/* Discreet Sticky Story Navigation Pill Track */}
+      <AboutNav
+        activeChapter={activeChapter}
+        onSelectChapter={scrollToChapter}
+      />
 
-        {/* 3 Compact Structured Information Cards */}
-        <div className="grid grid-cols-1 gap-3">
-          {/* Card 1: Current Focus */}
-          <div 
-            className="p-4 rounded-xl border flex items-start gap-3.5 transition-all hover:brightness-105"
-            style={{
-              backgroundColor: 'var(--color-btn-accent-bg)',
-              borderColor: 'var(--color-border-default)',
-            }}
-          >
-            <div 
-              className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
-              style={{
-                backgroundColor: 'var(--color-badge-bg)',
-                borderColor: 'var(--color-btn-accent-border)',
-                color: 'var(--color-status-dot)'
-              }}
-            >
-              <Target size={18} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div 
-                className="text-xs font-mono font-semibold uppercase tracking-wider"
-                style={{ color: 'var(--color-status-dot)' }}
-              >
-                CURRENT FOCUS
-              </div>
-              <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                {identity.sections.currentFocus}
-              </p>
-            </div>
-          </div>
+      {/* Main Narrative Flow */}
+      <main className="flex-1 flex flex-col">
+        {/* Section 02: 01 — Where It Began */}
+        <AboutStory />
 
-          {/* Card 2: Technical Interests */}
-          <div 
-            className="p-4 rounded-xl border flex items-start gap-3.5 transition-all hover:brightness-105"
-            style={{
-              backgroundColor: 'var(--color-btn-accent-bg)',
-              borderColor: 'var(--color-border-default)',
-            }}
-          >
-            <div 
-              className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
-              style={{
-                backgroundColor: 'var(--color-badge-bg)',
-                borderColor: 'var(--color-btn-accent-border)',
-                color: 'var(--color-status-dot)'
-              }}
-            >
-              <Brain size={18} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div 
-                className="text-xs font-mono font-semibold uppercase tracking-wider"
-                style={{ color: 'var(--color-status-dot)' }}
-              >
-                TECHNICAL INTERESTS
-              </div>
-              <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                {identity.sections.technicalInterests}
-              </p>
-            </div>
-          </div>
+        {/* Section 03: 02 — The Way I Learn */}
+        <AboutLearning />
 
-          {/* Card 3: My Approach */}
-          <div 
-            className="p-4 rounded-xl border flex items-start gap-3.5 transition-all hover:brightness-105"
-            style={{
-              backgroundColor: 'var(--color-btn-accent-bg)',
-              borderColor: 'var(--color-border-default)',
-            }}
-          >
-            <div 
-              className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
-              style={{
-                backgroundColor: 'var(--color-badge-bg)',
-                borderColor: 'var(--color-btn-accent-border)',
-                color: 'var(--color-status-dot)'
-              }}
-            >
-              <Compass size={18} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div 
-                className="text-xs font-mono font-semibold uppercase tracking-wider"
-                style={{ color: 'var(--color-status-dot)' }}
-              >
-                MY APPROACH
-              </div>
-              <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                {identity.sections.approach}
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* Section 04: 03 — What I Build */}
+        <AboutCraft />
 
-        {/* Action Footnote */}
-        <div className="pt-2 flex items-center justify-between mt-auto">
-          <div className="flex items-center gap-1.5 text-[11px] font-mono" style={{ color: 'var(--color-text-secondary)' }}>
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-status-dot)' }} />
-            <span>STATUS: KERNEL VERIFIED</span>
-          </div>
+        {/* Section 05: 04 — Beyond The Classroom */}
+        <AboutBeyond />
 
-          <button
-            type="button"
-            onClick={() => openApp && openApp('projects')}
-            className="px-4 py-2 rounded-lg text-xs font-mono font-medium flex items-center gap-2 cursor-pointer transition-all hover:brightness-110 active:scale-95 text-white"
-            style={{
-              backgroundColor: 'var(--color-progress-fill)',
-              boxShadow: 'var(--color-progress-glow)'
-            }}
-          >
-            <span>Explore Projects</span>
-            <ArrowRight size={14} />
-          </button>
-        </div>
-      </div>
+        {/* Section 06: 05 — My Technical Journey */}
+        <AboutTechJourney />
 
-      {/* Window Status Edge */}
+        {/* Section 07: 06 — What I'm Working Towards */}
+        <AboutVision />
+
+        {/* Section 08: 07 — The Story Continues */}
+        <AboutClosing openApp={openApp} />
+      </main>
+
+      {/* Subtle Bottom System Edge Decal */}
       <div 
-        className="h-7 px-4 border-t flex items-center justify-between text-[10px] font-mono select-none"
+        className="h-8 px-6 border-t flex items-center justify-between text-[10px] font-mono select-none shrink-0"
         style={{
           backgroundColor: 'var(--color-bg-card)',
           borderColor: 'var(--color-border-subtle)',
           color: 'var(--color-text-muted)'
         }}
       >
-        <span>MEM: 124MB ALLOCATED</span>
-        <span>ENCODING: UTF-8</span>
+        <div className="w-full max-w-5xl xl:max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-status-dot)]" />
+            <span>AURA OS // PROFILE SPECIFICATION</span>
+          </div>
+          <span className="hidden sm:inline">VERIFIED DEVELOPER RECORD // 2026</span>
+        </div>
       </div>
     </div>
   );

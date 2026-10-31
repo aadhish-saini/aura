@@ -180,8 +180,17 @@ export default function Taskbar({
               return (
                 <button
                   key={appId}
+                  id={`taskbar-icon-${appId}`}
+                  data-taskbar-icon={appId}
                   type="button"
-                  onClick={() => onTaskbarItemClick(appId)}
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const origin = {
+                      x: Math.round(rect.left + rect.width / 2),
+                      y: Math.round(rect.top + rect.height / 2)
+                    };
+                    onTaskbarItemClick(appId, origin);
+                  }}
                   className={`taskbar-icon-btn relative p-1.5 sm:p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer group ${
                     isActive
                       ? 'bg-white/15 shadow-sm'

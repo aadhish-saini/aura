@@ -198,7 +198,7 @@ export default function DesktopContextMenu({
         type="button"
         onClick={() => {
           onClose();
-          openApp('terminal');
+          openApp('terminal', { x: position.x, y: position.y });
         }}
         className="w-full px-2.5 py-1.5 rounded-lg flex items-center gap-2 transition-colors hover:bg-white/10 cursor-pointer text-left"
       >
@@ -211,7 +211,7 @@ export default function DesktopContextMenu({
         type="button"
         onClick={() => {
           onClose();
-          openApp('settings');
+          openApp('settings', { x: position.x, y: position.y });
         }}
         className="w-full px-2.5 py-1.5 rounded-lg flex items-center gap-2 transition-colors hover:bg-white/10 cursor-pointer text-left"
       >

@@ -1,4 +1,136 @@
-/* Unique Minimal Floating Window Controls for AURA */
+/* =========================================================================
+   AURA OS — Application Window Manager & Animation System
+   ========================================================================= */
+
+/* Base Window Shell */
+.aura-app-window {
+  box-sizing: border-box;
+  contain: layout style;
+  /* Smooth Maximize / Restore-Down / Focus Transitions */
+  transition: top 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              left 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              width 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              height 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 200ms ease,
+              border-color 200ms ease,
+              opacity 200ms ease;
+}
+
+/* Zero-latency tracking during window drag */
+.aura-app-window.is-dragging {
+  transition: none !important;
+  user-select: none;
+  cursor: move !important;
+}
+
+/* Active Window (Foreground) */
+.aura-app-window.aura-window-active {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(56, 189, 248, 0.35);
+  border-color: var(--color-status-dot);
+  opacity: 1;
+}
+
+/* Inactive Window (Background) */
+.aura-app-window.aura-window-inactive {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  border-color: var(--color-border-default);
+  opacity: 0.94;
+}
+
+/* -------------------------------------------------------------------------
+   Window Animation Keyframes (GPU-Accelerated Transforms & Opacity)
+   ------------------------------------------------------------------------- */
+
+/* 1. Opening Animation (Smooth 280ms deceleration emergence from icon) */
+@keyframes aura-window-open {
+  0% {
+    opacity: 0;
+    transform: var(--win-launch-transform, translate3d(0, 14px, 0) scale(0.94));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.aura-app-window.anim-opening {
+  animation: aura-window-open 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* 2. Closing Animation (Smooth 200ms graceful exit back to origin) */
+@keyframes aura-window-close {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: var(--win-close-transform, translate3d(0, 10px, 0) scale(0.94));
+  }
+}
+
+.aura-app-window.anim-closing {
+  animation: aura-window-close 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+  pointer-events: none !important;
+}
+
+/* 3. Minimizing Animation (Smooth 220ms glide to taskbar) */
+@keyframes aura-window-minimize {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: var(--win-taskbar-transform, translate3d(0, 200px, 0) scale(0.65));
+  }
+}
+
+.aura-app-window.anim-minimizing {
+  animation: aura-window-minimize 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+  pointer-events: none !important;
+}
+
+/* 4. Minimized State (Preserves children and inner state without unmounting) */
+.aura-app-window.anim-minimized {
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: none !important;
+  transform: var(--win-taskbar-transform, translate3d(0, 200px, 0) scale(0.65));
+  opacity: 0 !important;
+}
+
+/* 5. Restoring Animation (Smooth 260ms emergence from taskbar) */
+@keyframes aura-window-restore {
+  0% {
+    opacity: 0;
+    transform: var(--win-taskbar-transform, translate3d(0, 200px, 0) scale(0.65));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.aura-app-window.anim-restoring {
+  animation: aura-window-restore 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* 6. Idle State: Clean unhindered transform */
+.aura-app-window.anim-idle {
+  will-change: auto;
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------------------
+   Titlebar & Controls Styling
+   ------------------------------------------------------------------------- */
 
 .aura-window-titlebar {
   display: flex;
@@ -161,5 +293,20 @@
     width: 24px;
     height: 24px;
     border-radius: 6px;
+  }
+}
+
+/* Respect user's reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .aura-app-window,
+  .aura-app-window.anim-opening,
+  .aura-app-window.anim-closing,
+  .aura-app-window.anim-minimizing,
+  .aura-app-window.anim-restoring,
+  .aura-control-btn,
+  .aura-control-btn svg {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    transform: none !important;
   }
 }

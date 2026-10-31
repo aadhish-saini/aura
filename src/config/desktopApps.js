@@ -11,8 +11,8 @@ export const DESKTOP_APPS = {
     icon: "User",
     image: "/icons/about me.png",
     category: "profile",
-    defaultWidth: 720,
-    defaultHeight: 560,
+    defaultWidth: 760,
+    defaultHeight: 580,
     defaultPosition: { x: 340, y: 80 }
   },
   projects: {

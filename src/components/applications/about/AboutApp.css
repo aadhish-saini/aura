@@ -1,0 +1,247 @@
+/* =========================================================================
+   AURA OS — About Me Application Editorial Stylesheet
+   ========================================================================= */
+
+.about-app-container {
+  scroll-behavior: smooth;
+  color: var(--color-text-primary);
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -10%,
+    rgba(56, 189, 248, 0.08),
+    transparent 70%
+  );
+}
+
+[data-theme="light"] .about-app-container {
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -10%,
+    rgba(2, 132, 199, 0.06),
+    transparent 70%
+  );
+}
+
+/* Subtle editorial grid overlay */
+.about-grid-texture {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+[data-theme="light"] .about-grid-texture {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+}
+
+/* Editorial Chapter Section Base */
+.about-section {
+  position: relative;
+  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-section.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-section.not-revealed {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+/* Subtle chapter indicator line */
+.chapter-numeral {
+  font-family: var(--font-mono);
+  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-status-dot);
+  text-transform: uppercase;
+}
+
+/* Section Subtitle styling */
+.chapter-subtitle {
+  font-size: 0.925rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+/* Magazine quote styling */
+.about-quote {
+  position: relative;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--color-status-dot);
+}
+
+/* Learning sequence path */
+.learning-step-node {
+  position: relative;
+  transition: all 250ms ease;
+}
+
+.learning-step-node:hover {
+  transform: translateY(-2px);
+}
+
+/* Editorial Domain Panel */
+.domain-panel {
+  position: relative;
+  background: var(--color-btn-default-bg);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1rem;
+  padding: 1.75rem 1.5rem;
+  transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.domain-panel:hover {
+  background: var(--color-btn-default-hover);
+  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+}
+
+/* Stat Box for Hackathon */
+.hackathon-stat-card {
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.08) 0%,
+    rgba(192, 38, 211, 0.05) 50%,
+    transparent 100%
+  );
+  border: 1px solid var(--color-border-default);
+  border-radius: 1.25rem;
+  padding: 2rem 1.75rem;
+}
+
+[data-theme="light"] .hackathon-stat-card {
+  background: linear-gradient(
+    135deg,
+    rgba(2, 132, 199, 0.08) 0%,
+    rgba(124, 58, 237, 0.05) 50%,
+    transparent 100%
+  );
+}
+
+/* Technology Pills */
+.tech-pill-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  background: var(--color-btn-default-bg);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+  transition: all 200ms ease;
+}
+
+.tech-pill-active:hover {
+  border-color: var(--color-status-dot);
+  background: var(--color-btn-accent-bg);
+  color: var(--color-status-dot);
+  transform: translateY(-1px);
+}
+
+.tech-pill-exploring {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  background: rgba(192, 38, 211, 0.06);
+  border: 1px dashed rgba(192, 38, 211, 0.35);
+  color: var(--color-text-primary);
+  transition: all 200ms ease;
+}
+
+[data-theme="light"] .tech-pill-exploring {
+  background: rgba(124, 58, 237, 0.06);
+  border-color: rgba(124, 58, 237, 0.35);
+}
+
+.tech-pill-exploring:hover {
+  border-color: var(--color-accent-violet);
+  background: rgba(192, 38, 211, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Vision Constellation Card */
+.vision-composition {
+  position: relative;
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(56, 189, 248, 0.1) 0%,
+    rgba(14, 15, 24, 0.6) 70%
+  );
+  border: 1px solid var(--color-border-strong);
+  border-radius: 1.5rem;
+  padding: 2.25rem;
+}
+
+[data-theme="light"] .vision-composition {
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(2, 132, 199, 0.08) 0%,
+    rgba(255, 255, 255, 0.9) 70%
+  );
+}
+
+/* Subtle ambient pulse for constellation node */
+@keyframes ambientNodePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+.pulse-node {
+  animation: ambientNodePulse 3s ease-in-out infinite;
+}
+
+/* Floating Chapter Navigation Pill Track */
+.about-chapter-nav {
+  position: sticky;
+  top: 1rem;
+  z-index: 30;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Reduced Motion Overrides */
+@media (prefers-reduced-motion: reduce) {
+  .about-app-container {
+    scroll-behavior: auto !important;
+  }
+  .about-section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .learning-step-node,
+  .domain-panel,
+  .tech-pill-active,
+  .tech-pill-exploring {
+    transition: none !important;
+    transform: none !important;
+  }
+  .pulse-node {
+    animation: none !important;
+  }
+}
+

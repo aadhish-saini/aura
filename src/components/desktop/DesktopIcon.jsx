@@ -2,10 +2,24 @@ import React from 'react';
 import AppIcon from '../common/AppIcon';
 
 export default function DesktopIcon({ app, isOpen, isActive, onOpen, iconSize = 'medium' }) {
+  const handleClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const origin = {
+      x: Math.round(rect.left + rect.width / 2),
+      y: Math.round(rect.top + rect.height / 2)
+    };
+    onOpen(app.id, origin);
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      onOpen(app.id);
+      const rect = e.currentTarget.getBoundingClientRect();
+      const origin = {
+        x: Math.round(rect.left + rect.width / 2),
+        y: Math.round(rect.top + rect.height / 2)
+      };
+      onOpen(app.id, origin);
     }
   };
 
@@ -18,8 +32,10 @@ export default function DesktopIcon({ app, isOpen, isActive, onOpen, iconSize = 
 
   return (
     <button
+      id={`desktop-icon-${app.id}`}
+      data-desktop-icon={app.id}
       type="button"
-      onClick={() => onOpen(app.id)}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
       className={`group flex sm:flex-col items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-xl transition-all cursor-pointer text-left sm:text-center w-full sm:w-20 outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
         isActive

@@ -107,7 +107,17 @@ export default function StartMenu({
     if (e.key === 'Enter') {
       e.preventDefault();
       if (filteredApps.length > 0) {
-        openApp(filteredApps[0].id);
+        const appId = filteredApps[0].id;
+        const targetBtn = menuRef.current?.querySelector(`[data-start-app="${appId}"]`);
+        let origin = null;
+        if (targetBtn) {
+          const rect = targetBtn.getBoundingClientRect();
+          origin = {
+            x: Math.round(rect.left + rect.width / 2),
+            y: Math.round(rect.top + rect.height / 2)
+          };
+        }
+        openApp(appId, origin);
         onClose();
       }
     }
@@ -211,9 +221,15 @@ export default function StartMenu({
               {filteredApps.map((app) => (
                 <button
                   key={app.id}
+                  data-start-app={app.id}
                   type="button"
-                  onClick={() => {
-                    openApp(app.id);
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const origin = {
+                      x: Math.round(rect.left + rect.width / 2),
+                      y: Math.round(rect.top + rect.height / 2)
+                    };
+                    openApp(app.id, origin);
                     onClose();
                   }}
                   className="start-app-item p-2.5 rounded-xl flex flex-col items-center text-center gap-2 transition-all cursor-pointer group hover:bg-white/10 active:scale-95"
@@ -254,8 +270,9 @@ export default function StartMenu({
               {/* Featured Project */}
               <button
                 type="button"
-                onClick={() => {
-                  openApp('projects');
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  openApp('projects', { x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2) });
                   onClose();
                 }}
                 className="p-2 rounded-xl flex items-center gap-2.5 text-left transition-colors cursor-pointer hover:bg-white/10 group"
@@ -282,8 +299,9 @@ export default function StartMenu({
               {/* Developer Profile */}
               <button
                 type="button"
-                onClick={() => {
-                  openApp('about');
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  openApp('about', { x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2) });
                   onClose();
                 }}
                 className="p-2 rounded-xl flex items-center gap-2.5 text-left transition-colors cursor-pointer hover:bg-white/10 group"
@@ -310,8 +328,9 @@ export default function StartMenu({
               {/* Resume Quick Access */}
               <button
                 type="button"
-                onClick={() => {
-                  openApp('resume');
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  openApp('resume', { x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2) });
                   onClose();
                 }}
                 className="p-2 rounded-xl flex items-center gap-2.5 text-left transition-colors cursor-pointer hover:bg-white/10 group"
@@ -338,8 +357,9 @@ export default function StartMenu({
               {/* Terminal CLI */}
               <button
                 type="button"
-                onClick={() => {
-                  openApp('terminal');
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  openApp('terminal', { x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2) });
                   onClose();
                 }}
                 className="p-2 rounded-xl flex items-center gap-2.5 text-left transition-colors cursor-pointer hover:bg-white/10 group"
@@ -375,8 +395,9 @@ export default function StartMenu({
         {/* User Profile */}
         <button
           type="button"
-          onClick={() => {
-            openApp('about');
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            openApp('about', { x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2) });
             onClose();
           }}
           className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer text-left"
