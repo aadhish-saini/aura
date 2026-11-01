@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Maximize,
-  Sun,
-  Moon,
   Volume2,
   VolumeX,
   Sliders,
@@ -12,6 +10,7 @@ import {
 } from 'lucide-react';
 import StartMenu from './StartMenu';
 import AuraSessionMenu from './AuraSessionMenu';
+import TaskbarCalendar from './TaskbarCalendar';
 import AppIcon from '../common/AppIcon';
 import { DESKTOP_APPS } from '../../config/desktopApps';
 import './Taskbar.css';
@@ -44,6 +43,7 @@ export default function Taskbar({
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isTrayMenuOpen, setIsTrayMenuOpen] = useState(false);
   const [isSessionMenuOpen, setIsSessionMenuOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isSoundMuted, setIsSoundMuted] = useState(false);
   const [timeStr, setTimeStr] = useState('');
   const [dateStr, setDateStr] = useState('');
@@ -146,7 +146,10 @@ export default function Taskbar({
             <button
               id="start-menu-button"
               type="button"
-              onClick={() => setIsStartOpen(!isStartOpen)}
+              onClick={() => {
+                setIsStartOpen(!isStartOpen);
+                if (!isStartOpen) setIsCalendarOpen(false);
+              }}
               className="start-trigger-btn flex items-center justify-center cursor-pointer outline-none border-0 bg-transparent p-0 m-0 shadow-none transition-opacity duration-200 select-none shrink-0"
               title="AURA Start Menu (Ctrl+Alt+S)"
               aria-label="AURA Start Menu"
@@ -299,21 +302,6 @@ export default function Taskbar({
                     </button>
                   </div>
 
-                  {/* Theme Switch */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-neutral-300 flex items-center gap-1.5">
-                      {theme === 'dark' ? <Moon size={13} /> : <Sun size={13} />}
-                      <span>Theme:</span>
-                    </span>
-                    <button
-                      type="button"
-                      onClick={onToggleTheme}
-                      className="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-white font-mono text-[11px] cursor-pointer"
-                    >
-                      {theme === 'dark' ? 'AURA Dark' : 'AURA Light'}
-                    </button>
-                  </div>
-
                   {/* Personalization shortcut */}
                   <button
                     type="button"
@@ -330,22 +318,14 @@ export default function Taskbar({
             )}
           </div>
 
-          {/* Theme Quick Toggle */}
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-neutral-300 hover:text-white"
-            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-            aria-label="Toggle Theme"
-          >
-            {theme === 'dark' ? <Sun size={14} className="hover:text-amber-300" /> : <Moon size={14} className="hover:text-sky-400" />}
-          </button>
-
           {/* AURA SESSION Unobtrusive Status & System Controls */}
           <button
             id="aura-session-button"
             type="button"
-            onClick={() => setIsSessionMenuOpen(!isSessionMenuOpen)}
+            onClick={() => {
+              setIsSessionMenuOpen(!isSessionMenuOpen);
+              if (!isSessionMenuOpen) setIsCalendarOpen(false);
+            }}
             className={`aura-session-trigger flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono transition-all cursor-pointer ${
               isSessionMenuOpen
                 ? 'bg-sky-500/15 border-sky-500/40 text-white'
@@ -370,12 +350,26 @@ export default function Taskbar({
             </span>
           </button>
 
-          {/* Windows 11 Stacked Clock & Date */}
-          <div
-            className="flex flex-col items-end px-1.5 py-0.5 rounded-lg hover:bg-white/10 transition-colors cursor-default select-none leading-none font-mono"
-            title={`${timeStr} - ${dateStr}`}
+          {/* Windows 11 Stacked Clock & Date Trigger Button */}
+          <button
+            id="taskbar-clock-btn"
+            type="button"
+            onClick={() => {
+              setIsCalendarOpen((prev) => !prev);
+              setIsTrayMenuOpen(false);
+              setIsSessionMenuOpen(false);
+              setIsStartOpen(false);
+            }}
+            className={`flex flex-col items-end px-2 py-1 rounded-lg transition-all cursor-pointer select-none leading-none font-mono border ${
+              isCalendarOpen
+                ? 'bg-white/15 border-white/20 text-white shadow-sm'
+                : 'border-transparent hover:bg-white/10 text-slate-200 hover:text-white'
+            }`}
+            title="Open Calendar"
+            aria-label="Taskbar Date and Time, open Calendar"
+            aria-expanded={isCalendarOpen}
           >
-            <span className="text-[11px] font-medium text-white tracking-tight">
+            <span className="text-[11px] font-medium tracking-tight">
               {timeStr || '12:00 PM'}
             </span>
             <span
@@ -384,9 +378,15 @@ export default function Taskbar({
             >
               {dateStr || '10/30/2026'}
             </span>
-          </div>
+          </button>
         </div>
       </footer>
+
+      {/* Windows 11-Style Calendar Popup */}
+      <TaskbarCalendar
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+      />
 
       {/* AURA Session Menu Popover */}
       <AuraSessionMenu

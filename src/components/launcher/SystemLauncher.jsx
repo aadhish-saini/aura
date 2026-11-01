@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BrandLogo from '../BrandLogo';
-import ThemeToggle from '../ThemeToggle';
 import { ArrowRight, Monitor, AlertCircle } from 'lucide-react';
+import { preloadStartupSound, unlockAndQueueStartupSound } from '../../utils/startupSound';
 import './SystemLauncher.css';
 
 export default function SystemLauncher({
-  theme,
-  onToggleTheme,
   onBoot,
   onRequestFullscreen
 }) {
   const [fullscreenNotice, setFullscreenNotice] = useState(null);
   const [isBooting, setIsBooting] = useState(false);
+
+  // Preload startup audio asset on landing screen mount
+  useEffect(() => {
+    preloadStartupSound();
+  }, []);
 
   /**
    * Primary action: Request Fullscreen through Fullscreen API and boot
@@ -19,6 +22,9 @@ export default function SystemLauncher({
   const handleBootSystem = async () => {
     if (isBooting) return;
     setIsBooting(true);
+
+    // Unlock and prime startup sound during this user gesture
+    unlockAndQueueStartupSound();
 
     let fsSucceeded = false;
     try {
@@ -42,6 +48,10 @@ export default function SystemLauncher({
   const handleSkipFullscreen = () => {
     if (isBooting) return;
     setIsBooting(true);
+
+    // Unlock and prime startup sound during this user gesture
+    unlockAndQueueStartupSound();
+
     onBoot({ withFullscreen: false });
   };
 
@@ -66,19 +76,15 @@ export default function SystemLauncher({
               boxShadow: 'var(--color-status-glow)'
             }}
           />
-          <span className="hidden sm:inline">AADHISH OS // WORKSPACE LAUNCHER</span>
-          <span className="sm:hidden">AADHISH OS</span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          <span className="hidden sm:inline">AURA // WORKSPACE LAUNCHER</span>
+          <span className="sm:hidden">AURA</span>
         </div>
       </header>
 
       {/* Main Center Stage */}
       <main className="flex-1 flex flex-col items-center justify-center relative z-20 px-6 py-12">
         <div className="flex flex-col items-center text-center max-w-lg mx-auto launcher-card animate-in fade-in duration-500">
-          {/* AADHISH OS Emblem Brandmark */}
+          {/* AURA Emblem Brandmark */}
           <div className="launcher-brand-wrapper">
             <BrandLogo />
           </div>
@@ -88,14 +94,14 @@ export default function SystemLauncher({
             className="text-3xl md:text-5xl font-medium tracking-tight mb-2 select-none transition-colors duration-300"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            AADHISH OS
+            AURA
           </h1>
 
           <p
             className="text-xs md:text-sm tracking-[0.25em] uppercase font-light font-mono mb-8 select-none transition-colors duration-300"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            A Personal Developer Environment
+            Aadhish's Unified Runtime Architecture
           </p>
 
           {/* Non-intrusive Fullscreen Error Notice if any */}
@@ -153,14 +159,6 @@ export default function SystemLauncher({
               <Monitor size={14} className="opacity-75" />
               <span>VIEW PORTFOLIO WITHOUT FULLSCREEN</span>
             </button>
-
-            {/* Small Instruction Notice */}
-            <p
-              className="text-[11px] font-mono tracking-wider mt-2 select-none"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              An interactive developer workspace
-            </p>
           </div>
         </div>
       </main>
@@ -184,7 +182,7 @@ export default function SystemLauncher({
         </div>
 
         <div className="flex items-center gap-2 text-right text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-          <span>AADHISH OS</span>
+          <span>AURA</span>
           <span>//</span>
           <span>Build 26100.workstation</span>
         </div>

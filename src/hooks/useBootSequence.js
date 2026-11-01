@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 export const BOOT_STAGES = [
   {
     progress: 18,
-    main: "Starting AADHISH OS...",
+    main: "Starting AURA...",
     sub: "Stage 1/4 // Initializing kernel & CPU microcode"
   },
   {

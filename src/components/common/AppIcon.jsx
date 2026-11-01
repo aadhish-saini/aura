@@ -9,7 +9,8 @@ import {
   Terminal,
   FolderTree,
   Sliders,
-  HelpCircle
+  HelpCircle,
+  Gamepad2
 } from 'lucide-react';
 import { DESKTOP_APPS } from '../../config/desktopApps';
 
@@ -22,7 +23,8 @@ const LUCIDE_FALLBACKS = {
   contact: Mail,
   terminal: Terminal,
   explorer: FolderTree,
-  settings: Sliders
+  settings: Sliders,
+  'system-override': Gamepad2
 };
 
 /**

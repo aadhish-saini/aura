@@ -44,8 +44,8 @@ export const DESKTOP_APPS = {
     icon: "Award",
     image: "/icons/honors.png",
     category: "milestones",
-    defaultWidth: 680,
-    defaultHeight: 480,
+    defaultWidth: 760,
+    defaultHeight: 560,
     defaultPosition: { x: 400, y: 110 }
   },
   resume: {
@@ -55,8 +55,8 @@ export const DESKTOP_APPS = {
     icon: "FileText",
     image: "/icons/resume.png",
     category: "career",
-    defaultWidth: 720,
-    defaultHeight: 600,
+    defaultWidth: 780,
+    defaultHeight: 620,
     defaultPosition: { x: 420, y: 70 }
   },
   contact: {
@@ -66,9 +66,9 @@ export const DESKTOP_APPS = {
     icon: "Mail",
     image: "/icons/contact.png",
     category: "communication",
-    defaultWidth: 640,
-    defaultHeight: 500,
-    defaultPosition: { x: 390, y: 120 }
+    defaultWidth: 760,
+    defaultHeight: 580,
+    defaultPosition: { x: 390, y: 100 }
   },
   terminal: {
     id: "terminal",
@@ -102,6 +102,18 @@ export const DESKTOP_APPS = {
     defaultWidth: 620,
     defaultHeight: 480,
     defaultPosition: { x: 410, y: 105 }
+  },
+  'system-override': {
+    id: "system-override",
+    title: "AURA: SYSTEM OVERRIDE // The Hidden Gem",
+    shortTitle: "System Override",
+    icon: "Gamepad2",
+    image: null,
+    category: "classified",
+    defaultWidth: 880,
+    defaultHeight: 640,
+    defaultPosition: { x: 300, y: 60 },
+    isHidden: true
   }
 };
 

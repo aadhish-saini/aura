@@ -30,8 +30,6 @@ export default function BootScreen({ theme, onToggleTheme, onEnterWorkspace, boo
       <SystemHeader
         onRestart={restartBoot}
         onSkip={() => completeBoot(true)}
-        theme={theme}
-        onToggleTheme={onToggleTheme}
       />
 
       {/* Non-intrusive Notice (e.g. Fullscreen unavailable) */}
@@ -64,14 +62,14 @@ export default function BootScreen({ theme, onToggleTheme, onEnterWorkspace, boo
             className="text-3xl md:text-4xl lg:text-[42px] font-medium tracking-tight mb-2 select-none transition-colors duration-300"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            AADHISH OS
+            AURA
           </h1>
 
           <p
             className="text-xs md:text-sm tracking-[0.25em] uppercase font-light font-mono mb-12 select-none transition-colors duration-300"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            A Personal Developer Environment
+            Aadhish's Unified Runtime Architecture
           </p>
 
           {/* Windows Authentic 5-Dot Orbital Ring Loader */}

@@ -1,4 +1,9 @@
 import { PORTFOLIO_DATA } from './portfolioData';
+import {
+  unlockGamingAchievement,
+  advanceHintStage,
+  getHintStage,
+} from '../utils/easterEggManager';
 
 /**
  * Terminal Command Handler & Response Formatter
@@ -21,7 +26,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput }) {
     return {
       type: 'success',
       content: [
-        { text: 'AADHISH OS Shell, version 4.19.0-release (wasm32-unknown-linux-gnu)', style: 'muted' },
+        { text: 'AURA Shell, version 4.19.0-release (wasm32-unknown-linux-gnu)', style: 'muted' },
         { text: 'These shell commands are defined internally. Type a command to execute:', style: 'normal' },
         { text: '  help          - List all available commands', style: 'highlight' },
         { text: '  shortcuts     - View system keyboard shortcuts (Ctrl+Alt+F, etc.)', style: 'highlight' },
@@ -33,8 +38,9 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput }) {
         { text: '  resume        - Open resume viewer application', style: 'highlight' },
         { text: '  date          - Print current workstation timestamp', style: 'highlight' },
         { text: '  whoami        - Print current identity and role', style: 'highlight' },
-        { text: '  neofetch      - Display AADHISH OS ASCII badge and system telemetry', style: 'highlight' },
+        { text: '  neofetch      - Display AURA ASCII badge and system telemetry', style: 'highlight' },
         { text: '  sudo unlock   - Reveal builder philosophy & AWS Student Builder mindset', style: 'highlight' },
+        { text: '  hint          - Query AURA system discovery clues & hints', style: 'tip' },
         { text: '  clear         - Clear terminal screen buffer', style: 'highlight' }
       ]
     };
@@ -44,7 +50,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput }) {
     return {
       type: 'success',
       content: [
-        { text: 'AADHISH OS // SYSTEM KEYBOARD SHORTCUTS:', style: 'accent' },
+        { text: 'AURA // SYSTEM KEYBOARD SHORTCUTS:', style: 'accent' },
         { text: '  Escape              : Close open Start menu, power menu, or dialogs', style: 'highlight' },
         { text: '  Ctrl + Shift + Esc  : Launch Terminal CLI window', style: 'highlight' },
         { text: '  Ctrl + Alt + S      : Toggle Start menu', style: 'highlight' },
@@ -164,7 +170,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput }) {
         { text: "  /_/    \\_\\  Shell: bash // interactive-web-cli", style: 'normal' },
         { text: "              Resolution: Browser Viewport", style: 'normal' },
         { text: "              DE: AURA Window Compositor", style: 'normal' },
-        { text: "              Theme: Dynamic (Dark / Light VS Code)", style: 'secondary' },
+        { text: "              Theme: AURA Obsidian Dark (Permanent)", style: 'secondary' },
         { text: "              Font: Geist, JetBrains Mono", style: 'normal' },
         { text: "              Memory: 8.4 GB / 16.0 GB (Allocated)", style: 'muted' }
       ]
@@ -187,8 +193,117 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput }) {
     };
   }
 
+  // Easter Egg & Hint System: Trigger 1 / 2 - Game query
+  if (['game', 'games', 'play', 'secret', 'easteregg'].includes(lower)) {
+    advanceHintStage(2);
+    return {
+      type: 'success',
+      content: [
+        { text: '[AURA // SYSTEM DISCOVERY HINT 02]', style: 'accent' },
+        { text: '"A developer\'s workspace is incomplete without something to play with. Maybe there\'s an application that isn\'t listed?"', style: 'highlight' },
+        { text: 'Look closely at system daemons or query \'hint\' for progressive clues.', style: 'muted' },
+        { text: "Command suggestion: Try 'override' or 'ps' to inspect hidden processes.", style: 'tip' }
+      ]
+    };
+  }
+
+  // Progressive Hint System: Trigger 2 / 3
+  if (['hint', 'hints'].includes(lower)) {
+    const stage = getHintStage();
+    if (stage < 2) {
+      advanceHintStage(2);
+      return {
+        type: 'success',
+        content: [
+          { text: '[AURA // SYSTEM DISCOVERY HINT 01]', style: 'accent' },
+          { text: '"I built an entire operating system, added my projects, skills and achievements... but something important is still missing. 🤔"', style: 'highlight' },
+          { text: 'Tip: Ask yourself what every operating system needs when a developer gets bored.', style: 'tip' }
+        ]
+      };
+    } else if (stage === 2) {
+      advanceHintStage(3);
+      return {
+        type: 'success',
+        content: [
+          { text: '[AURA // SYSTEM DISCOVERY HINT 02]', style: 'accent' },
+          { text: '"A developer\'s workspace is incomplete without something to play with. Maybe there\'s an application that isn\'t listed?"', style: 'highlight' },
+          { text: 'Try checking system processes with \'ps\' or launching \'override\'.', style: 'tip' }
+        ]
+      };
+    } else {
+      advanceHintStage(3);
+      return {
+        type: 'success',
+        content: [
+          { text: '[AURA // SYSTEM DISCOVERY HINT 03 — STRONGER HINT]', style: 'accent' },
+          { text: '"I love building things, but I also love playing them. Look beyond the applications you can see."', style: 'highlight' },
+          { text: 'Direct sequence: Type \'override\' to bypass standard security filters and launch the hidden cybersecurity game.', style: 'tip' }
+        ]
+      };
+    }
+  }
+
+  // System processes inspection with hidden daemon
+  if (['ps', 'top', 'processes', 'systemctl', 'services'].includes(lower)) {
+    return {
+      type: 'success',
+      content: [
+        { text: 'PID   USER      CPU%  MEM%  COMMAND', style: 'accent' },
+        { text: '1     root      0.1   1.2   /aura/system/init', style: 'muted' },
+        { text: '104   guest     0.4   2.8   /aura/desktop/compositor', style: 'normal' },
+        { text: '218   guest     0.2   1.4   /aura/shell/terminal', style: 'normal' },
+        { text: '512   guest     0.0   0.8   /aura/services/telemetry', style: 'muted' },
+        { text: '4096  hidden    0.9   4.2   /system/bin/system-override.service [CLASSIFIED]', style: 'highlight' },
+        { text: "Notice: Process 4096 is responding to the 'override' instruction.", style: 'tip' }
+      ]
+    };
+  }
+
+  // Developer notes scratchpad
+  if (['notes', 'cat notes', 'cat notes.txt'].includes(lower)) {
+    return {
+      type: 'success',
+      content: [
+        { text: 'FILE: /guest/home/notes.txt', style: 'accent' },
+        { text: '------------------------------------------------------------', style: 'muted' },
+        { text: '1. Complete AURA portfolio desktop windows... [DONE]', style: 'normal' },
+        { text: '2. Wire Formspree contact endpoint... [DONE]', style: 'normal' },
+        { text: '3. WAIT... WHERE IS THE GAME?? I forgot to add a game!', style: 'highlight' },
+        { text: '4. Secretly hiding SYSTEM OVERRIDE cybersecurity challenge.', style: 'secondary' },
+        { text: '   Access key: \'override\'', style: 'tip' },
+        { text: '------------------------------------------------------------', style: 'muted' }
+      ]
+    };
+  }
+
+  // Launching the hidden game directly via terminal
+  if (['override', 'system-override', 'system override', 'game-start'].includes(lower)) {
+    unlockGamingAchievement();
+    if (openApp) openApp('system-override');
+    return {
+      type: 'success',
+      content: [
+        { text: '>>> [SYSTEM OVERRIDE DETECTED] <<<', style: 'accent' },
+        { text: 'Bypassing security barriers and mounting hidden challenge module...', style: 'highlight' },
+        { text: '★ ACHIEVEMENT UNLOCKED: "WAIT... WHERE\'S THE GAME?"', style: 'secondary' },
+        { text: 'Launching AURA: SYSTEM OVERRIDE — The Hidden Gem.', style: 'tip' }
+      ]
+    };
+  }
+
   if (lower.startsWith('open ')) {
     const appTarget = lower.replace('open ', '').trim();
+    if (appTarget === 'override' || appTarget === 'system-override') {
+      unlockGamingAchievement();
+      if (openApp) openApp('system-override');
+      return {
+        type: 'success',
+        content: [
+          { text: '>>> Launching hidden module: AURA: SYSTEM OVERRIDE <<<', style: 'accent' },
+          { text: '★ ACHIEVEMENT UNLOCKED: "WAIT... WHERE\'S THE GAME?"', style: 'secondary' }
+        ]
+      };
+    }
     if (['about', 'projects', 'skills', 'achievements', 'resume', 'contact', 'terminal', 'explorer', 'settings'].includes(appTarget)) {
       if (openApp) openApp(appTarget);
       return {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { RotateCw } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 
-export default function SystemHeader({ onRestart, onSkip, theme, onToggleTheme }) {
+export default function SystemHeader({ onRestart, onSkip }) {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 p-6 md:p-8 flex justify-between items-center pointer-events-auto">
       {/* Boot Telemetry Tag */}
@@ -23,9 +22,6 @@ export default function SystemHeader({ onRestart, onSkip, theme, onToggleTheme }
 
       {/* Quick Navigation Glass Buttons */}
       <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* Compact Theme Switcher */}
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-
         {/* Reboot Diagnostic Button */}
         <button
           type="button"

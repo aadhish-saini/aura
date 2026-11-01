@@ -14,9 +14,14 @@ import ContactApp from '../applications/ContactApp';
 import TerminalApp from '../applications/TerminalApp';
 import FileExplorerApp from '../applications/FileExplorerApp';
 import SettingsApp from '../applications/SettingsApp';
+import DiscoveryHintNotification from './DiscoveryHintNotification';
+import AchievementToast from './AchievementToast';
+
+const SystemOverrideApp = React.lazy(() => import('../applications/override/SystemOverrideApp'));
 
 import { DESKTOP_ICON_LIST } from '../../config/desktopApps';
 import { useWindowManager } from '../../hooks/useWindowManager';
+import { playStartupSoundIfQueued } from '../../utils/startupSound';
 import { Maximize, X } from 'lucide-react';
 import '../../styles/desktop.css';
 
@@ -51,6 +56,11 @@ export default function Desktop({
   const [iconSize, setIconSize] = useState('medium'); // 'small' | 'medium' | 'large'
   const [sortBy, setSortBy] = useState('default'); // 'default' | 'name'
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Play startup confirmation sound immediately after boot completes and desktop becomes visible
+  useEffect(() => {
+    playStartupSoundIfQueued();
+  }, []);
 
   // Global Keyboard Shortcuts
   useEffect(() => {
@@ -148,7 +158,7 @@ export default function Desktop({
       case 'achievements':
         return <AchievementsApp />;
       case 'resume':
-        return <ResumeApp />;
+        return <ResumeApp openApp={openApp} />;
       case 'contact':
         return <ContactApp />;
       case 'terminal':
@@ -163,6 +173,19 @@ export default function Desktop({
             isFullscreen={isFullscreen}
             onToggleFullscreen={onToggleFullscreen}
           />
+        );
+      case 'system-override':
+        return (
+          <React.Suspense
+            fallback={
+              <div className="flex items-center justify-center h-full bg-[#050914] text-xs font-mono text-cyan-400">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping mr-2" />
+                <span>MOUNTING CLASSIFIED OVERRIDE MODULE...</span>
+              </div>
+            }
+          >
+            <SystemOverrideApp openApp={openApp} />
+          </React.Suspense>
         );
       default:
         return (
@@ -302,6 +325,10 @@ export default function Desktop({
         sortBy={sortBy}
         setSortBy={setSortBy}
       />
+
+      {/* Desktop Easter Egg Discovery Hint & Gaming Achievement Notifications */}
+      <DiscoveryHintNotification openApp={openApp} />
+      <AchievementToast />
 
       {/* Persistent Windows 11 Taskbar */}
       <Taskbar

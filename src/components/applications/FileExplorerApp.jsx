@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Folder, FileText, ChevronRight, ArrowUp } from 'lucide-react';
+import { Folder, FileText, ChevronRight, ArrowUp, Terminal, Gamepad2 } from 'lucide-react';
 import AppIcon from '../common/AppIcon';
+import { unlockGamingAchievement } from '../../utils/easterEggManager';
 
 const FS_STRUCTURE = {
   name: 'AURA_FS',
@@ -58,6 +59,15 @@ const FS_STRUCTURE = {
       children: [
         { name: 'channels.vcf', type: 'file', appTarget: 'contact', size: '890 B' }
       ]
+    },
+    {
+      name: 'System',
+      type: 'dir',
+      children: [
+        { name: 'kernel.sys', type: 'file', size: '2.8 MB' },
+        { name: 'notes.txt', type: 'file', size: '420 B' },
+        { name: 'system_override.bin', type: 'file', appTarget: 'system-override', isSecret: true, size: '8.4 MB' }
+      ]
     }
   ]
 };
@@ -86,6 +96,9 @@ export default function FileExplorerApp({ openApp }) {
     if (item.type === 'dir') {
       navigateTo(item.name);
     } else if (item.appTarget && openApp) {
+      if (item.appTarget === 'system-override') {
+        unlockGamingAchievement();
+      }
       openApp(item.appTarget);
     }
   };

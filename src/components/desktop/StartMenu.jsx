@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { DESKTOP_ICON_LIST } from '../../config/desktopApps';
+import { DESKTOP_ICON_LIST, DESKTOP_APPS } from '../../config/desktopApps';
 import { PORTFOLIO_DATA } from '../../config/portfolioData';
+import { unlockGamingAchievement } from '../../utils/easterEggManager';
 import {
   Search,
   Power,
@@ -26,7 +27,8 @@ const APP_SEARCH_KEYWORDS = {
   contact: ['contact', 'email', 'message', 'transmission', 'github', 'connect', 'reach out', 'channels'],
   terminal: ['terminal', 'cli', 'bash', 'shell', 'command', 'prompt', 'neofetch', 'sudo'],
   explorer: ['explorer', 'files', 'filesystem', 'aura_fs', 'folders', 'browse', 'directory'],
-  settings: ['settings', 'preferences', 'theme', 'dark mode', 'light mode', 'appearance', 'display']
+  settings: ['settings', 'preferences', 'theme', 'dark mode', 'light mode', 'appearance', 'display'],
+  'system-override': ['override', 'system-override', 'game', 'play', 'easter', 'secret', 'puzzle', 'cybersecurity', 'gem', 'gaming']
 };
 
 export default function StartMenu({
@@ -94,7 +96,18 @@ export default function StartMenu({
     const q = search.trim().toLowerCase();
     if (!q) return DESKTOP_ICON_LIST;
 
-    return DESKTOP_ICON_LIST.filter((app) => {
+    const baseList = [...DESKTOP_ICON_LIST];
+    // Check if query matches hidden system-override
+    const overrideKeywords = APP_SEARCH_KEYWORDS['system-override'] || [];
+    const matchesOverride =
+      DESKTOP_APPS['system-override'].title.toLowerCase().includes(q) ||
+      overrideKeywords.some((kw) => kw.includes(q) || q.includes(kw));
+
+    if (matchesOverride) {
+      baseList.push(DESKTOP_APPS['system-override']);
+    }
+
+    return baseList.filter((app) => {
       const matchTitle = app.title.toLowerCase().includes(q) || app.shortTitle.toLowerCase().includes(q);
       const keywords = APP_SEARCH_KEYWORDS[app.id] || [];
       const matchKeywords = keywords.some((kw) => kw.includes(q) || q.includes(kw));
@@ -116,6 +129,9 @@ export default function StartMenu({
             x: Math.round(rect.left + rect.width / 2),
             y: Math.round(rect.top + rect.height / 2)
           };
+        }
+        if (appId === 'system-override') {
+          unlockGamingAchievement();
         }
         openApp(appId, origin);
         onClose();
@@ -229,6 +245,9 @@ export default function StartMenu({
                       x: Math.round(rect.left + rect.width / 2),
                       y: Math.round(rect.top + rect.height / 2)
                     };
+                    if (app.id === 'system-override') {
+                      unlockGamingAchievement();
+                    }
                     openApp(app.id, origin);
                     onClose();
                   }}

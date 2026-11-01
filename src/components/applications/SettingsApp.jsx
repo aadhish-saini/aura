@@ -99,76 +99,44 @@ export default function SettingsApp({
           </div>
         </div>
 
-        {/* Theme Settings Panel */}
+        {/* Appearance & Visual Identity */}
         <div 
-          className="p-5 rounded-xl border flex flex-col gap-4"
+          className="p-5 rounded-xl border flex flex-col gap-3"
           style={{
             backgroundColor: 'var(--color-btn-default-bg)',
             borderColor: 'var(--color-border-default)'
           }}
         >
-          <div className="flex items-center gap-2">
-            <Sliders size={16} style={{ color: 'var(--color-status-dot)' }} />
-            <h4 className="text-sm font-semibold text-white">Appearance & Theme</h4>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sliders size={16} style={{ color: 'var(--color-status-dot)' }} />
+              <h4 className="text-sm font-semibold text-white">Appearance & Theme</h4>
+            </div>
+            <span className="text-[10px] font-mono text-cyan-400 font-semibold px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30">
+              LOCKED DARK
+            </span>
           </div>
           <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Choose between AURA Obsidian Dark (deep cosmic violet and cyan) and AURA Clean Light mode. Theme persists in local storage across sessions.
+            AURA is permanently configured in its signature Obsidian Dark environment (deep cosmic violet, slate navy, and electric cyan accents).
           </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            {/* Dark Theme Card */}
-            <button
-              type="button"
-              onClick={() => isDark ? null : onToggleTheme()}
-              className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                isDark ? 'ring-2 ring-sky-400 brightness-110' : 'opacity-70 hover:opacity-100'
-              }`}
-              style={{
-                backgroundColor: '#06070a',
-                borderColor: isDark ? 'var(--color-status-dot)' : 'var(--color-border-subtle)',
-                color: '#ffffff'
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center text-sky-400">
-                  <Moon size={16} />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-semibold">AURA Obsidian Dark</div>
-                  <div className="text-[10px] text-neutral-400 font-mono">Cosmic Violet & Cyan</div>
-                </div>
+          <div
+            className="p-3.5 rounded-xl border flex items-center justify-between mt-1"
+            style={{
+              backgroundColor: '#06070a',
+              borderColor: 'var(--color-border-subtle)',
+              color: '#ffffff'
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center text-cyan-400">
+                <Moon size={16} />
               </div>
-              {isDark && (
-                <span className="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.85)]" />
-              )}
-            </button>
-
-            {/* Light Theme Card */}
-            <button
-              type="button"
-              onClick={() => !isDark ? null : onToggleTheme()}
-              className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                !isDark ? 'ring-2 ring-sky-500 brightness-105' : 'opacity-70 hover:opacity-100'
-              }`}
-              style={{
-                backgroundColor: '#F8FAFC',
-                borderColor: !isDark ? 'var(--color-status-dot)' : 'var(--color-border-subtle)',
-                color: '#0f172a'
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white border border-neutral-300 flex items-center justify-center text-sky-600">
-                  <Sun size={16} />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-semibold">VS Code Light</div>
-                  <div className="text-[10px] text-neutral-500 font-mono">Alabaster / Cobalt</div>
-                </div>
+              <div>
+                <div className="text-xs font-semibold">AURA Obsidian Dark</div>
+                <div className="text-[10px] text-neutral-400 font-mono">Cosmic Violet & Cyan // Workstation Standard</div>
               </div>
-              {!isDark && (
-                <span className="w-2 h-2 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(53,106,195,0.8)]" />
-              )}
-            </button>
+            </div>
+            <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.85)]" />
           </div>
         </div>
 
@@ -219,7 +187,7 @@ export default function SettingsApp({
         >
           <div className="flex items-center gap-2">
             <Info size={16} style={{ color: 'var(--color-status-dot)' }} />
-            <h4 className="text-sm font-semibold text-white">About AADHISH OS — Developer Environment</h4>
+            <h4 className="text-sm font-semibold text-white">About AURA — Developer Environment</h4>
           </div>
 
           <div className="space-y-2 text-xs font-mono" style={{ color: 'var(--color-text-secondary)' }}>

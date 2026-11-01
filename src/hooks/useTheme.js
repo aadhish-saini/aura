@@ -1,53 +1,33 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 
 const STORAGE_KEY = 'aura_theme';
-const LEGACY_STORAGE_KEY = 'aadhish_os_theme';
 
+/**
+ * Permanently locks AURA in Obsidian Dark Mode.
+ * Removes theme switching functionality and maintains persistent dark theme variables.
+ */
 export function useTheme() {
-  const [theme, setTheme] = useState(() => {
-    // 1. Check localStorage
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        return savedTheme;
-      }
-      // 2. Check system preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        return 'light';
-      }
-    }
-    return 'dark';
-  });
+  const theme = 'dark';
 
   useEffect(() => {
     const root = document.documentElement;
-    root.setAttribute('data-theme', theme);
+    root.setAttribute('data-theme', 'dark');
+    root.classList.add('dark');
+    root.classList.remove('light');
     try {
-      localStorage.setItem(STORAGE_KEY, theme);
+      localStorage.setItem(STORAGE_KEY, 'dark');
     } catch {
-      // Ignore localStorage errors (e.g., in private mode)
+      // Ignore localStorage errors
     }
-  }, [theme]);
-
-  // Listen to system theme changes if user hasn't explicitly set preference
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
-    const handleChange = (e) => {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) {
-        setTheme(e.matches ? 'light' : 'dark');
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+    // Theme switching disabled — AURA is locked in dark mode
   }, []);
 
-  return { theme, setTheme, toggleTheme, isDark: theme === 'dark' };
+  const setTheme = useCallback(() => {
+    // No-op to preserve permanent dark mode
+  }, []);
+
+  return { theme: 'dark', setTheme, toggleTheme, isDark: true };
 }

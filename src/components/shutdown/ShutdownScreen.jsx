@@ -51,7 +51,7 @@ export default function ShutdownScreen({ theme, onCompleteShutdown }) {
       }, 2000)
     );
 
-    // Stage 3: Shutting down AADHISH OS (2.0s - 3.2s)
+    // Stage 3: Shutting down AURA (2.0s - 3.2s)
     timers.push(
       setTimeout(() => {
         setStageIndex(3);
