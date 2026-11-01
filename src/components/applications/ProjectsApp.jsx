@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Folder, Layers, FolderCode, Boxes } from 'lucide-react';
 import DhruvNetraDetails from './projects/dhruvnetra/DhruvNetraDetails';
 import AIVoiceGuardDetails from './projects/aivoiceguard/AIVoiceGuardDetails';
@@ -52,8 +52,41 @@ const PROJECTS = [
 ];
 
 export default function ProjectsApp() {
-  const [selectedId, setSelectedId] = useState(null);
-  const [activeProjectView, setActiveProjectView] = useState(null);
+  const [selectedId, setSelectedId] = useState(() => {
+    return window.__aura_requested_project || null;
+  });
+  const [activeProjectView, setActiveProjectView] = useState(() => {
+    const requested = window.__aura_requested_project;
+    if (requested && ['dhruvnetra', 'ai-project', 'portfolio-website'].includes(requested)) {
+      window.__aura_requested_project = null;
+      return requested;
+    }
+    return null;
+  });
+
+  // Listen for navigation events from other apps (e.g. Skills app)
+  useEffect(() => {
+    if (window.__aura_requested_project) {
+      const pid = window.__aura_requested_project;
+      if (['dhruvnetra', 'ai-project', 'portfolio-website'].includes(pid)) {
+        setActiveProjectView(pid);
+        setSelectedId(pid);
+      }
+      window.__aura_requested_project = null;
+    }
+
+    const handleOpenProjectEvent = (e) => {
+      const { projectId } = e.detail || {};
+      if (projectId && ['dhruvnetra', 'ai-project', 'portfolio-website'].includes(projectId)) {
+        setActiveProjectView(projectId);
+        setSelectedId(projectId);
+      }
+    };
+    window.addEventListener('aura:open-project', handleOpenProjectEvent);
+    return () => {
+      window.removeEventListener('aura:open-project', handleOpenProjectEvent);
+    };
+  }, []);
 
   // Clear selection when clicking canvas background
   const handleCanvasClick = () => {

@@ -144,7 +144,7 @@ export default function Desktop({
       case 'projects':
         return <ProjectsApp />;
       case 'skills':
-        return <SkillsApp />;
+        return <SkillsApp openApp={openApp} />;
       case 'achievements':
         return <AchievementsApp />;
       case 'resume':

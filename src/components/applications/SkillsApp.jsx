@@ -1,196 +1,153 @@
-import React from 'react';
-import { PORTFOLIO_DATA } from '../../config/portfolioData';
-import { Code2, Layout, Database, Sparkles, CheckCircle2 } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { SKILLS_DATA } from './skills/skillsData';
+import SkillsNav from './skills/SkillsNav';
+import SkillsOverview from './skills/SkillsOverview';
+import SkillsLanguages from './skills/SkillsLanguages';
+import SkillsDevTech from './skills/SkillsDevTech';
+import SkillsAITech from './skills/SkillsAITech';
+import SkillsDevTools from './skills/SkillsDevTools';
+import SkillsInPractice from './skills/SkillsInPractice';
+import SkillsRoadmap from './skills/SkillsRoadmap';
+import SkillsBeyond from './skills/SkillsBeyond';
+import SkillsDirection from './skills/SkillsDirection';
+import SkillDetailModal from './skills/SkillDetailModal';
 
-export default function SkillsApp() {
-  const { skills } = PORTFOLIO_DATA;
+export default function SkillsApp({ openApp }) {
+  const [activeSection, setActiveSection] = useState('overview');
+  const [selectedSkill, setSelectedSkill] = useState(null);
+  const containerRef = useRef(null);
+
+  // Navigate to target section smoothly
+  const handleSelectSection = useCallback((sectionId) => {
+    setActiveSection(sectionId);
+    if (!containerRef.current) return;
+
+    const targetEl = containerRef.current.querySelector(`#${sectionId}`);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
+  // Track active section on scroll
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const sectionIds = [
+      'overview',
+      'languages',
+      'development',
+      'ai-technologies',
+      'developer-tools',
+      'skills-in-practice',
+      'learning-roadmap',
+      'beyond-technologies',
+      'my-direction',
+    ];
+
+    const handleScroll = () => {
+      const containerTop = container.getBoundingClientRect().top;
+      let currentSection = sectionIds[0];
+
+      for (const id of sectionIds) {
+        const el = container.querySelector(`#${id}`);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // If section top has reached near top of container
+          if (rect.top - containerTop <= 160) {
+            currentSection = id;
+          }
+        }
+      }
+
+      setActiveSection(currentSection);
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Open corresponding project in ProjectsApp
+  const handleOpenProject = useCallback((projectId) => {
+    // Store requested project for initial mount or transition
+    window.__aura_requested_project = projectId;
+
+    // Dispatch custom event for ProjectsApp if already mounted
+    window.dispatchEvent(
+      new CustomEvent('aura:open-project', { detail: { projectId } })
+    );
+
+    // Open projects application window in AURA
+    if (typeof openApp === 'function') {
+      openApp('projects');
+    }
+
+    // Close any open inspector modal
+    setSelectedSkill(null);
+  }, [openApp]);
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto font-sans select-text">
-      <div className="p-5 md:p-6 flex-1 flex flex-col gap-5">
-        <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
-          <div>
-            <span 
-              className="text-[10px] font-mono tracking-widest uppercase font-semibold"
-              style={{ color: 'var(--color-status-dot)' }}
-            >
-              TECHNICAL CAPABILITIES
-            </span>
-            <h3 className="text-xl font-bold text-white mt-0.5">
-              Engineering Skill Matrix
-            </h3>
-            <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-              Core languages, frontend architecture, databases, and AI development
-            </p>
-          </div>
-          <span 
-            className="px-2 py-0.5 rounded text-[10px] font-mono border"
-            style={{
-              backgroundColor: 'var(--color-badge-bg)',
-              borderColor: 'var(--color-btn-accent-border)',
-              color: 'var(--color-status-dot)'
-            }}
-          >
-            VERIFIED STACK
-          </span>
-        </div>
+    <div className="flex flex-col h-full bg-[#080c14] text-slate-100 select-text overflow-hidden relative font-sans">
+      {/* Sticky Navigation Bar */}
+      <SkillsNav
+        activeSection={activeSection}
+        onSelectSection={handleSelectSection}
+      />
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Programming */}
-          <div 
-            className="p-4 rounded-xl border flex flex-col justify-between"
-            style={{
-              backgroundColor: 'var(--color-btn-default-bg)',
-              borderColor: 'var(--color-border-default)'
-            }}
-          >
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Code2 size={16} style={{ color: 'var(--color-status-dot)' }} />
-                <span className="font-mono text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-primary)' }}>
-                  PROGRAMMING
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                {skills.programming.map((item) => (
-                  <div 
-                    key={item.name}
-                    className="p-2.5 rounded-lg border flex items-center justify-between"
-                    style={{
-                      backgroundColor: 'var(--color-btn-accent-bg)',
-                      borderColor: 'var(--color-border-subtle)'
-                    }}
-                  >
-                    <span className="text-xs font-mono font-medium text-white">{item.name}</span>
-                    <span className="text-[10px] font-mono" style={{ color: 'var(--color-text-secondary)' }}>
-                      {item.category}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Frontend */}
-          <div 
-            className="p-4 rounded-xl border flex flex-col justify-between"
-            style={{
-              backgroundColor: 'var(--color-btn-default-bg)',
-              borderColor: 'var(--color-border-default)'
-            }}
-          >
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Layout size={16} style={{ color: 'var(--color-status-dot)' }} />
-                <span className="font-mono text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-primary)' }}>
-                  FRONTEND
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                {skills.frontend.map((item) => (
-                  <div 
-                    key={item.name}
-                    className="p-2.5 rounded-lg border flex items-center justify-between"
-                    style={{
-                      backgroundColor: 'var(--color-btn-accent-bg)',
-                      borderColor: 'var(--color-border-subtle)'
-                    }}
-                  >
-                    <span className="text-xs font-mono font-medium text-white">{item.name}</span>
-                    <span className="text-[10px] font-mono" style={{ color: 'var(--color-text-secondary)' }}>
-                      {item.category}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Database */}
-          <div 
-            className="p-4 rounded-xl border flex flex-col justify-between"
-            style={{
-              backgroundColor: 'var(--color-btn-default-bg)',
-              borderColor: 'var(--color-border-default)'
-            }}
-          >
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Database size={16} style={{ color: 'var(--color-status-dot)' }} />
-                <span className="font-mono text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-primary)' }}>
-                  DATABASE
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                {skills.database.map((item) => (
-                  <div 
-                    key={item.name}
-                    className="p-2.5 rounded-lg border flex items-center justify-between"
-                    style={{
-                      backgroundColor: 'var(--color-btn-accent-bg)',
-                      borderColor: 'var(--color-border-subtle)'
-                    }}
-                  >
-                    <span className="text-xs font-mono font-medium text-white">{item.name}</span>
-                    <span className="text-[10px] font-mono" style={{ color: 'var(--color-text-secondary)' }}>
-                      {item.category}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* AI Development */}
-          <div 
-            className="p-4 rounded-xl border flex flex-col justify-between"
-            style={{
-              backgroundColor: 'var(--color-btn-default-bg)',
-              borderColor: 'var(--color-border-default)'
-            }}
-          >
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={16} style={{ color: 'var(--color-status-dot)' }} />
-                <span className="font-mono text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-status-dot)' }}>
-                  AI DEVELOPMENT
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                {skills.aiDevelopment.map((item) => (
-                  <div 
-                    key={item.name}
-                    className="p-2.5 rounded-lg border flex items-center justify-between"
-                    style={{
-                      backgroundColor: 'var(--color-btn-accent-bg)',
-                      borderColor: 'var(--color-border-subtle)'
-                    }}
-                  >
-                    <span className="text-xs font-mono font-medium text-white">{item.name}</span>
-                    <span className="text-[10px] font-mono" style={{ color: 'var(--color-status-dot)' }}>
-                      {item.level}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Window Status Edge */}
-      <div 
-        className="h-7 px-4 border-t flex items-center justify-between text-[10px] font-mono select-none"
-        style={{
-          backgroundColor: 'var(--color-bg-card)',
-          borderColor: 'var(--color-border-subtle)',
-          color: 'var(--color-text-muted)'
-        }}
+      {/* Main Scrollable Content Container */}
+      <div
+        ref={containerRef}
+        className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth focus:outline-none"
+        tabIndex={0}
       >
-        <span>SYS.STACK // REPOSITORY CHECKED</span>
-        <span>STATUS: NOMINAL</span>
+        {/* Section 01: Overview */}
+        <SkillsOverview data={SKILLS_DATA.overview} />
+
+        {/* Section 02: Programming Languages */}
+        <SkillsLanguages
+          languages={SKILLS_DATA.languages}
+          onSelectSkill={setSelectedSkill}
+        />
+
+        {/* Section 03: Development Technologies */}
+        <SkillsDevTech
+          technologies={SKILLS_DATA.developmentTechnologies}
+          onSelectSkill={setSelectedSkill}
+        />
+
+        {/* Section 04: AI & Emerging Technologies */}
+        <SkillsAITech
+          aiTechnologies={SKILLS_DATA.aiTechnologies}
+          onSelectSkill={setSelectedSkill}
+        />
+
+        {/* Section 05: Developer Tools */}
+        <SkillsDevTools tools={SKILLS_DATA.developerTools} />
+
+        {/* Section 06: Skills in Practice */}
+        <SkillsInPractice
+          projects={SKILLS_DATA.skillsInPractice}
+          onOpenProject={handleOpenProject}
+        />
+
+        {/* Section 07: Learning Roadmap */}
+        <SkillsRoadmap roadmap={SKILLS_DATA.learningRoadmap} />
+
+        {/* Section 08: Beyond Technologies */}
+        <SkillsBeyond items={SKILLS_DATA.beyondTechnologies} />
+
+        {/* Section 09: My Direction */}
+        <SkillsDirection direction={SKILLS_DATA.myDirection} />
       </div>
+
+      {/* Interactive Detail Modal / Inspector */}
+      {selectedSkill && (
+        <SkillDetailModal
+          skill={selectedSkill}
+          onClose={() => setSelectedSkill(null)}
+          onOpenProject={handleOpenProject}
+        />
+      )}
     </div>
   );
 }
