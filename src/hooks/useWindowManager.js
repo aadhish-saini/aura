@@ -87,6 +87,8 @@ export function useWindowManager() {
         ...appConfig,
         isMinimized: false,
         isMaximized: false,
+        snapState: null,
+        preSnapRect: null,
         isClosing: false,
         launchOrigin: resolvedOrigin,
         position: { x: posX, y: posY },
@@ -187,9 +189,59 @@ export function useWindowManager() {
     setOpenWindows((prev) =>
       prev.map((win) => {
         if (win.id === appId) {
+          const isCurrentlyExpanded = win.isMaximized || Boolean(win.snapState);
+          if (isCurrentlyExpanded) {
+            return {
+              ...win,
+              isMaximized: false,
+              snapState: null,
+              position: win.preSnapRect ? win.preSnapRect.position : win.position,
+              size: win.preSnapRect ? win.preSnapRect.size : win.size,
+              zIndex: newZ
+            };
+          } else {
+            return {
+              ...win,
+              isMaximized: true,
+              snapState: 'maximize',
+              preSnapRect: { position: { ...win.position }, size: { ...win.size } },
+              zIndex: newZ
+            };
+          }
+        }
+        return win;
+      })
+    );
+    setActiveWindowId(appId);
+  }, []);
+
+  // Snap window to a designated screen region
+  const snapWindow = useCallback((appId, snapType) => {
+    zIndexCounter.current += 1;
+    const newZ = zIndexCounter.current;
+
+    setOpenWindows((prev) =>
+      prev.map((win) => {
+        if (win.id === appId) {
+          if (!snapType) {
+            return {
+              ...win,
+              snapState: null,
+              isMaximized: false,
+              position: win.preSnapRect ? win.preSnapRect.position : win.position,
+              size: win.preSnapRect ? win.preSnapRect.size : win.size,
+              zIndex: newZ
+            };
+          }
+
+          const currentPreSnap = win.preSnapRect || { position: { ...win.position }, size: { ...win.size } };
+          const isMax = snapType === 'maximize';
+
           return {
             ...win,
-            isMaximized: !win.isMaximized,
+            snapState: snapType,
+            isMaximized: isMax,
+            preSnapRect: currentPreSnap,
             zIndex: newZ
           };
         }
@@ -197,6 +249,22 @@ export function useWindowManager() {
       })
     );
     setActiveWindowId(appId);
+  }, []);
+
+  // Minimize all windows or restore all (Show Desktop)
+  const toggleShowDesktop = useCallback(() => {
+    setOpenWindows((prev) => {
+      const anyVisible = prev.some((w) => !w.isMinimized && !w.isClosing);
+      if (anyVisible) {
+        setActiveWindowId(null);
+        return prev.map((w) => ({ ...w, isMinimized: true }));
+      } else {
+        if (prev.length > 0) {
+          setActiveWindowId(prev[prev.length - 1].id);
+        }
+        return prev.map((w) => ({ ...w, isMinimized: false }));
+      }
+    });
   }, []);
 
   // Taskbar click handler: toggle minimize or focus / restore
@@ -244,6 +312,8 @@ export function useWindowManager() {
     closeActiveWindow,
     minimizeWindow,
     maximizeWindow,
+    snapWindow,
+    toggleShowDesktop,
     focusWindow,
     handleTaskbarItemClick,
     updateWindowPosition

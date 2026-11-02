@@ -6,6 +6,7 @@ import HonorsList from './HonorsList';
 import HonorsTimeline from './HonorsTimeline';
 import HonorsEmptyState from './HonorsEmptyState';
 import HonorDetailModal from './HonorDetailModal';
+import DiscoveryAchievementsView from './DiscoveryAchievementsView';
 import { Trophy, ShieldCheck, Lock } from 'lucide-react';
 import { isGamingAchievementUnlocked } from '../../../utils/easterEggManager';
 
@@ -96,79 +97,7 @@ export default function HonorsApp() {
 
           {/* Conditional View by Category */}
           {activeCategory === 'secrets' ? (
-            <div className="space-y-6">
-              <div className="p-6 rounded-2xl border backdrop-blur-xl relative overflow-hidden"
-                style={{
-                  backgroundColor: isUnlocked ? 'rgba(16, 24, 39, 0.7)' : 'rgba(15, 23, 42, 0.4)',
-                  borderColor: isUnlocked ? 'rgba(245, 158, 11, 0.4)' : 'rgba(255, 255, 255, 0.1)',
-                  boxShadow: isUnlocked ? '0 0 30px rgba(245, 158, 11, 0.15)' : 'none',
-                }}
-              >
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                      isUnlocked
-                        ? 'bg-amber-500/20 border-amber-400/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-                        : 'bg-slate-800/60 border-slate-700 text-slate-500'
-                    }`}>
-                      {isUnlocked ? <Trophy size={26} /> : <Lock size={24} />}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono tracking-widest uppercase font-semibold text-amber-400">
-                          {secretRecord.rankDisplay}
-                        </span>
-                        <span className="text-white/20">•</span>
-                        <span className="text-[10px] font-mono text-slate-400">
-                          {secretRecord.organization}
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-bold text-white tracking-tight mt-0.5">
-                        {secretRecord.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  <span className={`px-2.5 py-1 rounded text-[11px] font-mono border ${
-                    isUnlocked
-                      ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
-                      : 'bg-slate-800 border-slate-700 text-slate-400'
-                  }`}>
-                    {secretRecord.status}
-                  </span>
-                </div>
-
-                <p className="text-sm text-slate-300 leading-relaxed font-sans mb-4">
-                  {secretRecord.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 pt-4 border-t border-white/10 text-xs font-mono">
-                  {secretRecord.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-slate-300"
-                    >
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-4">
-                  <span className="text-amber-400 font-mono text-xs tracking-widest uppercase">
-                    ALL SECRET DISCOVERIES
-                  </span>
-                  <h3 className="text-lg font-bold text-white tracking-tight mt-0.5">
-                    Operating System Easter Eggs & Trophies
-                  </h3>
-                </div>
-                <HonorsList
-                  items={[secretRecord]}
-                  onSelectItem={setSelectedItem}
-                />
-              </div>
-            </div>
+            <DiscoveryAchievementsView />
           ) : activeCategory === 'awards' ? (
             <HonorsEmptyState
               category="awards"

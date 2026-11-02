@@ -5,6 +5,7 @@ import {
   computeTaskbarDelta,
   isReducedMotion
 } from '../../utils/windowAnimations';
+import { getSnapRect, detectSnapZone } from '../../utils/windowSnap';
 import './AppWindow.css';
 
 export default function AppWindow({
@@ -14,6 +15,8 @@ export default function AppWindow({
   onClose,
   onMinimize,
   onMaximize,
+  onSnap,
+  onSnapPreview,
   onPositionChange,
   children
 }) {
@@ -46,9 +49,13 @@ export default function AppWindow({
 
   // Window rect calculation
   const isSmallScreen = viewport.width < 768;
-  const isMaximized = win.isMaximized || isSmallScreen;
+  const isMaximized = (win.isMaximized || win.snapState === 'maximize' || isSmallScreen);
 
   const currentRect = useMemo(() => {
+    if (win.snapState && !isSmallScreen) {
+      const snapR = getSnapRect(win.snapState, viewport);
+      if (snapR) return snapR;
+    }
     if (isMaximized) {
       return {
         left: 8,
@@ -63,7 +70,7 @@ export default function AppWindow({
       width: win.size.width,
       height: win.size.height
     };
-  }, [isMaximized, viewport, pos.x, pos.y, win.size.width, win.size.height]);
+  }, [win.snapState, isMaximized, isSmallScreen, viewport, pos.x, pos.y, win.size.width, win.size.height]);
 
   // Launch transform parameters (origin-aware)
   const launchParams = useMemo(() => {
@@ -151,22 +158,38 @@ export default function AppWindow({
 
   // Window dragging by header
   const handleMouseDown = (e) => {
-    // Only drag with left click and when not maximized
-    if (e.button !== 0 || isMaximized) return;
+    // Only drag with left click
+    if (e.button !== 0) return;
 
     // Don't drag if clicked on a button or control
     if (e.target.closest('button') || e.target.closest('[role="button"]') || e.target.closest('.aura-control-btn')) return;
+
+    onFocus();
+
+    let initialWinX = pos.x;
+    let initialWinY = pos.y;
+
+    // If currently maximized or snapped, restore floating dimensions anchored around the mouse
+    if (win.isMaximized || win.snapState) {
+      const floatingWidth = win.preSnapRect?.size?.width || win.size?.width || 720;
+      const relativeX = Math.max(0.1, Math.min(0.9, e.clientX / window.innerWidth));
+      initialWinX = Math.max(10, Math.min(window.innerWidth - floatingWidth - 10, e.clientX - Math.round(floatingWidth * relativeX)));
+      initialWinY = Math.max(50, e.clientY - 16);
+
+      onSnap?.(win.id, null);
+      setPos({ x: initialWinX, y: initialWinY });
+    }
 
     isDragging.current = true;
     setIsDraggingState(true);
     dragStart.current = {
       mouseX: e.clientX,
       mouseY: e.clientY,
-      winX: pos.x,
-      winY: pos.y
+      winX: initialWinX,
+      winY: initialWinY
     };
 
-    onFocus();
+    let activeSnapZone = null;
 
     const handleMouseMove = (moveEvent) => {
       if (!isDragging.current) return;
@@ -178,13 +201,29 @@ export default function AppWindow({
       const newY = Math.max(50, Math.min(window.innerHeight - 100, dragStart.current.winY + dy));
 
       setPos({ x: newX, y: newY });
+
+      // Detect snap zone near edges
+      const zone = detectSnapZone(moveEvent.clientX, moveEvent.clientY, viewport);
+      activeSnapZone = zone;
+      if (zone) {
+        const previewRect = getSnapRect(zone, viewport);
+        onSnapPreview?.(previewRect);
+      } else {
+        onSnapPreview?.(null);
+      }
     };
 
     const handleMouseUp = () => {
       if (isDragging.current) {
         isDragging.current = false;
         setIsDraggingState(false);
-        onPositionChange?.(win.id, pos);
+        onSnapPreview?.(null);
+
+        if (activeSnapZone) {
+          onSnap?.(win.id, activeSnapZone);
+        } else {
+          onPositionChange?.(win.id, pos);
+        }
       }
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
@@ -251,9 +290,7 @@ export default function AppWindow({
       <div
         onMouseDown={handleMouseDown}
         onDoubleClick={handleTitleBarDoubleClick}
-        className={`aura-window-titlebar select-none transition-colors ${
-          isMaximized ? 'cursor-default' : 'cursor-move'
-        }`}
+        className="aura-window-titlebar select-none transition-colors cursor-move"
       >
         {/* App Title & Icon */}
         <div className="flex items-center gap-2 min-w-0 pr-3 pointer-events-none">

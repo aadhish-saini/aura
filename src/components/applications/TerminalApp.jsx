@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { executeTerminalCommand } from '../../config/terminalCommands';
+import { executeTerminalCommand, AVAILABLE_COMMANDS, OPENABLE_TARGETS } from '../../config/terminalCommands';
 
-export default function TerminalApp({ openApp }) {
+export default function TerminalApp({ openApp, onClose }) {
   const [history, setHistory] = useState([
     {
       type: 'system',
@@ -41,7 +41,9 @@ export default function TerminalApp({ openApp }) {
       // Execute command
       const response = executeTerminalCommand(cmd, {
         openApp,
-        clearOutput: () => setHistory([])
+        clearOutput: () => setHistory([]),
+        commandHistory,
+        onClose
       });
 
       if (response.type !== 'cleared') {
@@ -56,6 +58,24 @@ export default function TerminalApp({ openApp }) {
       }
 
       setInputVal('');
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const current = inputVal.trimStart();
+      if (!current) return;
+
+      if (current.toLowerCase().startsWith('open ')) {
+        const sub = current.slice(5).toLowerCase();
+        const matches = OPENABLE_TARGETS.filter((t) => t.startsWith(sub));
+        if (matches.length > 0) {
+          setInputVal(`open ${matches[0]}`);
+        }
+      } else {
+        const sub = current.toLowerCase();
+        const matches = AVAILABLE_COMMANDS.filter((c) => c.startsWith(sub));
+        if (matches.length > 0) {
+          setInputVal(matches[0]);
+        }
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (commandHistory.length === 0) return;

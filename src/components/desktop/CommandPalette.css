@@ -1,0 +1,14 @@
+/* AURA Command Palette Styles */
+.aura-command-palette {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.2);
+}
+
+.aura-command-palette ::-webkit-scrollbar {
+  width: 4px;
+}
+
+.aura-command-palette ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+

@@ -1,0 +1,5 @@
+/* Window Snap Preview Ghost */
+.aura-snap-preview {
+  contain: layout style;
+}
+

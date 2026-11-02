@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
+  Bell,
   Volume2,
   VolumeX,
   ChevronUp,
@@ -8,8 +9,10 @@ import {
 import StartMenu from './StartMenu';
 import AuraSessionMenu from './AuraSessionMenu';
 import TaskbarCalendar from './TaskbarCalendar';
+import NotificationCenter from './NotificationCenter';
 import AppIcon from '../common/AppIcon';
 import { DESKTOP_APPS } from '../../config/desktopApps';
+import { getUnreadCount } from '../../utils/notificationManager';
 import './Taskbar.css';
 
 // Pinned apps for taskbar center section
@@ -35,16 +38,30 @@ export default function Taskbar({
   onToggleFullscreen,
   onSleep,
   onRestart,
-  onShutdown
+  onShutdown,
+  toggleShowDesktop
 }) {
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isTrayMenuOpen, setIsTrayMenuOpen] = useState(false);
   const [isSessionMenuOpen, setIsSessionMenuOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isSoundMuted, setIsSoundMuted] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(() => getUnreadCount());
   const [timeStr, setTimeStr] = useState('');
   const [dateStr, setDateStr] = useState('');
   const trayMenuRef = useRef(null);
+
+  // Sync unread notification count
+  useEffect(() => {
+    const handleUpdate = () => setUnreadCount(getUnreadCount());
+    window.addEventListener('aura-notifications-updated', handleUpdate);
+    window.addEventListener('focus', handleUpdate);
+    return () => {
+      window.removeEventListener('aura-notifications-updated', handleUpdate);
+      window.removeEventListener('focus', handleUpdate);
+    };
+  }, []);
 
   // Global shortcut to toggle Start Menu (Ctrl+Alt+S or Meta)
   useEffect(() => {
@@ -155,11 +172,10 @@ export default function Taskbar({
               <img
                 src="/aura-start-icon.png"
                 alt="AURA Start Menu"
-                className={`h-[30px] sm:h-[32px] md:h-[34px] w-auto object-contain select-none pointer-events-none transition-all duration-200 ${
-                  isStartOpen
-                    ? 'brightness-125 drop-shadow-[0_0_12px_rgba(192,38,211,0.55)]'
-                    : 'brightness-100 hover:brightness-115'
-                }`}
+                className={`h-[30px] sm:h-[32px] md:h-[34px] w-auto object-contain select-none pointer-events-none transition-all duration-200 ${isStartOpen
+                  ? 'brightness-125 drop-shadow-[0_0_12px_rgba(192,38,211,0.55)]'
+                  : 'brightness-100 hover:brightness-115'
+                  }`}
               />
             </button>
 
@@ -168,60 +184,58 @@ export default function Taskbar({
 
             {/* Pinned & Running Applications Group */}
             <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            {allTaskbarAppIds.map((appId) => {
-              const app = DESKTOP_APPS[appId];
-              if (!app) return null;
+              {allTaskbarAppIds.map((appId) => {
+                const app = DESKTOP_APPS[appId];
+                if (!app) return null;
 
-              const openWin = openWindows.find((w) => w.id === appId);
-              const isOpen = !!openWin;
-              const isActive = isOpen && activeWindowId === appId && !openWin.isMinimized;
-              const isMinimized = isOpen && openWin.isMinimized;
+                const openWin = openWindows.find((w) => w.id === appId);
+                const isOpen = !!openWin;
+                const isActive = isOpen && activeWindowId === appId && !openWin.isMinimized;
+                const isMinimized = isOpen && openWin.isMinimized;
 
-              return (
-                <button
-                  key={appId}
-                  id={`taskbar-icon-${appId}`}
-                  data-taskbar-icon={appId}
-                  type="button"
-                  onClick={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const origin = {
-                      x: Math.round(rect.left + rect.width / 2),
-                      y: Math.round(rect.top + rect.height / 2)
-                    };
-                    onTaskbarItemClick(appId, origin);
-                  }}
-                  className={`taskbar-icon-btn relative p-1.5 sm:p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer group ${
-                    isActive
+                return (
+                  <button
+                    key={appId}
+                    id={`taskbar-icon-${appId}`}
+                    data-taskbar-icon={appId}
+                    type="button"
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const origin = {
+                        x: Math.round(rect.left + rect.width / 2),
+                        y: Math.round(rect.top + rect.height / 2)
+                      };
+                      onTaskbarItemClick(appId, origin);
+                    }}
+                    className={`taskbar-icon-btn relative p-1.5 sm:p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer group ${isActive
                       ? 'bg-white/15 shadow-sm'
                       : isOpen
-                      ? 'hover:bg-white/10'
-                      : 'hover:bg-white/5 opacity-85 hover:opacity-100'
-                  }`}
-                  title={`${app.title}${isOpen ? (isMinimized ? ' (Minimized)' : ' (Active)') : ''}`}
-                  aria-label={app.title}
-                >
-                  <AppIcon app={app} appId={appId} size={22} className="transition-transform group-hover:scale-110" />
+                        ? 'hover:bg-white/10'
+                        : 'hover:bg-white/5 opacity-85 hover:opacity-100'
+                      }`}
+                    title={`${app.title}${isOpen ? (isMinimized ? ' (Minimized)' : ' (Active)') : ''}`}
+                    aria-label={app.title}
+                  >
+                    <AppIcon app={app} appId={appId} size={22} className="transition-transform group-hover:scale-110" />
 
-                  {/* Windows 11 Active / Open Indicator beneath icon */}
-                  {isOpen && (
-                    <span
-                      className={`taskbar-indicator absolute bottom-0.5 transition-all duration-200 rounded-full ${
-                        isActive
+                    {/* Windows 11 Active / Open Indicator beneath icon */}
+                    {isOpen && (
+                      <span
+                        className={`taskbar-indicator absolute bottom-0.5 transition-all duration-200 rounded-full ${isActive
                           ? 'w-4 h-1'
                           : isMinimized
-                          ? 'w-1.5 h-1 opacity-50'
-                          : 'w-2 h-1 opacity-80'
-                      }`}
-                      style={{
-                        backgroundColor: 'var(--color-status-dot)',
-                        boxShadow: isActive ? 'var(--color-status-glow)' : 'none'
-                      }}
-                    />
-                  )}
-                </button>
-              );
-            })}
+                            ? 'w-1.5 h-1 opacity-50'
+                            : 'w-2 h-1 opacity-80'
+                          }`}
+                        style={{
+                          backgroundColor: 'var(--color-status-dot)',
+                          boxShadow: isActive ? 'var(--color-status-glow)' : 'none'
+                        }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -315,6 +329,34 @@ export default function Taskbar({
             )}
           </div>
 
+          {/* Notification Center Trigger */}
+          <button
+            id="notification-tray-button"
+            type="button"
+            onClick={() => {
+              setIsNotificationOpen((prev) => !prev);
+              setIsCalendarOpen(false);
+              setIsTrayMenuOpen(false);
+              setIsSessionMenuOpen(false);
+              setIsStartOpen(false);
+            }}
+            className={`relative p-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-center ${
+              isNotificationOpen
+                ? 'bg-white/15 text-white'
+                : 'hover:bg-white/10 text-neutral-300 hover:text-white'
+            }`}
+            title={`Notification Center ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
+            aria-label="Notification Center"
+            aria-expanded={isNotificationOpen}
+          >
+            <Bell size={14} className={unreadCount > 0 ? 'text-cyan-400' : 'text-neutral-300'} />
+            {unreadCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] px-0.5 rounded-full bg-cyan-400 text-[9px] font-bold text-black flex items-center justify-center leading-none shadow-[0_0_8px_rgba(34,211,238,0.8)]">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+
           {/* AURA SESSION Unobtrusive Status & System Controls */}
           <button
             id="aura-session-button"
@@ -323,21 +365,19 @@ export default function Taskbar({
               setIsSessionMenuOpen(!isSessionMenuOpen);
               if (!isSessionMenuOpen) setIsCalendarOpen(false);
             }}
-            className={`aura-session-trigger flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono transition-all cursor-pointer ${
-              isSessionMenuOpen
-                ? 'bg-sky-500/15 border-sky-500/40 text-white'
-                : 'hover:bg-white/10 text-neutral-300 hover:text-white border-transparent'
-            }`}
+            className={`aura-session-trigger flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono transition-all cursor-pointer ${isSessionMenuOpen
+              ? 'bg-sky-500/15 border-sky-500/40 text-white'
+              : 'hover:bg-white/10 text-neutral-300 hover:text-white border-transparent'
+              }`}
             title="AURA Session Controls"
             aria-label="AURA Session Controls"
             aria-expanded={isSessionMenuOpen}
           >
             <span
-              className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                isFullscreen
-                  ? 'bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.9)]'
-                  : 'bg-violet-400/80 shadow-[0_0_6px_rgba(168,85,247,0.6)]'
-              }`}
+              className={`w-1.5 h-1.5 rounded-full transition-colors ${isFullscreen
+                ? 'bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.9)]'
+                : 'bg-violet-400/80 shadow-[0_0_6px_rgba(168,85,247,0.6)]'
+                }`}
             />
             <span className="font-semibold tracking-wider text-[11px] hidden sm:inline">
               AURA SESSION
@@ -355,13 +395,13 @@ export default function Taskbar({
               setIsCalendarOpen((prev) => !prev);
               setIsTrayMenuOpen(false);
               setIsSessionMenuOpen(false);
+              setIsNotificationOpen(false);
               setIsStartOpen(false);
             }}
-            className={`flex flex-col items-end px-2 py-1 rounded-lg transition-all cursor-pointer select-none leading-none font-mono border ${
-              isCalendarOpen
-                ? 'bg-white/15 border-white/20 text-white shadow-sm'
-                : 'border-transparent hover:bg-white/10 text-slate-200 hover:text-white'
-            }`}
+            className={`flex flex-col items-end px-2 py-1 rounded-lg transition-all cursor-pointer select-none leading-none font-mono border ${isCalendarOpen
+              ? 'bg-white/15 border-white/20 text-white shadow-sm'
+              : 'border-transparent hover:bg-white/10 text-slate-200 hover:text-white'
+              }`}
             title="Open Calendar"
             aria-label="Taskbar Date and Time, open Calendar"
             aria-expanded={isCalendarOpen}
@@ -376,8 +416,24 @@ export default function Taskbar({
               {dateStr || '10/30/2026'}
             </span>
           </button>
+
+          {/* Windows 11 Far-Right Show Desktop Sliver */}
+          <button
+            id="taskbar-show-desktop-btn"
+            type="button"
+            onClick={toggleShowDesktop}
+            className="w-1.5 sm:w-2 h-7 sm:h-8 my-auto ml-1 rounded-sm border-l border-white/20 hover:bg-sky-400/30 transition-colors cursor-pointer"
+            title="Show Desktop (Win+D)"
+            aria-label="Show Desktop"
+          />
         </div>
       </footer>
+
+      {/* Notification Center Popover */}
+      <NotificationCenter
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+      />
 
       {/* Windows 11-Style Calendar Popup */}
       <TaskbarCalendar

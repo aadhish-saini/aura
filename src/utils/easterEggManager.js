@@ -14,6 +14,8 @@ const KEYS = {
   OVERRIDE_SAVE: 'aura_override_save',
 };
 
+import { unlockAchievement } from './achievementManager';
+
 export const EASTER_EGG_ACHIEVEMENT = {
   id: 'secret-gaming-easter-egg',
   title: "WAIT... WHERE'S THE GAME?",
@@ -94,6 +96,8 @@ export function unlockGamingAchievement() {
     localStorage.setItem(KEYS.ACHIEVEMENT_GAMING, 'true');
     localStorage.setItem(KEYS.ACHIEVEMENT_TIMESTAMP, new Date().toISOString());
     advanceHintStage(4);
+
+    unlockAchievement('game-lover');
 
     // Dispatch event for UI notifications
     if (typeof window !== 'undefined') {

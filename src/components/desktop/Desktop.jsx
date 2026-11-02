@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Taskbar from './Taskbar';
 import DesktopIcon from './DesktopIcon';
 import AuraBackground from './AuraBackground';
 import AppWindow from './AppWindow';
 import DesktopContextMenu from './DesktopContextMenu';
+import CommandPalette from './CommandPalette';
+import AppSwitcher from './AppSwitcher';
+import SnapPreview from './SnapPreview';
 
 import AboutApp from '../applications/AboutApp';
 import ProjectsApp from '../applications/ProjectsApp';
@@ -22,6 +25,7 @@ const SystemOverrideApp = React.lazy(() => import('../applications/override/Syst
 import { DESKTOP_ICON_LIST } from '../../config/desktopApps';
 import { useWindowManager } from '../../hooks/useWindowManager';
 import { playStartupSoundIfQueued } from '../../utils/startupSound';
+import { unlockAchievement, recordAppOpened } from '../../utils/achievementManager';
 import { Maximize } from 'lucide-react';
 import '../../styles/desktop.css';
 
@@ -46,6 +50,8 @@ export default function Desktop({
     closeActiveWindow,
     minimizeWindow,
     maximizeWindow,
+    snapWindow,
+    toggleShowDesktop,
     focusWindow,
     handleTaskbarItemClick,
     updateWindowPosition
@@ -57,15 +63,51 @@ export default function Desktop({
   const [sortBy, setSortBy] = useState('default'); // 'default' | 'name'
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Play startup confirmation sound immediately after boot completes and desktop becomes visible
+  // New OS feature states
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isAppSwitcherOpen, setIsAppSwitcherOpen] = useState(false);
+  const [switcherIndex, setSwitcherIndex] = useState(0);
+  const [snapPreviewRect, setSnapPreviewRect] = useState(null);
+
+  // Track references for stable event handlers
+  const openWindowsRef = useRef(openWindows);
+  openWindowsRef.current = openWindows;
+
+  const switcherIndexRef = useRef(switcherIndex);
+  switcherIndexRef.current = switcherIndex;
+
+  const isAppSwitcherOpenRef = useRef(isAppSwitcherOpen);
+  isAppSwitcherOpenRef.current = isAppSwitcherOpen;
+
+  // Open app wrapper that records discovery achievements
+  const handleOpenApp = useCallback(
+    (appId, origin = null) => {
+      recordAppOpened(appId);
+      openApp(appId, origin);
+    },
+    [openApp]
+  );
+
+  // Play startup confirmation sound and unlock First Boot achievement
   useEffect(() => {
     playStartupSoundIfQueued();
+    unlockAchievement('first-boot');
   }, []);
+
+  // Keep switcherIndex valid if windows close
+  useEffect(() => {
+    if (openWindows.length === 0) {
+      setIsAppSwitcherOpen(false);
+      setSwitcherIndex(0);
+    } else if (switcherIndex >= openWindows.length) {
+      setSwitcherIndex(0);
+    }
+  }, [openWindows.length, switcherIndex]);
 
   // Global Keyboard Shortcuts
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
-      // Don't fire shortcuts if the user is typing in an input or textarea or terminal
+      // Don't fire normal shortcuts if the user is typing in an input or textarea or terminal
       const activeEl = document.activeElement;
       const isInput =
         activeEl &&
@@ -74,39 +116,116 @@ export default function Desktop({
           activeEl.isContentEditable ||
           activeEl.classList.contains('terminal-input'));
 
-      // 1. Ctrl + Shift + Escape -> Open Terminal
-      if (e.ctrlKey && e.shiftKey && (e.key === 'Escape' || e.code === 'Escape')) {
+      // 1. Escape -> Close active overlays in priority order
+      if (e.key === 'Escape') {
+        if (isAppSwitcherOpenRef.current) {
+          e.preventDefault();
+          setIsAppSwitcherOpen(false);
+          return;
+        }
+        if (isCommandPaletteOpen) {
+          e.preventDefault();
+          setIsCommandPaletteOpen(false);
+          return;
+        }
+        if (contextMenu.isOpen) {
+          e.preventDefault();
+          setContextMenu({ isOpen: false, x: 0, y: 0 });
+          return;
+        }
+      }
+
+      // 2. Command Palette: Ctrl + K / Cmd + K
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
         e.preventDefault();
-        openApp('terminal');
+        setIsCommandPaletteOpen((prev) => !prev);
         return;
       }
 
-      // 2. Ctrl + Alt + F -> Toggle Fullscreen
+      // 3. Alt + Tab Application Switcher
+      if (e.altKey && e.key === 'Tab') {
+        e.preventDefault();
+        const wins = openWindowsRef.current;
+        if (wins.length > 0) {
+          if (!isAppSwitcherOpenRef.current) {
+            setIsAppSwitcherOpen(true);
+            const nextIdx = wins.length > 1 ? 1 : 0;
+            setSwitcherIndex(nextIdx);
+          } else {
+            setSwitcherIndex((prev) =>
+              e.shiftKey ? (prev - 1 + wins.length) % wins.length : (prev + 1) % wins.length
+            );
+          }
+        }
+        return;
+      }
+
+      // 4. Show Desktop: Win + D / Ctrl + Alt + D
+      if (
+        (e.metaKey && (e.key === 'd' || e.key === 'D')) ||
+        (e.ctrlKey && e.altKey && (e.key === 'd' || e.key === 'D'))
+      ) {
+        e.preventDefault();
+        toggleShowDesktop();
+        return;
+      }
+
+      // 5. Open Terminal CLI: Ctrl + Shift + T or Ctrl + Shift + Escape
+      if (
+        e.ctrlKey &&
+        e.shiftKey &&
+        (e.key === 't' || e.key === 'T' || e.key === 'Escape' || e.code === 'Escape')
+      ) {
+        e.preventDefault();
+        handleOpenApp('terminal');
+        return;
+      }
+
+      // Skip remaining OS shortcuts if user is typing in an active input
+      if (isInput) return;
+
+      // 6. Ctrl + Alt + F -> Toggle Fullscreen
       if (e.ctrlKey && e.altKey && (e.key === 'f' || e.key === 'F')) {
         e.preventDefault();
         onToggleFullscreen();
         return;
       }
 
-      // 3. Alt + F4 -> Close Active Window
+      // 7. Alt + F4 -> Close Active Window
       if (e.altKey && (e.key === 'F4' || e.code === 'F4')) {
         e.preventDefault();
         closeActiveWindow();
         return;
       }
+    };
 
-      // 4. Escape -> Close Context Menu
-      if (e.key === 'Escape') {
-        if (contextMenu.isOpen) {
-          e.preventDefault();
-          setContextMenu({ isOpen: false, x: 0, y: 0 });
+    const handleGlobalKeyUp = (e) => {
+      // Release Alt to commit Alt+Tab selection
+      if (e.key === 'Alt' && isAppSwitcherOpenRef.current) {
+        const wins = openWindowsRef.current;
+        const idx = switcherIndexRef.current;
+        if (wins[idx]) {
+          focusWindow(wins[idx].id);
         }
+        setIsAppSwitcherOpen(false);
       }
     };
 
     window.addEventListener('keydown', handleGlobalKeyDown);
-    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [openApp, onToggleFullscreen, closeActiveWindow, contextMenu.isOpen]);
+    window.addEventListener('keyup', handleGlobalKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown);
+      window.removeEventListener('keyup', handleGlobalKeyUp);
+    };
+  }, [
+    isCommandPaletteOpen,
+    contextMenu.isOpen,
+    toggleShowDesktop,
+    handleOpenApp,
+    onToggleFullscreen,
+    closeActiveWindow,
+    focusWindow
+  ]);
 
   // Handle right click on desktop canvas
   const handleCanvasContextMenu = (e) => {
@@ -150,21 +269,21 @@ export default function Desktop({
   const renderWindowContent = (win) => {
     switch (win.id) {
       case 'about':
-        return <AboutApp openApp={openApp} />;
+        return <AboutApp openApp={handleOpenApp} />;
       case 'projects':
         return <ProjectsApp />;
       case 'skills':
-        return <SkillsApp openApp={openApp} />;
+        return <SkillsApp openApp={handleOpenApp} />;
       case 'achievements':
         return <AchievementsApp />;
       case 'resume':
-        return <ResumeApp openApp={openApp} />;
+        return <ResumeApp openApp={handleOpenApp} />;
       case 'contact':
         return <ContactApp />;
       case 'terminal':
-        return <TerminalApp openApp={openApp} />;
+        return <TerminalApp openApp={handleOpenApp} onClose={() => closeWindow(win.id)} />;
       case 'explorer':
-        return <FileExplorerApp openApp={openApp} />;
+        return <FileExplorerApp openApp={handleOpenApp} />;
       case 'settings':
         return (
           <SettingsApp
@@ -184,7 +303,7 @@ export default function Desktop({
               </div>
             }
           >
-            <SystemOverrideApp openApp={openApp} />
+            <SystemOverrideApp openApp={handleOpenApp} />
           </React.Suspense>
         );
       default:
@@ -289,7 +408,7 @@ export default function Desktop({
                 app={app}
                 isOpen={isOpen}
                 isActive={isActive}
-                onOpen={openApp}
+                onOpen={handleOpenApp}
                 iconSize={iconSize}
               />
             );
@@ -307,11 +426,43 @@ export default function Desktop({
           onClose={closeWindow}
           onMinimize={minimizeWindow}
           onMaximize={maximizeWindow}
+          onSnap={snapWindow}
+          onSnapPreview={setSnapPreviewRect}
           onPositionChange={updateWindowPosition}
         >
           {renderWindowContent(win)}
         </AppWindow>
       ))}
+
+      {/* Window Ghost Snap Preview */}
+      <SnapPreview rect={snapPreviewRect} />
+
+      {/* Global Command Palette (Ctrl+K) */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        openApp={handleOpenApp}
+        toggleShowDesktop={toggleShowDesktop}
+        onToggleFullscreen={onToggleFullscreen}
+        onRestart={onRestart}
+        onSleep={onSleep}
+        onShutdown={onShutdown}
+      />
+
+      {/* Alt + Tab Application Switcher */}
+      <AppSwitcher
+        isOpen={isAppSwitcherOpen}
+        openWindows={openWindows}
+        selectedIndex={switcherIndex}
+        onSelectIndex={(idx) => {
+          setSwitcherIndex(idx);
+          if (openWindows[idx]) {
+            focusWindow(openWindows[idx].id);
+          }
+          setIsAppSwitcherOpen(false);
+        }}
+        onClose={() => setIsAppSwitcherOpen(false)}
+      />
 
       {/* Desktop Context Menu (Right Click) */}
       <DesktopContextMenu
@@ -319,7 +470,9 @@ export default function Desktop({
         position={{ x: contextMenu.x, y: contextMenu.y }}
         onClose={() => setContextMenu({ isOpen: false, x: 0, y: 0 })}
         onRefresh={handleRefresh}
-        openApp={openApp}
+        openApp={handleOpenApp}
+        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+        toggleShowDesktop={toggleShowDesktop}
         iconSize={iconSize}
         setIconSize={setIconSize}
         sortBy={sortBy}
@@ -327,7 +480,7 @@ export default function Desktop({
       />
 
       {/* Desktop Easter Egg Discovery Hint & Gaming Achievement Notifications */}
-      <DiscoveryHintNotification openApp={openApp} />
+      <DiscoveryHintNotification openApp={handleOpenApp} />
       <AchievementToast />
 
       {/* Persistent Windows 11 Taskbar */}
@@ -335,7 +488,8 @@ export default function Desktop({
         openWindows={openWindows}
         activeWindowId={activeWindowId}
         onTaskbarItemClick={handleTaskbarItemClick}
-        openApp={openApp}
+        openApp={handleOpenApp}
+        toggleShowDesktop={toggleShowDesktop}
         theme={theme}
         onToggleTheme={onToggleTheme}
         isFullscreen={isFullscreen}

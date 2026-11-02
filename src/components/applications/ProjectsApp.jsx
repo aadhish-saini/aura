@@ -4,6 +4,7 @@ import DhruvNetraDetails from './projects/dhruvnetra/DhruvNetraDetails';
 import AIVoiceGuardDetails from './projects/aivoiceguard/AIVoiceGuardDetails';
 import PortfolioDetails from './projects/portfolio/PortfolioDetails';
 import ErrorBoundary from '../common/ErrorBoundary';
+import { unlockAchievement } from '../../utils/achievementManager';
 
 /**
  * Projects Explorer Application
@@ -51,12 +52,21 @@ const PROJECTS = [
   },
 ];
 
+function normalizeProjectId(id) {
+  if (!id) return null;
+  const lower = String(id).toLowerCase().trim();
+  if (['dhruvnetra', 'antarctic', 'antarctica'].includes(lower)) return 'dhruvnetra';
+  if (['ai-project', 'ai-voice-guard', 'aivoiceguard', 'voiceguard'].includes(lower)) return 'ai-project';
+  if (['portfolio-website', 'portfolio', '3d-portfolio'].includes(lower)) return 'portfolio-website';
+  return lower;
+}
+
 export default function ProjectsApp() {
   const [selectedId, setSelectedId] = useState(() => {
-    return window.__aura_requested_project || null;
+    return normalizeProjectId(window.__aura_requested_project) || null;
   });
   const [activeProjectView, setActiveProjectView] = useState(() => {
-    const requested = window.__aura_requested_project;
+    const requested = normalizeProjectId(window.__aura_requested_project);
     if (requested && ['dhruvnetra', 'ai-project', 'portfolio-website'].includes(requested)) {
       window.__aura_requested_project = null;
       return requested;
@@ -64,10 +74,16 @@ export default function ProjectsApp() {
     return null;
   });
 
+  useEffect(() => {
+    if (activeProjectView) {
+      unlockAchievement('project-explorer');
+    }
+  }, [activeProjectView]);
+
   // Listen for navigation events from other apps (e.g. Skills app)
   useEffect(() => {
     if (window.__aura_requested_project) {
-      const pid = window.__aura_requested_project;
+      const pid = normalizeProjectId(window.__aura_requested_project);
       if (['dhruvnetra', 'ai-project', 'portfolio-website'].includes(pid)) {
         setActiveProjectView(pid);
         setSelectedId(pid);
@@ -77,9 +93,10 @@ export default function ProjectsApp() {
 
     const handleOpenProjectEvent = (e) => {
       const { projectId } = e.detail || {};
-      if (projectId && ['dhruvnetra', 'ai-project', 'portfolio-website'].includes(projectId)) {
-        setActiveProjectView(projectId);
-        setSelectedId(projectId);
+      const pid = normalizeProjectId(projectId);
+      if (pid && ['dhruvnetra', 'ai-project', 'portfolio-website'].includes(pid)) {
+        setActiveProjectView(pid);
+        setSelectedId(pid);
       }
     };
     window.addEventListener('aura:open-project', handleOpenProjectEvent);
