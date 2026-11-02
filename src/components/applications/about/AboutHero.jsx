@@ -3,7 +3,7 @@ import { ChevronDown, Sparkles, Terminal } from 'lucide-react';
 
 export default function AboutHero({ onScrollToStory }) {
   return (
-    <header className="relative min-h-[460px] md:min-h-[520px] flex flex-col justify-between py-10 md:py-14 px-6 md:px-12 border-b border-[var(--color-border-subtle)] overflow-hidden">
+    <header className="relative min-h-[460px] md:min-h-[520px] flex flex-col justify-between py-8 sm:py-10 md:py-14 px-4 sm:px-6 md:px-12 border-b border-[var(--color-border-subtle)] overflow-hidden">
       {/* Background Graphic Watermark */}
       <div 
         className="absolute top-1/2 right-4 md:right-16 -translate-y-1/2 select-none pointer-events-none opacity-[0.035] dark:opacity-[0.05] flex items-center justify-center"
@@ -55,7 +55,7 @@ export default function AboutHero({ onScrollToStory }) {
             </div>
 
             {/* Name Title */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-[var(--color-text-primary)] leading-[1.08] mb-4">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-[var(--color-text-primary)] leading-[1.08] mb-4">
               AADHISH SAINI
             </h1>
 

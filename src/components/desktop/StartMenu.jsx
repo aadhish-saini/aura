@@ -66,6 +66,7 @@ export default function StartMenu({
         menuRef.current &&
         !menuRef.current.contains(e.target) &&
         !e.target.closest('#start-menu-button') &&
+        !e.target.closest('#mobile-start-menu-button') &&
         !e.target.closest('.power-menu-popover')
       ) {
         onClose();
@@ -74,10 +75,12 @@ export default function StartMenu({
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('mousedown', handleOutsideClick);
+    window.addEventListener('touchstart', handleOutsideClick, { passive: true });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleOutsideClick);
+      window.removeEventListener('touchstart', handleOutsideClick);
     };
   }, [isOpen, isPowerOpen, onClose]);
 
@@ -438,11 +441,10 @@ export default function StartMenu({
             id="power-menu-button"
             type="button"
             onClick={() => setIsPowerOpen(!isPowerOpen)}
-            className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all cursor-pointer ${
-              isPowerOpen
-                ? 'bg-red-500/20 text-red-400 border-red-500/40 shadow-sm'
-                : 'hover:bg-white/10 text-neutral-300 hover:text-white border-transparent'
-            }`}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all cursor-pointer ${isPowerOpen
+              ? 'bg-red-500/20 text-red-400 border-red-500/40 shadow-sm'
+              : 'hover:bg-white/10 text-neutral-300 hover:text-white border-transparent'
+              }`}
             title="Power Options (Sleep, Restart, Shut Down)"
             aria-label="Power Options"
             aria-expanded={isPowerOpen}

@@ -38,7 +38,8 @@ export default function TaskbarCalendar({ isOpen, onClose }) {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target) &&
-        !e.target.closest('#taskbar-clock-btn')
+        !e.target.closest('#taskbar-clock-btn') &&
+        !e.target.closest('#mobile-clock-btn')
       ) {
         onClose();
       }
@@ -46,10 +47,12 @@ export default function TaskbarCalendar({ isOpen, onClose }) {
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('touchstart', handleMouseDown, { passive: true });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('touchstart', handleMouseDown);
     };
   }, [isOpen, onClose]);
 
@@ -135,7 +138,7 @@ export default function TaskbarCalendar({ isOpen, onClose }) {
       ref={containerRef}
       role="dialog"
       aria-label="Windows Taskbar Calendar"
-      className="fixed bottom-14 right-3 sm:right-4 z-50 w-76 sm:w-80 rounded-2xl border border-white/10 bg-[#080d1a]/95 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] p-4 select-none font-sans text-xs animate-in fade-in slide-in-from-bottom-2 duration-150 motion-reduce:animate-none"
+      className="fixed bottom-14 right-2.5 left-2.5 sm:left-auto sm:right-4 z-50 w-auto sm:w-80 max-w-[340px] mx-auto sm:mx-0 rounded-2xl border border-white/10 bg-[#080d1a]/95 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] p-4 select-none font-sans text-xs animate-in fade-in slide-in-from-bottom-2 duration-150 motion-reduce:animate-none"
       style={{
         boxShadow: '0 20px 50px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.08)'
       }}

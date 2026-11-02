@@ -56,6 +56,14 @@ export default function AppWindow({
       const snapR = getSnapRect(win.snapState, viewport);
       if (snapR) return snapR;
     }
+    if (isSmallScreen) {
+      return {
+        left: 4,
+        top: 4,
+        width: Math.max(300, viewport.width - 8),
+        height: Math.max(200, viewport.height - 58)
+      };
+    }
     if (isMaximized) {
       return {
         left: 8,
@@ -166,6 +174,9 @@ export default function AppWindow({
 
     onFocus();
 
+    // In mobile mode (< 768px), windows behave as native full-screen apps; dragging is disabled
+    if (isSmallScreen) return;
+
     let initialWinX = pos.x;
     let initialWinY = pos.y;
 
@@ -235,6 +246,7 @@ export default function AppWindow({
 
   // Double click title bar to toggle maximize / restore
   const handleTitleBarDoubleClick = (e) => {
+    if (isSmallScreen) return;
     if (e.target.closest('button') || e.target.closest('.aura-control-btn')) return;
     onMaximize(win.id);
   };
@@ -290,7 +302,7 @@ export default function AppWindow({
       <div
         onMouseDown={handleMouseDown}
         onDoubleClick={handleTitleBarDoubleClick}
-        className="aura-window-titlebar select-none transition-colors cursor-move"
+        className={`aura-window-titlebar select-none transition-colors ${isSmallScreen ? 'cursor-default' : 'cursor-move'}`}
       >
         {/* App Title & Icon */}
         <div className="flex items-center gap-2 min-w-0 pr-3 pointer-events-none">

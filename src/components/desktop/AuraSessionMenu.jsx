@@ -45,7 +45,7 @@ export default function AuraSessionMenu({
   return (
     <div
       ref={menuRef}
-      className="aura-session-popover fixed bottom-14 right-4 z-50 w-72 rounded-2xl border p-2 shadow-2xl backdrop-blur-2xl font-mono select-none animate-in fade-in zoom-in-95 duration-150"
+      className="aura-session-popover fixed bottom-14 right-2 sm:right-4 z-50 w-72 max-w-[calc(100vw-16px)] rounded-2xl border p-2 shadow-2xl backdrop-blur-2xl font-mono select-none animate-in fade-in zoom-in-95 duration-150"
       style={{
         backgroundColor: 'var(--color-bg-panel)',
         borderColor: 'var(--color-border-strong)',

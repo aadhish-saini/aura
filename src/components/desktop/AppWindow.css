@@ -272,21 +272,25 @@
 }
 
 /* Responsive adjustments for mobile and tablets */
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .aura-window-titlebar {
-    padding-left: 10px;
-    padding-right: 8px;
-    height: 36px;
+    padding-left: 12px;
+    padding-right: 10px;
+    height: 40px;
   }
 
   .aura-window-controls {
-    gap: 5px;
+    gap: 7px;
   }
 
   .aura-control-btn {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+  }
+
+  .aura-app-window {
+    border-radius: 10px !important;
   }
 }
 

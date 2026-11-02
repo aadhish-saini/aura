@@ -47,7 +47,8 @@ export default function NotificationCenter({ isOpen, onClose }) {
       if (
         panelRef.current &&
         !panelRef.current.contains(e.target) &&
-        !e.target.closest('#notification-tray-button')
+        !e.target.closest('#notification-tray-button') &&
+        !e.target.closest('#mobile-notification-tray-button')
       ) {
         onClose();
       }
@@ -55,10 +56,12 @@ export default function NotificationCenter({ isOpen, onClose }) {
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('mousedown', handleOutsideClick);
+    window.addEventListener('touchstart', handleOutsideClick, { passive: true });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleOutsideClick);
+      window.removeEventListener('touchstart', handleOutsideClick);
     };
   }, [isOpen, onClose]);
 
@@ -80,7 +83,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
       ref={panelRef}
       role="dialog"
       aria-label="AURA Notification Center"
-      className="aura-notification-panel fixed bottom-14 right-4 w-[340px] sm:w-[380px] max-w-[calc(100vw-32px)] rounded-2xl border shadow-2xl backdrop-blur-2xl font-sans text-xs z-50 select-none animate-in fade-in slide-in-from-bottom-2 duration-150 flex flex-col max-h-[480px] overflow-hidden"
+      className="aura-notification-panel fixed bottom-14 right-2 left-2 sm:left-auto sm:right-4 w-auto sm:w-[380px] max-w-[calc(100vw-16px)] sm:max-w-[calc(100vw-32px)] rounded-2xl border shadow-2xl backdrop-blur-2xl font-sans text-xs z-50 select-none animate-in fade-in slide-in-from-bottom-2 duration-150 flex flex-col max-h-[480px] overflow-hidden"
       style={{
         backgroundColor: 'rgba(8, 12, 22, 0.95)',
         borderColor: 'var(--color-border-strong)',

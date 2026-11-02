@@ -37,10 +37,10 @@ export default function DesktopIcon({ app, isOpen, isActive, onOpen, iconSize = 
       type="button"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className={`group flex sm:flex-col items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-xl transition-all cursor-pointer text-left sm:text-center w-full sm:w-20 outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
+      className={`group flex flex-col items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-xl transition-all cursor-pointer text-center w-full sm:w-20 outline-none focus-visible:ring-2 focus-visible:ring-sky-400 select-none active:scale-95 ${
         isActive
           ? 'bg-white/10 shadow-sm'
-          : 'hover:bg-white/5 active:scale-95'
+          : 'hover:bg-white/5'
       }`}
       title={`Open ${app.shortTitle || app.title}`}
       aria-label={`Open ${app.shortTitle || app.title}`}

@@ -12,7 +12,7 @@ const CHAPTERS = [
 
 export default function AboutNav({ activeChapter, onSelectChapter }) {
   return (
-    <div className="w-full max-w-5xl xl:max-w-6xl mx-auto px-6 md:px-12 my-3">
+    <div className="w-full max-w-5xl xl:max-w-6xl mx-auto px-3 sm:px-6 md:px-12 my-3">
       <nav 
         aria-label="Story chapter navigation"
         className="about-chapter-nav px-3.5 py-1.5 flex items-center justify-between gap-1 w-full select-none"

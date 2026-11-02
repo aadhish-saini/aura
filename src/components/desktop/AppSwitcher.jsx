@@ -18,11 +18,13 @@ export default function AppSwitcher({
     <div
       role="dialog"
       aria-label="Application Switcher"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm select-none pointer-events-none animate-in fade-in duration-100"
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md select-none animate-in fade-in duration-100"
     >
       <div
         ref={containerRef}
-        className="aura-app-switcher p-3 rounded-2xl border shadow-2xl backdrop-blur-2xl flex flex-col gap-2 max-w-xl w-full animate-in zoom-in-95 duration-100 pointer-events-auto"
+        onClick={(e) => e.stopPropagation()}
+        className="aura-app-switcher p-3 rounded-2xl border shadow-2xl backdrop-blur-2xl flex flex-col gap-2 max-w-xl w-full animate-in zoom-in-95 duration-100"
         style={{
           backgroundColor: 'rgba(9, 14, 26, 0.94)',
           borderColor: 'rgba(56, 189, 248, 0.4)',
@@ -33,9 +35,22 @@ export default function AppSwitcher({
           <span className="text-cyan-400 font-semibold tracking-wider uppercase text-[11px]">
             Active Task Switcher
           </span>
-          <span className="text-neutral-400 text-[10px]">
-            Release Alt to Switch // Tab to Cycle
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-neutral-400 text-[10px] hidden sm:inline">
+              Release Alt to Switch // Tab to Cycle
+            </span>
+            <span className="text-neutral-400 text-[10px] sm:hidden">
+              Tap to Switch
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              className="sm:hidden text-neutral-400 hover:text-white text-xs px-1.5 py-0.5 rounded border border-white/10"
+              aria-label="Close task switcher"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto p-1.5 no-scrollbar">

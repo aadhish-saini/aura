@@ -241,6 +241,40 @@ export default function Desktop({
     });
   };
 
+  // Mobile Long-Press gesture on canvas to open Context Menu
+  const touchTimerRef = useRef(null);
+
+  const handleCanvasTouchStart = (e) => {
+    if (e.touches.length !== 1) return;
+    if (
+      e.target.closest('.windows-taskbar') ||
+      e.target.closest('[role="dialog"]') ||
+      e.target.closest('.aura-app-window') ||
+      e.target.closest('[data-desktop-icon]')
+    ) {
+      return;
+    }
+    const touch = e.touches[0];
+    const clientX = touch.clientX;
+    const clientY = touch.clientY;
+
+    touchTimerRef.current = setTimeout(() => {
+      setContextMenu({
+        isOpen: true,
+        x: Math.min(clientX, window.innerWidth - 220),
+        y: Math.min(clientY, window.innerHeight - 340)
+      });
+      touchTimerRef.current = null;
+    }, 500);
+  };
+
+  const handleCanvasTouchEnd = () => {
+    if (touchTimerRef.current) {
+      clearTimeout(touchTimerRef.current);
+      touchTimerRef.current = null;
+    }
+  };
+
   // Close context menu on left click anywhere on canvas
   const handleCanvasClick = (e) => {
     if (contextMenu.isOpen && !e.target.closest('.desktop-context-menu')) {
@@ -320,6 +354,9 @@ export default function Desktop({
       className="desktop-canvas flex flex-col justify-between relative overflow-hidden select-none"
       onContextMenu={handleCanvasContextMenu}
       onClick={handleCanvasClick}
+      onTouchStart={handleCanvasTouchStart}
+      onTouchMove={handleCanvasTouchEnd}
+      onTouchEnd={handleCanvasTouchEnd}
     >
       {/* 1. Original AURA Particle Background Wallpaper */}
       <AuraBackground />
@@ -392,10 +429,12 @@ export default function Desktop({
       )}
 
       {/* Main Desktop Stage: Minimal Desktop containing ONLY Desktop Application Icons */}
-      <main className="flex-1 p-4 md:p-6 relative z-10 flex flex-col items-start pointer-events-none select-none">
-        {/* Left Vertical Desktop App Launcher Grid */}
+      <main className="flex-1 p-3 sm:p-4 md:p-6 relative z-10 flex flex-col items-start pointer-events-none select-none">
+        {/* Responsive Desktop App Launcher Grid:
+            On mobile (< 768px): clean 3-column touch-friendly app grid that never overflows screen
+            On desktop (>= 768px): exact original left vertical launcher column */}
         <div
-          className={`flex flex-col flex-wrap gap-2 sm:gap-2.5 z-20 shrink-0 max-h-[calc(100vh-80px)] pointer-events-auto py-1 transition-opacity duration-300 ${
+          className={`w-full max-w-xs mx-auto grid grid-cols-3 gap-y-3.5 gap-x-2 pt-2 px-1 md:max-w-none md:mx-0 md:pt-1 md:px-0 md:flex md:flex-col md:flex-wrap md:gap-2.5 md:shrink-0 md:max-h-[calc(100vh-80px)] z-20 pointer-events-auto transition-opacity duration-300 ${
             isRefreshing ? 'opacity-30 scale-98' : 'opacity-100 scale-100'
           }`}
         >
@@ -490,6 +529,7 @@ export default function Desktop({
         onTaskbarItemClick={handleTaskbarItemClick}
         openApp={handleOpenApp}
         toggleShowDesktop={toggleShowDesktop}
+        onOpenSwitcher={() => setIsAppSwitcherOpen(true)}
         theme={theme}
         onToggleTheme={onToggleTheme}
         isFullscreen={isFullscreen}

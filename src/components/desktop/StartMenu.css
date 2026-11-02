@@ -15,7 +15,9 @@
     left: 8px;
     transform: none;
     bottom: 56px;
-    height: calc(100vh - 70px);
+    max-height: calc(100dvh - 66px);
+    height: auto;
+    min-height: 380px;
     padding: 1rem;
   }
 }

@@ -4,7 +4,8 @@ import {
   Volume2,
   VolumeX,
   ChevronUp,
-  Monitor
+  Monitor,
+  Layers
 } from 'lucide-react';
 import StartMenu from './StartMenu';
 import AuraSessionMenu from './AuraSessionMenu';
@@ -39,7 +40,8 @@ export default function Taskbar({
   onSleep,
   onRestart,
   onShutdown,
-  toggleShowDesktop
+  toggleShowDesktop,
+  onOpenSwitcher
 }) {
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isTrayMenuOpen, setIsTrayMenuOpen] = useState(false);
@@ -154,7 +156,7 @@ export default function Taskbar({
         </div>
 
         {/* Center Section: Centered Unified Cluster (Start button → clear horizontal gap → pinned applications) */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 flex items-center justify-center max-w-[calc(100vw-220px)] overflow-x-auto no-scrollbar py-0.5 z-10">
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-0 bottom-0 items-center justify-center max-w-[calc(100vw-280px)] lg:max-w-[calc(100vw-220px)] overflow-x-auto no-scrollbar py-0.5 z-10">
           <div className="flex items-center">
             {/* Standalone Rectangular AURA Start Button */}
             <button
@@ -240,8 +242,8 @@ export default function Taskbar({
           </div>
         </div>
 
-        {/* Right Section: System Tray & Clock (Permanently Pinned Right) */}
-        <div className="ml-auto flex items-center gap-1 sm:gap-2 shrink-0 z-20">
+        {/* Right Section: System Tray & Clock (Permanently Pinned Right on Desktop/Tablet) */}
+        <div className="hidden md:flex ml-auto items-center gap-1 sm:gap-2 shrink-0 z-20">
           {/* Quick Settings Flyout Trigger */}
           <div className="relative">
             <button
@@ -379,10 +381,10 @@ export default function Taskbar({
                 : 'bg-violet-400/80 shadow-[0_0_6px_rgba(168,85,247,0.6)]'
                 }`}
             />
-            <span className="font-semibold tracking-wider text-[11px] hidden sm:inline">
+            <span className="font-semibold tracking-wider text-[11px] hidden lg:inline">
               AURA SESSION
             </span>
-            <span className="font-semibold tracking-wider text-[11px] sm:hidden">
+            <span className="font-semibold tracking-wider text-[11px] hidden md:inline lg:hidden">
               SESSION
             </span>
           </button>
@@ -421,11 +423,170 @@ export default function Taskbar({
           <button
             id="taskbar-show-desktop-btn"
             type="button"
-            onClick={toggleShowDesktop}
+            onClick={() => {
+              setIsStartOpen(false);
+              setIsCalendarOpen(false);
+              setIsNotificationOpen(false);
+              setIsTrayMenuOpen(false);
+              setIsSessionMenuOpen(false);
+              toggleShowDesktop();
+            }}
             className="w-1.5 sm:w-2 h-7 sm:h-8 my-auto ml-1 rounded-sm border-l border-white/20 hover:bg-sky-400/30 transition-colors cursor-pointer"
             title="Show Desktop (Win+D)"
             aria-label="Show Desktop"
           />
+        </div>
+
+        {/* Mobile Dock (< 768px): Dedicated touch-optimized bar */}
+        <div className="flex md:hidden w-full h-full items-center justify-between gap-1 overflow-hidden">
+          {/* Left: Mobile Start + Task Switcher */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              id="mobile-start-menu-button"
+              type="button"
+              onClick={() => {
+                setIsStartOpen((prev) => !prev);
+                if (!isStartOpen) {
+                  setIsCalendarOpen(false);
+                  setIsNotificationOpen(false);
+                  setIsTrayMenuOpen(false);
+                }
+              }}
+              className="start-trigger-btn flex items-center justify-center p-1 shrink-0 cursor-pointer"
+              title="AURA Start Menu"
+              aria-label="AURA Start Menu"
+              aria-expanded={isStartOpen}
+            >
+              <img
+                src="/aura-start-icon.png"
+                alt="AURA Start"
+                className={`h-7 w-auto object-contain select-none pointer-events-none transition-all duration-200 ${
+                  isStartOpen ? 'brightness-125 drop-shadow-[0_0_10px_rgba(192,38,211,0.55)]' : 'brightness-100'
+                }`}
+              />
+            </button>
+
+            <button
+              id="mobile-task-switcher-btn"
+              type="button"
+              onClick={() => {
+                setIsStartOpen(false);
+                setIsCalendarOpen(false);
+                setIsNotificationOpen(false);
+                onOpenSwitcher?.();
+              }}
+              className={`p-1.5 rounded-lg flex items-center justify-center transition-colors cursor-pointer shrink-0 ${
+                openWindows.length > 0 ? 'text-sky-400 hover:bg-white/10' : 'text-neutral-400 hover:bg-white/10'
+              }`}
+              title="App Switcher"
+              aria-label="App Switcher"
+            >
+              <Layers size={18} />
+            </button>
+          </div>
+
+          {/* Center: Scrollable Running & Pinned Apps */}
+          <div className="flex-1 min-w-0 mx-1 flex items-center justify-start overflow-x-auto no-scrollbar py-0.5 gap-1">
+            {allTaskbarAppIds.map((appId) => {
+              const app = DESKTOP_APPS[appId];
+              if (!app) return null;
+
+              const openWin = openWindows.find((w) => w.id === appId);
+              const isOpen = !!openWin;
+              const isActive = isOpen && activeWindowId === appId && !openWin.isMinimized;
+              const isMinimized = isOpen && openWin.isMinimized;
+
+              return (
+                <button
+                  key={`mob-${appId}`}
+                  type="button"
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const origin = {
+                      x: Math.round(rect.left + rect.width / 2),
+                      y: Math.round(rect.top + rect.height / 2)
+                    };
+                    onTaskbarItemClick(appId, origin);
+                  }}
+                  className={`relative p-1.5 rounded-lg flex items-center justify-center transition-all cursor-pointer shrink-0 ${
+                    isActive
+                      ? 'bg-white/20'
+                      : isOpen
+                        ? 'bg-white/10'
+                        : 'opacity-70 hover:opacity-100'
+                  }`}
+                  title={app.title}
+                  aria-label={app.title}
+                >
+                  <AppIcon app={app} appId={appId} size={20} />
+                  {isOpen && (
+                    <span
+                      className={`taskbar-indicator absolute bottom-0.5 rounded-full ${
+                        isActive ? 'w-3 h-0.5 bg-sky-400' : 'w-1.5 h-0.5 bg-neutral-400 opacity-60'
+                      }`}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right: Notifications, Compact Clock, Show Desktop */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              id="mobile-notification-tray-button"
+              type="button"
+              onClick={() => {
+                setIsNotificationOpen((prev) => !prev);
+                setIsCalendarOpen(false);
+                setIsStartOpen(false);
+              }}
+              className="relative p-1.5 rounded-lg text-neutral-300 hover:text-white flex items-center justify-center shrink-0 cursor-pointer"
+              title="Notifications"
+              aria-label="Notifications"
+              aria-expanded={isNotificationOpen}
+            >
+              <Bell size={16} className={unreadCount > 0 ? 'text-cyan-400' : 'text-neutral-300'} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[13px] h-[13px] px-0.5 rounded-full bg-cyan-400 text-[8px] font-bold text-black flex items-center justify-center leading-none">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              id="mobile-clock-btn"
+              type="button"
+              onClick={() => {
+                setIsCalendarOpen((prev) => !prev);
+                setIsNotificationOpen(false);
+                setIsStartOpen(false);
+              }}
+              className="px-1.5 py-1 rounded-md text-[11px] font-mono text-neutral-200 shrink-0 cursor-pointer leading-tight"
+              title="Open Calendar"
+              aria-label="Open Calendar"
+            >
+              {timeStr || '12:00 PM'}
+            </button>
+
+            <button
+              id="mobile-show-desktop-btn"
+              type="button"
+              onClick={() => {
+                setIsStartOpen(false);
+                setIsCalendarOpen(false);
+                setIsNotificationOpen(false);
+                setIsTrayMenuOpen(false);
+                setIsSessionMenuOpen(false);
+                toggleShowDesktop();
+              }}
+              className="p-1 rounded-md text-neutral-400 hover:text-white shrink-0 cursor-pointer"
+              title="Show Desktop"
+              aria-label="Show Desktop"
+            >
+              <Monitor size={15} />
+            </button>
+          </div>
         </div>
       </footer>
 

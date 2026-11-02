@@ -3,7 +3,7 @@ import { RotateCw } from 'lucide-react';
 
 export default function SystemHeader({ onRestart, onSkip }) {
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 p-6 md:p-8 flex justify-between items-center pointer-events-auto">
+    <header className="fixed top-0 left-0 right-0 z-40 p-3 sm:p-6 md:p-8 flex justify-between items-center pointer-events-auto">
       {/* Boot Telemetry Tag */}
       <div 
         className="flex items-center gap-2.5 text-xs font-mono tracking-wider opacity-75 hover:opacity-100 transition-opacity"

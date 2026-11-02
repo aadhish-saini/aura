@@ -314,11 +314,11 @@ export default function CommandPalette({
 
   return (
     <div
-      className="aura-command-palette-backdrop fixed inset-0 z-50 flex items-start justify-center pt-20 sm:pt-28 p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-150 select-none"
+      className="aura-command-palette-backdrop fixed inset-0 z-50 flex items-start justify-center pt-6 sm:pt-24 px-3 sm:px-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-150 select-none"
       onClick={onClose}
     >
       <div
-        className="aura-command-palette w-full max-w-xl rounded-2xl border shadow-2xl backdrop-blur-2xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[460px]"
+        className="aura-command-palette w-full max-w-xl rounded-2xl border shadow-2xl backdrop-blur-2xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[85dvh] sm:max-h-[460px]"
         style={{
           backgroundColor: 'rgba(9, 14, 26, 0.96)',
           borderColor: 'rgba(56, 189, 248, 0.35)',

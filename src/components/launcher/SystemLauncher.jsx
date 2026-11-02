@@ -64,7 +64,7 @@ export default function SystemLauncher({
       }}
     >
       {/* Top Header Bar */}
-      <header className="fixed top-0 left-0 right-0 z-40 p-6 md:p-8 flex justify-between items-center">
+      <header className="fixed top-0 left-0 right-0 z-40 p-4 sm:p-6 md:p-8 flex justify-between items-center">
         <div
           className="flex items-center gap-2.5 text-xs font-mono tracking-wider opacity-75 hover:opacity-100 transition-opacity"
           style={{ color: 'var(--color-text-secondary)' }}
@@ -82,7 +82,7 @@ export default function SystemLauncher({
       </header>
 
       {/* Main Center Stage */}
-      <main className="flex-1 flex flex-col items-center justify-center relative z-20 px-6 py-12">
+      <main className="flex-1 flex flex-col items-center justify-center relative z-20 px-4 sm:px-6 py-12">
         <div className="flex flex-col items-center text-center max-w-lg mx-auto launcher-card animate-in fade-in duration-500">
           {/* AURA Emblem Brandmark */}
           <div className="launcher-brand-wrapper">
@@ -165,7 +165,7 @@ export default function SystemLauncher({
 
       {/* Bottom Footer Watermark Bar */}
       <footer
-        className="w-full p-6 md:p-8 flex flex-col sm:flex-row justify-between items-center text-xs font-mono tracking-wider relative z-20 gap-3 border-t select-none"
+        className="w-full p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row justify-between items-center text-xs font-mono tracking-wider relative z-20 gap-3 border-t select-none"
         style={{
           borderColor: 'var(--color-border-subtle)',
           backgroundColor: 'var(--color-footer-bg)'

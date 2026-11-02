@@ -20,11 +20,11 @@ export default function SkillDetailModal({ skill, onClose, onOpenProject }) {
   const levelText = skill.levelDisplay || levelInfo.label;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150"
       onClick={onClose}
     >
-      <div 
+      <div
         className="w-full max-w-lg rounded-2xl border p-6 shadow-2xl relative animate-in zoom-in-95 duration-150 select-text"
         style={{
           backgroundColor: 'var(--color-bg-card, #090d16)',
@@ -60,7 +60,7 @@ export default function SkillDetailModal({ skill, onClose, onOpenProject }) {
         </div>
 
         {/* Level Definition Badge & Description */}
-        <div 
+        <div
           className="p-3.5 rounded-xl border mb-5 flex flex-col gap-1.5"
           style={{
             backgroundColor: levelInfo.bgColor,
@@ -71,7 +71,7 @@ export default function SkillDetailModal({ skill, onClose, onOpenProject }) {
             <span className="text-[11px] font-mono uppercase tracking-wider text-slate-300">
               Proficiency Benchmark
             </span>
-            <span 
+            <span
               className="px-2 py-0.5 rounded text-[11px] font-mono font-semibold"
               style={{
                 color: levelInfo.color,

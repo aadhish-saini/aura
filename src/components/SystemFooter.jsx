@@ -3,7 +3,7 @@ import React from 'react';
 export default function SystemFooter() {
   return (
     <footer 
-      className="w-full p-6 md:p-8 flex flex-col sm:flex-row justify-between items-center text-xs font-mono tracking-wider relative z-20 gap-3 border-t backdrop-blur-sm transition-colors duration-300"
+      className="w-full p-3.5 sm:p-6 md:p-8 flex flex-col sm:flex-row justify-between items-center text-xs font-mono tracking-wider relative z-20 gap-3 border-t backdrop-blur-sm transition-colors duration-300"
       style={{
         backgroundColor: 'var(--color-footer-bg)',
         borderColor: 'var(--color-border-subtle)',

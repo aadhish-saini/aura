@@ -40,7 +40,7 @@ export default function AchievementToast() {
     <aside
       role="alert"
       aria-live="assertive"
-      className="fixed top-6 right-6 z-50 max-w-md w-[calc(100vw-48px)] sm:w-[420px] select-none animate-in fade-in slide-in-from-top-4 duration-300"
+      className="fixed top-4 right-3 left-3 sm:left-auto sm:right-6 sm:top-6 z-50 max-w-sm sm:max-w-md w-auto select-none animate-in fade-in slide-in-from-top-4 duration-300"
     >
       <div
         className="p-4 sm:p-5 rounded-2xl border shadow-2xl backdrop-blur-2xl font-sans relative overflow-hidden"

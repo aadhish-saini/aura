@@ -45,10 +45,12 @@ export default function DesktopContextMenu({
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('mousedown', handleOutsideClick);
+    window.addEventListener('touchstart', handleOutsideClick, { passive: true });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleOutsideClick);
+      window.removeEventListener('touchstart', handleOutsideClick);
     };
   }, [isOpen, onClose]);
 
