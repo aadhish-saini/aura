@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, ExternalLink, ArrowRight, CheckCircle2, Sparkles, Layers, Box } from 'lucide-react';
+import { X, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { SKILL_LEVELS } from './skillsData';
 
 export default function SkillDetailModal({ skill, onClose, onOpenProject }) {

@@ -22,7 +22,7 @@ const SystemOverrideApp = React.lazy(() => import('../applications/override/Syst
 import { DESKTOP_ICON_LIST } from '../../config/desktopApps';
 import { useWindowManager } from '../../hooks/useWindowManager';
 import { playStartupSoundIfQueued } from '../../utils/startupSound';
-import { Maximize, X } from 'lucide-react';
+import { Maximize } from 'lucide-react';
 import '../../styles/desktop.css';
 
 export default function Desktop({

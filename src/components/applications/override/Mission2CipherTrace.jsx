@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KeyRound, ShieldCheck, AlertTriangle, ArrowRight, CornerDownLeft, Sliders } from 'lucide-react';
+import { KeyRound, ShieldCheck, AlertTriangle, ArrowRight, Sliders } from 'lucide-react';
 
 const CIPHERTEXT = 'GCFIV_WIRXMRIP';
 const EXPECTED_KEY = 'CYBER_SENTINEL';

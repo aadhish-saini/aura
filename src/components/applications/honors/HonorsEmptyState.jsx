@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, CheckCircle, ShieldAlert, Sparkles, FolderArchive } from 'lucide-react';
+import { Award, CheckCircle, FolderArchive } from 'lucide-react';
 
 export default function HonorsEmptyState({ category, emptyInfo }) {
   const isAward = category === 'awards';

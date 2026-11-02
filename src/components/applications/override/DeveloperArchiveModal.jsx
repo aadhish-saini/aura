@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Award, ShieldCheck, Gamepad2, Sparkles, Copy, Check, X, Terminal, Cpu } from 'lucide-react';
+import { Award, Gamepad2, Copy, Check, X } from 'lucide-react';
 
 export default function DeveloperArchiveModal({ score, attempts, onClose, onReplay }) {
   const [copied, setCopied] = useState(false);

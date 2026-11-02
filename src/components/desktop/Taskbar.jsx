@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Maximize,
   Volume2,
   VolumeX,
-  Sliders,
   ChevronUp,
-  Monitor,
-  Sparkles
+  Monitor
 } from 'lucide-react';
 import StartMenu from './StartMenu';
 import AuraSessionMenu from './AuraSessionMenu';

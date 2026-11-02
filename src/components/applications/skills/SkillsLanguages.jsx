@@ -1,5 +1,5 @@
 import React from 'react';
-import { Code2, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Code2, ArrowUpRight } from 'lucide-react';
 import { SKILL_LEVELS } from './skillsData';
 
 export default function SkillsLanguages({ languages, onSelectSkill }) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, HelpCircle, RefreshCw, Trophy, ChevronRight, Lock, CheckCircle2, AlertTriangle, X } from 'lucide-react';
+import { HelpCircle, RefreshCw, Lock, CheckCircle2, X } from 'lucide-react';
 
 export const MISSIONS = [
   { id: 1, name: 'INITIAL ACCESS', tag: 'M1 // HANDSHAKE' },

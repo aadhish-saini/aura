@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Sparkles, Radio } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 export default function ContactHero({ hero }) {
   const { heading, subtitle, description } = hero;

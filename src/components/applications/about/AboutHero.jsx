@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown, Sparkles, Terminal, Cpu } from 'lucide-react';
+import { ChevronDown, Sparkles, Terminal } from 'lucide-react';
 
 export default function AboutHero({ onScrollToStory }) {
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Award, Trophy, Users, ShieldCheck, FileCheck2, ExternalLink, ZoomIn, ArrowLeft } from 'lucide-react';
+import { X, Trophy, Users, ShieldCheck, FileCheck2, ZoomIn, ArrowLeft } from 'lucide-react';
 
 export default function HonorDetailModal({ item, onClose }) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);

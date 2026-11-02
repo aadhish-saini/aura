@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Code2, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 function GithubIcon({ size = 22, className = "" }) {
   return (

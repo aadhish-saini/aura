@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gamepad2, ShieldAlert, Sparkles, Terminal, ChevronRight, Play } from 'lucide-react';
+import { Gamepad2, Play } from 'lucide-react';
 
 export default function IntroScreen({ onStart }) {
   return (

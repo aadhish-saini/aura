@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BrandLogo from '../BrandLogo';
-import { Sun, Power } from 'lucide-react';
+import { Sun } from 'lucide-react';
 import './SleepScreen.css';
 
 export default function SleepScreen({ onWake }) {

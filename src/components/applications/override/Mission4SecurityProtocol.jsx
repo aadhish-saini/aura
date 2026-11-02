@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cpu, ShieldCheck, AlertTriangle, ArrowRight, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Cpu, ShieldCheck, AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
 
 const MATRIX = [
   ['1C', '7A', 'E4', '9F'],

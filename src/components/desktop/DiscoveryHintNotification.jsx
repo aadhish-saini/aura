@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Sparkles, Terminal, MessageSquare } from 'lucide-react';
+import { X, Terminal } from 'lucide-react';
 import { isHintDismissed, dismissHint, isGamingAchievementUnlocked, advanceHintStage } from '../../utils/easterEggManager';
 
 export default function DiscoveryHintNotification({ openApp }) {

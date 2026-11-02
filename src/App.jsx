@@ -23,9 +23,7 @@ export default function App() {
     dismissExitToast
   } = useFullscreen({ isDesktopActive: systemScreen === 'desktop' });
 
-  /**
-   * Transition from System Launcher to Boot Sequence
-   */
+  // Transition from launcher to boot sequence
   const handleBoot = useCallback(({ withFullscreen, notice }) => {
     unlockAndQueueStartupSound();
     if (notice) {
@@ -36,46 +34,34 @@ export default function App() {
     setSystemScreen('boot');
   }, []);
 
-  /**
-   * Transition from Boot / Welcome Screen to Desktop
-   */
+  // Enter desktop workspace
   const handleEnterWorkspace = useCallback(() => {
     setSystemScreen('desktop');
   }, []);
 
-  /**
-   * Reboot / Restart system: return to boot screen
-   */
+  // Reboot to boot screen
   const handleRestart = useCallback(() => {
     unlockAndQueueStartupSound();
     setBootNotice(null);
     setSystemScreen('boot');
   }, []);
 
-  /**
-   * Sleep mode: suspend desktop to minimal sleep overlay
-   */
+  // Suspend desktop to sleep screen
   const handleSleep = useCallback(() => {
     setSystemScreen('sleep');
   }, []);
 
-  /**
-   * Wake system from sleep mode
-   */
+  // Wake from sleep
   const handleWake = useCallback(() => {
     setSystemScreen('desktop');
   }, []);
 
-  /**
-   * Shut Down: begin cinematic shutdown sequence
-   */
+  // Trigger shutdown sequence
   const handleShutdown = useCallback(() => {
     setSystemScreen('shutdown');
   }, []);
 
-  /**
-   * Shutdown sequence completion: exit fullscreen and return to system launcher
-   */
+  // Reset to launcher on shutdown completion
   const handleCompleteShutdown = useCallback(async () => {
     await exitFullscreen();
     setSystemScreen('launcher');

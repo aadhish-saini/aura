@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, ExternalLink, Radio, Activity, Lock, Cpu, Sparkles } from 'lucide-react';
+import { ShieldAlert, ExternalLink, Activity } from 'lucide-react';
 
 function GithubIcon({ size = 15, className = "" }) {
   return (

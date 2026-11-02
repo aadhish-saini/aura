@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Award, FileCheck2, Users, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Trophy, FileCheck2, Users, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export default function HonorsFeatured({ featured, onSelectAchievement }) {
   if (!featured) return null;

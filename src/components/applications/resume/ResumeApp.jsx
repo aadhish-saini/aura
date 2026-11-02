@@ -6,7 +6,7 @@ import ResumeSkills from './ResumeSkills';
 import ResumeProjects from './ResumeProjects';
 import ResumePdfViewer from './ResumePdfViewer';
 import ResumeCareerDirection from './ResumeCareerDirection';
-import { FileText, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export default function ResumeApp({ openApp }) {
   const containerRef = useRef(null);

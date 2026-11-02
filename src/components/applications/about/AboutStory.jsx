@@ -1,5 +1,4 @@
 import React from 'react';
-import { Compass, Sparkle } from 'lucide-react';
 
 export default function AboutStory() {
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, ShieldAlert, Key, CheckCircle2, AlertTriangle, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { Terminal, ShieldAlert, CheckCircle2, AlertTriangle, ArrowRight, CornerDownLeft } from 'lucide-react';
 
 export default function Mission1InitialAccess({ onComplete, onFailAttempt }) {
   const [portInput, setPortInput] = useState('');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Monitor, Sliders, Info, Keyboard, Maximize, Minimize } from 'lucide-react';
+import { Moon, Monitor, Sliders, Info, Keyboard, Maximize } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../../config/portfolioData';
 
 export default function SettingsApp({

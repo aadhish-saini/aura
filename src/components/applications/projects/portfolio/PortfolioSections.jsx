@@ -3,17 +3,12 @@ import {
   AlertTriangle, 
   CheckCircle2, 
   Sparkles, 
-  Layers, 
   Code2, 
   Compass, 
   Quote, 
   ExternalLink, 
   Wrench, 
-  BookOpen, 
   Rocket, 
-  MousePointer2, 
-  Cpu,
-  Monitor,
   Lightbulb
 } from 'lucide-react';
 

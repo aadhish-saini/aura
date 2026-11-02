@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Network, ShieldAlert, CheckCircle2, AlertTriangle, ArrowRight, Radio, RefreshCw } from 'lucide-react';
+import { Network, CheckCircle2, AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
 
 const NODES = [
   { id: '10.0.4.12', name: 'Node Alpha (Relay)', x: 60, y: 120, isHoneypot: false, desc: 'Entry hop relay. Clean telemetry.' },

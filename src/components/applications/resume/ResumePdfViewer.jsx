@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FileText, Download, ExternalLink, RefreshCw, AlertCircle, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { FileText, Download, ExternalLink, RefreshCw, AlertCircle } from 'lucide-react';
 
 export default function ResumePdfViewer({ pdfUrl = '/resume.pdf', downloadFileName = 'Aadhish_Saini_Resume.pdf' }) {
   const [isLoading, setIsLoading] = useState(true);

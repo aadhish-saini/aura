@@ -1,5 +1,5 @@
 import React from 'react';
-import { Code2, Layout, Sparkles, Wrench, Terminal, Cpu } from 'lucide-react';
+import { Code2, Layout, Sparkles, Wrench, Cpu } from 'lucide-react';
 
 const CAPABILITY_ICONS = {
   Code2,

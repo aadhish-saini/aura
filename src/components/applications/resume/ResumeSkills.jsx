@@ -1,5 +1,4 @@
 import React from 'react';
-import { Code2, Terminal, Layers } from 'lucide-react';
 
 const LEVEL_STYLES = {
   comfortable: {

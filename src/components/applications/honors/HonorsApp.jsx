@@ -6,7 +6,7 @@ import HonorsList from './HonorsList';
 import HonorsTimeline from './HonorsTimeline';
 import HonorsEmptyState from './HonorsEmptyState';
 import HonorDetailModal from './HonorDetailModal';
-import { Trophy, Award, ShieldCheck, Sparkles, Gamepad2, Lock, Unlock } from 'lucide-react';
+import { Trophy, ShieldCheck, Lock } from 'lucide-react';
 import { isGamingAchievementUnlocked } from '../../../utils/easterEggManager';
 
 export default function HonorsApp() {

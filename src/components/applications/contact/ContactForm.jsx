@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle2, AlertCircle, Info, Mail, ExternalLink, RefreshCw } from 'lucide-react';
+import { Send, CheckCircle2, AlertCircle, Info, Mail, RefreshCw } from 'lucide-react';
 
 export default function ContactForm({ formspreeEndpoint, ownerEmail }) {
   const [formData, setFormData] = useState({

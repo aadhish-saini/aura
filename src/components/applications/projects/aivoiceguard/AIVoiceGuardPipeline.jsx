@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mic, Clock, Waves, Cpu, Activity, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Mic, Clock, Waves, Cpu, Activity, AlertTriangle } from 'lucide-react';
 
 const STAGE_ICONS = {
   "01": Mic,

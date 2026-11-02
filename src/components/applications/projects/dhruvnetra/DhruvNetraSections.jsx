@@ -2,17 +2,11 @@ import React from 'react';
 import {
   WifiOff,
   Sparkles,
-  Layers,
   Eye,
   Users,
-  Compass,
   Milestone,
-  ArrowRight,
   Shield,
-  FileCheck2,
-  Terminal,
-  Activity,
-  Award
+  FileCheck2
 } from 'lucide-react';
 
 export default function DhruvNetraSections({ mode = 'all', sections = [], architectureSections = [], metadata = {} }) {

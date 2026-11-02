@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Shield, Zap, Sparkles, CheckCircle2, AlertTriangle, ArrowRight, Award } from 'lucide-react';
+import { Zap, CheckCircle2, AlertTriangle, Award } from 'lucide-react';
 
 export default function Mission5SystemOverride({ onComplete, onFailAttempt }) {
   // All puzzle input fields start completely empty

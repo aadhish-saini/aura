@@ -6,8 +6,7 @@ import {
   Smile, 
   Compass, 
   MousePointer2, 
-  Box,
-  Layers
+  Box
 } from 'lucide-react';
 
 const INTERACTION_ICONS = [

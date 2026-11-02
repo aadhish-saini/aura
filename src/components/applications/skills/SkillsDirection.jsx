@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Sparkles } from 'lucide-react';
+import { Compass } from 'lucide-react';
 
 export default function SkillsDirection({ direction }) {
   const { heading, mainContent, closingStatement } = direction || {

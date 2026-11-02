@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bookmark, Trophy, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function HonorsTimeline({ milestones, onSelectMilestone }) {
   if (!milestones || milestones.length === 0) return null;

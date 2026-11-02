@@ -2,17 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { DESKTOP_ICON_LIST, DESKTOP_APPS } from '../../config/desktopApps';
 import { PORTFOLIO_DATA } from '../../config/portfolioData';
 import { unlockGamingAchievement } from '../../utils/easterEggManager';
-import {
-  Search,
-  Power,
-  ChevronRight,
-  ExternalLink,
-  Sparkles,
-  FileText,
-  FolderGit2,
-  Terminal,
-  User
-} from 'lucide-react';
+import { Search, Power, Sparkles } from 'lucide-react';
 import AppIcon from '../common/AppIcon';
 import PowerMenu from '../power/PowerMenu';
 import './StartMenu.css';

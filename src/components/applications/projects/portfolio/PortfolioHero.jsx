@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Sparkles, Box, Code2, MousePointer2, Layers } from 'lucide-react';
+import { ExternalLink, Box, Code2, MousePointer2 } from 'lucide-react';
 
 function GithubIcon({ size = 15, className = "" }) {
   return (

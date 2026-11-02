@@ -5,7 +5,7 @@ import ContactDirect from './ContactDirect';
 import ContactForm from './ContactForm';
 import ContactSocials from './ContactSocials';
 import ContactOpportunities from './ContactOpportunities';
-import { ShieldCheck, Radio } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export default function ContactApp() {
   const { owner, email, phone, phoneCallUrl, emailMailtoUrl, hero, socialProfiles, collaborationOpportunities, formspreeEndpoint } = CONTACT_DATA;

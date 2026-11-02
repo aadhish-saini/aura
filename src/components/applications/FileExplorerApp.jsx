@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Folder, FileText, ChevronRight, ArrowUp, Terminal, Gamepad2 } from 'lucide-react';
+import { Folder, FileText, ChevronRight, ArrowUp } from 'lucide-react';
 import AppIcon from '../common/AppIcon';
 import { unlockGamingAchievement } from '../../utils/easterEggManager';
 

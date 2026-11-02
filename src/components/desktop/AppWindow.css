@@ -1,6 +1,4 @@
-/* =========================================================================
-   AURA OS — Application Window Manager & Animation System
-   ========================================================================= */
+/* Window manager & animation system */
 
 /* Base Window Shell */
 .aura-app-window {
@@ -38,9 +36,7 @@
   opacity: 0.94;
 }
 
-/* -------------------------------------------------------------------------
-   Window Animation Keyframes (GPU-Accelerated Transforms & Opacity)
-   ------------------------------------------------------------------------- */
+/* GPU-accelerated window animations */
 
 /* 1. Opening Animation (Smooth 280ms deceleration emergence from icon) */
 @keyframes aura-window-open {
@@ -128,9 +124,7 @@
   opacity: 1;
 }
 
-/* -------------------------------------------------------------------------
-   Titlebar & Controls Styling
-   ------------------------------------------------------------------------- */
+/* Titlebar & controls */
 
 .aura-window-titlebar {
   display: flex;
