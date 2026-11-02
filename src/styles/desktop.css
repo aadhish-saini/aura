@@ -10,6 +10,43 @@
   -webkit-user-select: none;
 }
 
+/* Windows-Style Predictable Desktop Icon Launcher (Top-to-Bottom, Left-Grouped Columns) */
+.desktop-icon-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start; /* CRITICAL: packed to the left; wrapped columns stay immediately adjacent */
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: 12px;          /* Clean, consistent column spacing */
+  row-gap: 10px;             /* Clean vertical spacing between icons */
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: calc(100vw - 32px);
+  /* Leaves safe clearance above the fixed taskbar (52px + margins) */
+  max-height: calc(100vh - 76px);
+  z-index: 20;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Mobile Breakpoint (< 768px): Dedicated touch-friendly 3-column launcher grid */
+@media (max-width: 767px) {
+  .desktop-icon-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px 8px;
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: none;
+    padding-top: 8px;
+    padding-bottom: 64px; /* Ensure clearance above bottom dock */
+  }
+}
+
 /* Smooth window transitions */
 .window-enter {
   opacity: 0;

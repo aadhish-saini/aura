@@ -77,10 +77,34 @@ export function useWindowManager() {
       zIndexCounter.current += 1;
       const newZ = zIndexCounter.current;
 
-      // Calculate responsive default position
+      // Calculate responsive default position and dimensions within visible workspace
+      const taskbarHeight = 52;
+      const margin = 16;
+      const usableWidth = window.innerWidth;
+      const usableHeight = window.innerHeight - taskbarHeight;
+
+      const winWidth = Math.min(Math.max(280, usableWidth - margin * 2), appConfig.defaultWidth || 720);
+      const winHeight = Math.min(Math.max(200, usableHeight - margin * 2), appConfig.defaultHeight || 540);
+
       const offset = (prev.length % 5) * 24;
-      const posX = Math.max(20, Math.min(window.innerWidth - 750, (appConfig.defaultPosition?.x || 300) + offset));
-      const posY = Math.max(60, Math.min(window.innerHeight - 550, (appConfig.defaultPosition?.y || 80) + offset));
+
+      // Center default window within available workspace (area above taskbar)
+      const preferredX = appConfig.defaultPosition?.x !== undefined
+        ? appConfig.defaultPosition.x + offset
+        : Math.round((usableWidth - winWidth) / 2) + offset;
+
+      const preferredY = appConfig.defaultPosition?.y !== undefined
+        ? appConfig.defaultPosition.y + offset
+        : Math.max(margin, Math.round((usableHeight - winHeight) / 2)) + offset;
+
+      // Strictly clamp position so window never spawns outside workspace or underneath taskbar
+      const minX = margin;
+      const maxX = Math.max(minX, usableWidth - winWidth - margin);
+      const minY = margin;
+      const maxY = Math.max(minY, usableHeight - winHeight - margin);
+
+      const posX = Math.round(Math.max(minX, Math.min(maxX, preferredX)));
+      const posY = Math.round(Math.max(minY, Math.min(maxY, preferredY)));
 
       const newWindow = {
         id: appId,
@@ -93,8 +117,8 @@ export function useWindowManager() {
         launchOrigin: resolvedOrigin,
         position: { x: posX, y: posY },
         size: {
-          width: Math.min(window.innerWidth - 40, appConfig.defaultWidth || 720),
-          height: Math.min(window.innerHeight - 140, appConfig.defaultHeight || 540)
+          width: winWidth,
+          height: winHeight
         },
         zIndex: newZ
       };

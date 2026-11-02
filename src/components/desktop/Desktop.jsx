@@ -430,11 +430,11 @@ export default function Desktop({
 
       {/* Main Desktop Stage: Minimal Desktop containing ONLY Desktop Application Icons */}
       <main className="flex-1 p-3 sm:p-4 md:p-6 relative z-10 flex flex-col items-start pointer-events-none select-none">
-        {/* Responsive Desktop App Launcher Grid:
-            On mobile (< 768px): clean 3-column touch-friendly app grid that never overflows screen
-            On desktop (>= 768px): exact original left vertical launcher column */}
+        {/* Windows-Style Predictable Desktop Launcher:
+            - Desktop/Tablet (>= 768px): Left-grouped vertical columns (top-to-bottom, wrapping into immediately adjacent column)
+            - Mobile (< 768px): Dedicated touch-friendly 3-column grid safe from bottom dock */}
         <div
-          className={`w-full max-w-xs mx-auto grid grid-cols-3 gap-y-3.5 gap-x-2 pt-2 px-1 md:max-w-none md:mx-0 md:pt-1 md:px-0 md:flex md:flex-col md:flex-wrap md:gap-2.5 md:shrink-0 md:max-h-[calc(100vh-80px)] z-20 pointer-events-auto transition-opacity duration-300 ${
+          className={`desktop-icon-container transition-opacity duration-300 ${
             isRefreshing ? 'opacity-30 scale-98' : 'opacity-100 scale-100'
           }`}
         >
