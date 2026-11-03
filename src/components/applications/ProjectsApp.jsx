@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Folder, Layers, FolderCode, Boxes } from 'lucide-react';
 import DhruvNetraDetails from './projects/dhruvnetra/DhruvNetraDetails';
+import AuraDetails from './projects/aura/AuraDetails';
 import AIVoiceGuardDetails from './projects/aivoiceguard/AIVoiceGuardDetails';
 import PortfolioDetails from './projects/portfolio/PortfolioDetails';
 import ErrorBoundary from '../common/ErrorBoundary';
@@ -9,8 +10,8 @@ import { unlockAchievement } from '../../utils/achievementManager';
 /**
  * Projects Explorer Application
  * Features an icon-based 6-project desktop explorer.
- * Supports dedicated in-depth details experiences for DhruvNetra, AI-Voice Guard, and Interactive Developer Portfolio.
- * The other three projects remain interactive shortcuts pending individual implementation.
+ * Supports dedicated in-depth details experiences for DhruvNetra, AURA, AI-Voice Guard, and Interactive Developer Portfolio.
+ * The other two projects remain interactive shortcuts pending individual implementation.
  */
 const PROJECTS = [
   {
@@ -24,7 +25,7 @@ const PROJECTS = [
     name: 'AURA',
     image: '/AURA-icon.png',
     placeholderIcon: Layers,
-    hasDetails: false,
+    hasDetails: true,
   },
   {
     id: 'ai-project',
@@ -56,6 +57,7 @@ function normalizeProjectId(id) {
   if (!id) return null;
   const lower = String(id).toLowerCase().trim();
   if (['dhruvnetra', 'antarctic', 'antarctica'].includes(lower)) return 'dhruvnetra';
+  if (['aura', 'aura-os', 'aura-project'].includes(lower)) return 'aura';
   if (['ai-project', 'ai-voice-guard', 'aivoiceguard', 'voiceguard'].includes(lower)) return 'ai-project';
   if (['portfolio-website', 'portfolio', '3d-portfolio'].includes(lower)) return 'portfolio-website';
   return lower;
@@ -67,7 +69,7 @@ export default function ProjectsApp() {
   });
   const [activeProjectView, setActiveProjectView] = useState(() => {
     const requested = normalizeProjectId(window.__aura_requested_project);
-    if (requested && ['dhruvnetra', 'ai-project', 'portfolio-website'].includes(requested)) {
+    if (requested && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(requested)) {
       window.__aura_requested_project = null;
       return requested;
     }
@@ -84,7 +86,7 @@ export default function ProjectsApp() {
   useEffect(() => {
     if (window.__aura_requested_project) {
       const pid = normalizeProjectId(window.__aura_requested_project);
-      if (['dhruvnetra', 'ai-project', 'portfolio-website'].includes(pid)) {
+      if (['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(pid)) {
         setActiveProjectView(pid);
         setSelectedId(pid);
       }
@@ -94,7 +96,7 @@ export default function ProjectsApp() {
     const handleOpenProjectEvent = (e) => {
       const { projectId } = e.detail || {};
       const pid = normalizeProjectId(projectId);
-      if (pid && ['dhruvnetra', 'ai-project', 'portfolio-website'].includes(pid)) {
+      if (pid && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(pid)) {
         setActiveProjectView(pid);
         setSelectedId(pid);
       }
@@ -116,6 +118,8 @@ export default function ProjectsApp() {
 
     if (project.id === 'dhruvnetra') {
       setActiveProjectView('dhruvnetra');
+    } else if (project.id === 'aura') {
+      setActiveProjectView('aura');
     } else if (project.id === 'ai-project') {
       setActiveProjectView('ai-project');
     } else if (project.id === 'portfolio-website') {
@@ -129,6 +133,8 @@ export default function ProjectsApp() {
       setSelectedId(project.id);
       if (project.id === 'dhruvnetra') {
         setActiveProjectView('dhruvnetra');
+      } else if (project.id === 'aura') {
+        setActiveProjectView('aura');
       } else if (project.id === 'ai-project') {
         setActiveProjectView('ai-project');
       } else if (project.id === 'portfolio-website') {
@@ -147,6 +153,21 @@ export default function ProjectsApp() {
           onReset={() => setActiveProjectView(null)}
         >
           <DhruvNetraDetails onBack={() => setActiveProjectView(null)} />
+        </ErrorBoundary>
+      </div>
+    );
+  }
+
+  // Render AURA details view if active
+  if (activeProjectView === 'aura') {
+    return (
+      <div className="h-full w-full">
+        <ErrorBoundary
+          fallbackTitle="AURA Details Failed to Render"
+          onBack={() => setActiveProjectView(null)}
+          onReset={() => setActiveProjectView(null)}
+        >
+          <AuraDetails onBack={() => setActiveProjectView(null)} />
         </ErrorBoundary>
       </div>
     );
