@@ -10,7 +10,7 @@ import {
 import StartMenu from './StartMenu';
 import AuraSessionMenu from './AuraSessionMenu';
 import TaskbarCalendar from './TaskbarCalendar';
-import NotificationCenter from './NotificationCenter';
+import NotificationCenter from '../notifications/NotificationCenter';
 import AppIcon from '../common/AppIcon';
 import { DESKTOP_APPS } from '../../config/desktopApps';
 import { getUnreadCount } from '../../utils/notificationManager';

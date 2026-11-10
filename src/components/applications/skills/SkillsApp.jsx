@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { SKILLS_DATA } from './skills/skillsData';
-import SkillsNav from './skills/SkillsNav';
-import SkillsOverview from './skills/SkillsOverview';
-import SkillsLanguages from './skills/SkillsLanguages';
-import SkillsDevTech from './skills/SkillsDevTech';
-import SkillsAITech from './skills/SkillsAITech';
-import SkillsDevTools from './skills/SkillsDevTools';
-import SkillsInPractice from './skills/SkillsInPractice';
-import SkillsRoadmap from './skills/SkillsRoadmap';
-import SkillsBeyond from './skills/SkillsBeyond';
-import SkillsDirection from './skills/SkillsDirection';
-import SkillDetailModal from './skills/SkillDetailModal';
+import { SKILLS_DATA } from './skillsData';
+import SkillsNav from './SkillsNav';
+import SkillsOverview from './SkillsOverview';
+import SkillsLanguages from './SkillsLanguages';
+import SkillsDevTech from './SkillsDevTech';
+import SkillsAITech from './SkillsAITech';
+import SkillsDevTools from './SkillsDevTools';
+import SkillsInPractice from './SkillsInPractice';
+import SkillsRoadmap from './SkillsRoadmap';
+import SkillsBeyond from './SkillsBeyond';
+import SkillsDirection from './SkillsDirection';
+import SkillDetailModal from './SkillDetailModal';
 
 export default function SkillsApp({ openApp }) {
   const [activeSection, setActiveSection] = useState('overview');

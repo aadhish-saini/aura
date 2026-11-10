@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import BrandLogo from '../BrandLogo';
-import OrbitalLoader from '../OrbitalLoader';
+import BrandLogo from '../common/BrandLogo';
+import OrbitalLoader from '../common/OrbitalLoader';
 import './ShutdownScreen.css';
 
 const SHUTDOWN_STAGES = [

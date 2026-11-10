@@ -94,6 +94,7 @@ export function isGamingAchievementUnlocked() {
  */
 export function unlockGamingAchievement() {
   try {
+    triggerGameDiscoveredNotification();
     if (isGamingAchievementUnlocked()) {
       return false;
     }
@@ -102,7 +103,6 @@ export function unlockGamingAchievement() {
     advanceHintStage(4);
 
     unlockAchievement('game-lover');
-    triggerGameDiscoveredNotification();
     return true;
   } catch (e) {
     return false;

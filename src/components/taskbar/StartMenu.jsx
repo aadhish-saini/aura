@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { DESKTOP_ICON_LIST, DESKTOP_APPS } from '../../config/desktopApps';
 import { PORTFOLIO_DATA } from '../../config/portfolioData';
 import { unlockGamingAchievement } from '../../utils/easterEggManager';
+import { triggerGameDiscoveredNotification } from '../../utils/notificationManager';
 import { Search, Power, Sparkles } from 'lucide-react';
 import AppIcon from '../common/AppIcon';
 import PowerMenu from '../power/PowerMenu';
@@ -125,6 +126,7 @@ export default function StartMenu({
         }
         if (appId === 'system-override') {
           unlockGamingAchievement();
+          triggerGameDiscoveredNotification();
         }
         openApp(appId, origin);
         onClose();
@@ -240,6 +242,7 @@ export default function StartMenu({
                     };
                     if (app.id === 'system-override') {
                       unlockGamingAchievement();
+                      triggerGameDiscoveredNotification();
                     }
                     openApp(app.id, origin);
                     onClose();

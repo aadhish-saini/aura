@@ -21,8 +21,10 @@ export function normalizeProjectId(id) {
   const lower = String(id).toLowerCase().trim();
   if (['dhruvnetra', 'dhruv netra', 'antarctic', 'antarctica'].includes(lower)) return 'dhruvnetra';
   if (['aura', 'aura-os', 'aura-project', 'aura os', 'system'].includes(lower)) return 'aura';
-  if (['ai-project', 'ai-voice-guard', 'aivoiceguard', 'voice guard', 'voiceguard'].includes(lower)) return 'ai-project';
-  if (['portfolio-website', 'portfolio', '3d-portfolio', '3d portfolio', 'avatar'].includes(lower)) return 'portfolio-website';
+  if (['ai-project', 'ai-voice-guard', 'aivoiceguard', 'voice guard', 'voiceguard', 'ai project'].includes(lower)) return 'ai-project';
+  if (['portfolio-website', 'portfolio', '3d-portfolio', '3d portfolio', 'avatar', 'portfolio website', 'interactive developer portfolio'].includes(lower)) return 'portfolio-website';
+  if (['web-dev-project', 'web dev project', 'web development project'].includes(lower)) return 'web-dev-project';
+  if (['other-projects', 'other projects', 'other'].includes(lower)) return 'other-projects';
   return lower;
 }
 
@@ -213,6 +215,7 @@ export function recordAppOpened(appId) {
     }
     if (appId === 'system-override') {
       unlockAchievement('game-lover');
+      triggerGameDiscoveredNotification();
     }
     if (appId === 'achievements') {
       triggerHonorsNotification();

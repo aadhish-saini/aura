@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Folder, Layers, FolderCode, Boxes } from 'lucide-react';
-import DhruvNetraDetails from './projects/dhruvnetra/DhruvNetraDetails';
-import AuraDetails from './projects/aura/AuraDetails';
-import AIVoiceGuardDetails from './projects/aivoiceguard/AIVoiceGuardDetails';
-import PortfolioDetails from './projects/portfolio/PortfolioDetails';
-import ErrorBoundary from '../common/ErrorBoundary';
-import { unlockAchievement, recordProjectOpened, normalizeProjectId } from '../../utils/achievementManager';
+import DhruvNetraDetails from './dhruvnetra/DhruvNetraDetails';
+import AuraDetails from './aura/AuraDetails';
+import AIVoiceGuardDetails from './aivoiceguard/AIVoiceGuardDetails';
+import PortfolioDetails from './portfolio/PortfolioDetails';
+import ErrorBoundary from '../../common/ErrorBoundary';
+import { unlockAchievement, recordProjectOpened, normalizeProjectId } from '../../../utils/achievementManager';
 
 /**
  * Projects Explorer Application
@@ -72,10 +72,10 @@ export default function ProjectsApp() {
     const pid = typeof project === 'string' ? project : project.id;
     const normalized = normalizeProjectId(pid);
     setSelectedId(pid);
+    recordProjectOpened(normalized || pid);
 
     if (normalized && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(normalized)) {
       setActiveProjectView(normalized);
-      recordProjectOpened(normalized);
     }
   }, []);
 

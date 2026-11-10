@@ -29,6 +29,9 @@ let welcomedBootSessionId = null;
 let welcomeTriggerTime = null;
 let welcomeTriggerSessionId = null;
 let honorsViewedSessionId = null;
+let gameDiscoveredSessionId = null;
+let gameCompletedSessionId = null;
+let allProjectsSessionId = null;
 
 try {
   if (typeof sessionStorage !== 'undefined') {
@@ -58,6 +61,9 @@ export function startNewBootSession() {
   welcomeTriggerTime = null;
   welcomeTriggerSessionId = null;
   honorsViewedSessionId = null;
+  gameDiscoveredSessionId = null;
+  gameCompletedSessionId = null;
+  allProjectsSessionId = null;
   gameDiscoveredNotifFired = false;
   gameCompletedNotifFired = false;
   allProjectsNotifFired = false;
@@ -69,6 +75,14 @@ export function startNewBootSession() {
       sessionStorage.removeItem('aura_welcome_trigger_session');
       sessionStorage.removeItem('aura_discovery_hint_shown_session');
       sessionStorage.removeItem('aura_honors_viewed_session');
+      sessionStorage.removeItem('aura_game_discovered_session');
+      sessionStorage.removeItem('aura_game_completed_session');
+      sessionStorage.removeItem('aura_all_projects_session');
+    }
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('aura_game_discovered_notif_shown');
+      localStorage.removeItem('aura_all_projects_notif_shown');
+      localStorage.removeItem('aura_game_completed_notif_shown');
     }
   } catch (e) {}
   return currentBootSessionId;
@@ -344,16 +358,31 @@ let gameDiscoveredNotifFired = false;
  */
 export function triggerGameDiscoveredNotification() {
   if (typeof window === 'undefined') return;
-  if (gameDiscoveredNotifFired) return;
+
+  const sessionId =
+    (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('aura_boot_session_id')) ||
+    currentBootSessionId;
+
+  let alreadyShown = false;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      alreadyShown = sessionStorage.getItem('aura_game_discovered_session') === sessionId;
+    }
+  } catch (e) {}
+
+  if (alreadyShown || gameDiscoveredSessionId === sessionId || gameDiscoveredNotifFired) {
+    return;
+  }
+
+  gameDiscoveredSessionId = sessionId;
+  gameDiscoveredNotifFired = true;
 
   try {
-    if (localStorage.getItem('aura_game_discovered_notif_shown') === 'true') {
-      return;
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('aura_game_discovered_session', sessionId);
     }
     localStorage.setItem('aura_game_discovered_notif_shown', 'true');
   } catch (e) {}
-
-  gameDiscoveredNotifFired = true;
 
   const title = "Well... You Found It.";
   const description =
@@ -393,16 +422,31 @@ const STORAGE_KEY_GAME_COMPLETED = 'aura_game_completed_notif_shown';
  */
 export function triggerGameCompletedNotification() {
   if (typeof window === 'undefined') return;
-  if (gameCompletedNotifFired) return;
+
+  const sessionId =
+    (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('aura_boot_session_id')) ||
+    currentBootSessionId;
+
+  let alreadyShown = false;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      alreadyShown = sessionStorage.getItem('aura_game_completed_session') === sessionId;
+    }
+  } catch (e) {}
+
+  if (alreadyShown || gameCompletedSessionId === sessionId || gameCompletedNotifFired) {
+    return;
+  }
+
+  gameCompletedSessionId = sessionId;
+  gameCompletedNotifFired = true;
 
   try {
-    if (localStorage.getItem(STORAGE_KEY_GAME_COMPLETED) === 'true') {
-      return;
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('aura_game_completed_session', sessionId);
     }
     localStorage.setItem(STORAGE_KEY_GAME_COMPLETED, 'true');
   } catch (e) {}
-
-  gameCompletedNotifFired = true;
 
   const title = "ACCESS GRANTED.";
   const description =
@@ -442,16 +486,31 @@ const STORAGE_KEY_ALL_PROJECTS = 'aura_all_projects_notif_shown';
  */
 export function triggerAllProjectsExploredNotification() {
   if (typeof window === 'undefined') return;
-  if (allProjectsNotifFired) return;
+
+  const sessionId =
+    (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('aura_boot_session_id')) ||
+    currentBootSessionId;
+
+  let alreadyShown = false;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      alreadyShown = sessionStorage.getItem('aura_all_projects_session') === sessionId;
+    }
+  } catch (e) {}
+
+  if (alreadyShown || allProjectsSessionId === sessionId || allProjectsNotifFired) {
+    return;
+  }
+
+  allProjectsSessionId = sessionId;
+  allProjectsNotifFired = true;
 
   try {
-    if (localStorage.getItem(STORAGE_KEY_ALL_PROJECTS) === 'true') {
-      return;
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('aura_all_projects_session', sessionId);
     }
     localStorage.setItem(STORAGE_KEY_ALL_PROJECTS, 'true');
   } catch (e) {}
-
-  allProjectsNotifFired = true;
 
   const title = "Not Just Projects. Pure Dedication.";
   const description =

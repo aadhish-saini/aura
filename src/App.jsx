@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import SystemLauncher from './components/launcher/SystemLauncher';
-import BootScreen from './components/BootScreen';
+import BootScreen from './components/boot/BootScreen';
 import Desktop from './components/desktop/Desktop';
 import SleepScreen from './components/power/SleepScreen';
 import ShutdownScreen from './components/shutdown/ShutdownScreen';

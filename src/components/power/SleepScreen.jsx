@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import BrandLogo from '../BrandLogo';
+import BrandLogo from '../common/BrandLogo';
 import { Sun } from 'lucide-react';
 import './SleepScreen.css';
 

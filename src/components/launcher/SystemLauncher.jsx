@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import BrandLogo from '../BrandLogo';
+import BrandLogo from '../common/BrandLogo';
 import { ArrowRight, Monitor, AlertCircle } from 'lucide-react';
 import { preloadStartupSound, unlockAndQueueStartupSound } from '../../utils/startupSound';
 import './SystemLauncher.css';

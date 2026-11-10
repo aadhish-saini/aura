@@ -48,7 +48,10 @@ export const OPENABLE_TARGETS = [
   'dhruvnetra',
   'ai-voice-guard',
   'aivoiceguard',
+  'ai-project',
   'portfolio',
+  'portfolio-website',
+  'portfolio website',
   'aura'
 ];
 
@@ -333,6 +336,9 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
     };
   }
 
+  // Clean command without sudo prefix for matching
+  const cleanCmd = lower.replace(/^sudo\s+/, '').trim();
+
   // Launching the hidden game directly via terminal
   const isDirectGameCmd = [
     'override',
@@ -344,14 +350,18 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
     'override.bin',
     './override',
     './override.bin',
+    './system-override',
     'game-start',
     'game',
     'play game',
+    'play override',
     'run override',
     'run system-override',
     'run system override',
     'run system_override',
     'run system_override.bin',
+    'run ./override',
+    'run ./system_override.bin',
     'start override',
     'start system-override',
     'start system override',
@@ -362,7 +372,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
     'launch system override',
     'launch system_override',
     'launch system_override.bin'
-  ].includes(lower);
+  ].includes(cleanCmd);
 
   if (isDirectGameCmd) {
     unlockGamingAchievement();
@@ -410,22 +420,22 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
       };
     }
 
-    if (['ai-voice-guard', 'aivoiceguard', 'voice guard', 'voiceguard'].includes(target)) {
-      window.__aura_requested_project = 'ai-voice-guard';
-      window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'ai-voice-guard' } }));
+    if (['ai-voice-guard', 'aivoiceguard', 'voice guard', 'voiceguard', 'ai-project', 'ai project'].includes(target)) {
+      window.__aura_requested_project = 'ai-project';
+      window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'ai-project' } }));
       if (openApp) openApp('projects');
-      recordProjectOpened('ai-voice-guard');
+      recordProjectOpened('ai-project');
       return {
         type: 'success',
         content: [{ text: 'Opening AI-Voice Guard deepfake defense dossier...', style: 'accent' }]
       };
     }
 
-    if (['portfolio', '3d-portfolio', '3d portfolio', 'avatar'].includes(target)) {
-      window.__aura_requested_project = '3d-portfolio';
-      window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: '3d-portfolio' } }));
+    if (['portfolio', '3d-portfolio', '3d portfolio', 'avatar', 'portfolio-website', 'portfolio website'].includes(target)) {
+      window.__aura_requested_project = 'portfolio-website';
+      window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'portfolio-website' } }));
       if (openApp) openApp('projects');
-      recordProjectOpened('3d-portfolio');
+      recordProjectOpened('portfolio-website');
       return {
         type: 'success',
         content: [{ text: 'Opening Interactive 3D Portfolio dossier...', style: 'accent' }]
@@ -433,10 +443,10 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
     }
 
     if (['aura', 'aura-os', 'aura os', 'system'].includes(target)) {
-      window.__aura_requested_project = 'aura-os';
-      window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'aura-os' } }));
+      window.__aura_requested_project = 'aura';
+      window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'aura' } }));
       if (openApp) openApp('projects');
-      recordProjectOpened('aura-os');
+      recordProjectOpened('aura');
       return {
         type: 'success',
         content: [{ text: 'Opening AURA OS architecture specification...', style: 'accent' }]
@@ -450,6 +460,10 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
       'system_override',
       'system_override.bin',
       'override.bin',
+      './override',
+      './system_override.bin',
+      './override.bin',
+      './system-override',
       'game'
     ].includes(target);
 

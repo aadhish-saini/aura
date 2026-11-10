@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import Taskbar from './Taskbar';
+import Taskbar from '../taskbar/Taskbar';
 import DesktopIcon from './DesktopIcon';
 import AuraBackground from './AuraBackground';
 import AppWindow from './AppWindow';
@@ -8,18 +8,18 @@ import CommandPalette from './CommandPalette';
 import AppSwitcher from './AppSwitcher';
 import SnapPreview from './SnapPreview';
 
-import AboutApp from '../applications/AboutApp';
-import ProjectsApp from '../applications/ProjectsApp';
-import SkillsApp from '../applications/SkillsApp';
-import AchievementsApp from '../applications/AchievementsApp';
-import ResumeApp from '../applications/ResumeApp';
-import ContactApp from '../applications/ContactApp';
+import AboutApp from '../applications/about/AboutApp';
+import ProjectsApp from '../applications/projects/ProjectsApp';
+import SkillsApp from '../applications/skills/SkillsApp';
+import HonorsApp from '../applications/honors/HonorsApp';
+import ResumeApp from '../applications/resume/ResumeApp';
+import ContactApp from '../applications/contact/ContactApp';
 import TerminalApp from '../applications/TerminalApp';
 import FileExplorerApp from '../applications/FileExplorerApp';
 import SettingsApp from '../applications/SettingsApp';
-import DiscoveryHintNotification from './DiscoveryHintNotification';
-import AchievementToast from './AchievementToast';
-import WelcomeToast from './WelcomeToast';
+import DiscoveryHintNotification from '../notifications/DiscoveryHintNotification';
+import AchievementToast from '../notifications/AchievementToast';
+import WelcomeToast from '../notifications/WelcomeToast';
 
 const SystemOverrideApp = React.lazy(() => import('../applications/override/SystemOverrideApp'));
 
@@ -28,6 +28,7 @@ import { useWindowManager } from '../../hooks/useWindowManager';
 import { playStartupSoundIfQueued } from '../../utils/startupSound';
 import { unlockAchievement, recordAppOpened } from '../../utils/achievementManager';
 import { unlockGamingAchievement } from '../../utils/easterEggManager';
+import { triggerGameDiscoveredNotification } from '../../utils/notificationManager';
 import { Maximize } from 'lucide-react';
 import '../../styles/desktop.css';
 
@@ -86,6 +87,7 @@ export default function Desktop({
     (appId, origin = null) => {
       if (appId === 'system-override') {
         unlockGamingAchievement();
+        triggerGameDiscoveredNotification();
       }
       recordAppOpened(appId);
       openApp(appId, origin);
@@ -98,6 +100,7 @@ export default function Desktop({
     (appId, origin = null) => {
       if (appId === 'system-override') {
         unlockGamingAchievement();
+        triggerGameDiscoveredNotification();
       }
       recordAppOpened(appId);
       wmHandleTaskbarItemClick(appId, origin);
@@ -329,7 +332,7 @@ export default function Desktop({
       case 'skills':
         return <SkillsApp openApp={handleOpenApp} />;
       case 'achievements':
-        return <AchievementsApp />;
+        return <HonorsApp />;
       case 'resume':
         return <ResumeApp openApp={handleOpenApp} />;
       case 'contact':

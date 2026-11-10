@@ -1,12 +1,12 @@
 import React from 'react';
 import SystemHeader from './SystemHeader';
-import BrandLogo from './BrandLogo';
-import OrbitalLoader from './OrbitalLoader';
+import BrandLogo from '../common/BrandLogo';
+import OrbitalLoader from '../common/OrbitalLoader';
 import BootStatus from './BootStatus';
 import BootProgress from './BootProgress';
 import SystemFooter from './SystemFooter';
-import { useBootSequence } from '../hooks/useBootSequence';
-import '../styles/boot-screen.css';
+import { useBootSequence } from '../../hooks/useBootSequence';
+import '../../styles/boot-screen.css';
 
 export default function BootScreen({ theme, onToggleTheme, onEnterWorkspace, bootNotice }) {
   const {

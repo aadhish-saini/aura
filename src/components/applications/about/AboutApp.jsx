@@ -1,15 +1,15 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import AboutHero from './about/AboutHero';
-import AboutStory from './about/AboutStory';
-import AboutLearning from './about/AboutLearning';
-import AboutCraft from './about/AboutCraft';
-import AboutBeyond from './about/AboutBeyond';
-import AboutTechJourney from './about/AboutTechJourney';
-import AboutVision from './about/AboutVision';
-import AboutClosing from './about/AboutClosing';
-import AboutNav from './about/AboutNav';
-import { isReducedMotion } from '../../utils/windowAnimations';
-import './about/AboutApp.css';
+import AboutHero from './AboutHero';
+import AboutStory from './AboutStory';
+import AboutLearning from './AboutLearning';
+import AboutCraft from './AboutCraft';
+import AboutBeyond from './AboutBeyond';
+import AboutTechJourney from './AboutTechJourney';
+import AboutVision from './AboutVision';
+import AboutClosing from './AboutClosing';
+import AboutNav from './AboutNav';
+import { isReducedMotion } from '../../../utils/windowAnimations';
+import './AboutApp.css';
 
 export default function AboutApp({ openApp }) {
   const containerRef = useRef(null);
