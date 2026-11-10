@@ -5,6 +5,7 @@ import AuraDetails from './aura/AuraDetails';
 import AIVoiceGuardDetails from './aivoiceguard/AIVoiceGuardDetails';
 import PortfolioDetails from './portfolio/PortfolioDetails';
 import ErrorBoundary from '../../common/ErrorBoundary';
+import DevelopmentNoticeDialog from './DevelopmentNoticeDialog';
 import { unlockAchievement, recordProjectOpened, normalizeProjectId } from '../../../utils/achievementManager';
 
 /**
@@ -58,6 +59,8 @@ export default function ProjectsApp() {
   const [selectedId, setSelectedId] = useState(() => {
     return normalizeProjectId(window.__aura_requested_project) || null;
   });
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [noticeCategory, setNoticeCategory] = useState(null);
   const [activeProjectView, setActiveProjectView] = useState(() => {
     const requested = normalizeProjectId(window.__aura_requested_project);
     if (requested && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(requested)) {
@@ -73,6 +76,18 @@ export default function ProjectsApp() {
     const normalized = normalizeProjectId(pid);
     setSelectedId(pid);
     recordProjectOpened(normalized || pid);
+
+    // Open blocking development notice for unreleased project sections
+    if (
+      normalized === 'web-dev-project' ||
+      normalized === 'other-projects' ||
+      pid === 'web-dev-project' ||
+      pid === 'other-projects'
+    ) {
+      setNoticeCategory(normalized || pid);
+      setIsNoticeOpen(true);
+      return;
+    }
 
     if (normalized && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(normalized)) {
       setActiveProjectView(normalized);
@@ -292,6 +307,15 @@ export default function ProjectsApp() {
         </span>
         <span>6 ITEMS // DESKTOP EXPLORER</span>
       </div>
+      {/* Windows-Inspired Blocking System Notice Dialog */}
+      <DevelopmentNoticeDialog
+        isOpen={isNoticeOpen}
+        onClose={() => {
+          setIsNoticeOpen(false);
+          setNoticeCategory(null);
+        }}
+        category={noticeCategory}
+      />
     </div>
   );
 }
