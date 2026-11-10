@@ -3,6 +3,9 @@
  * Manages system, application, and achievement notifications with localStorage persistence.
  */
 
+import { playNotificationSound } from './notificationSound';
+export { playNotificationSound };
+
 const STORAGE_KEY = 'aura_notifications_v2';
 
 export const WELCOME_NOTIFICATION_DEF = {
@@ -56,6 +59,8 @@ export function startNewBootSession() {
   welcomeTriggerSessionId = null;
   honorsViewedSessionId = null;
   gameDiscoveredNotifFired = false;
+  gameCompletedNotifFired = false;
+  allProjectsNotifFired = false;
   try {
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.setItem('aura_boot_session_id', currentBootSessionId);
@@ -373,6 +378,105 @@ export function triggerGameDiscoveredNotification() {
         icon: 'Gamepad2',
         accentGradient: 'linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6)',
         footerLabel: 'AURA // SYSTEM OVERRIDE',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    })
+  );
+}
+
+let gameCompletedNotifFired = false;
+const STORAGE_KEY_GAME_COMPLETED = 'aura_game_completed_notif_shown';
+
+/**
+ * Trigger the Hidden Game Completed notification.
+ * Fires once when the user successfully completes the entire AURA: SYSTEM OVERRIDE challenge.
+ */
+export function triggerGameCompletedNotification() {
+  if (typeof window === 'undefined') return;
+  if (gameCompletedNotifFired) return;
+
+  try {
+    if (localStorage.getItem(STORAGE_KEY_GAME_COMPLETED) === 'true') {
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY_GAME_COMPLETED, 'true');
+  } catch (e) {}
+
+  gameCompletedNotifFired = true;
+
+  const title = "ACCESS GRANTED.";
+  const description =
+    "You've successfully completed the hidden challenge. What was once concealed is now unlocked. Not everyone gets this far — well played, explorer.";
+
+  // 1. Save in Notification Center
+  addNotification({
+    title,
+    description,
+    type: 'achievement'
+  });
+
+  // 2. Dispatch floating desktop toast event
+  window.dispatchEvent(
+    new CustomEvent('aura-desktop-toast', {
+      detail: {
+        id: 'game-completed',
+        title,
+        description,
+        category: 'SYSTEM OVERRIDE // VICTORY',
+        status: 'GRANTED',
+        icon: 'Award',
+        accentGradient: 'linear-gradient(90deg, #10b981, #06b6d4, #f59e0b)',
+        footerLabel: 'AURA // SYSTEM OVERRIDE COMPLETE',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    })
+  );
+}
+
+let allProjectsNotifFired = false;
+const STORAGE_KEY_ALL_PROJECTS = 'aura_all_projects_notif_shown';
+
+/**
+ * Trigger the All Projects Explored milestone notification.
+ * Fires once when the user successfully opens and explores all available projects in AURA.
+ */
+export function triggerAllProjectsExploredNotification() {
+  if (typeof window === 'undefined') return;
+  if (allProjectsNotifFired) return;
+
+  try {
+    if (localStorage.getItem(STORAGE_KEY_ALL_PROJECTS) === 'true') {
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY_ALL_PROJECTS, 'true');
+  } catch (e) {}
+
+  allProjectsNotifFired = true;
+
+  const title = "Not Just Projects. Pure Dedication.";
+  const description =
+    "You've explored every project in AURA. Each one represents an idea, countless hours of learning, experimentation, and dedication. Thanks for taking the time to explore my work.";
+
+  // 1. Save in Notification Center
+  addNotification({
+    title,
+    description,
+    type: 'achievement'
+  });
+
+  // 2. Dispatch floating desktop toast event with dedicated serious dedication sound
+  window.dispatchEvent(
+    new CustomEvent('aura-desktop-toast', {
+      detail: {
+        id: 'all-projects-explored',
+        title,
+        description,
+        category: 'PORTFOLIO // DEDICATION',
+        status: 'EXPLORED',
+        icon: 'Award',
+        accentGradient: 'linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6)',
+        footerLabel: 'AURA // ALL PROJECTS EXPLORED',
+        sound: 'serious_dedication',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
     })

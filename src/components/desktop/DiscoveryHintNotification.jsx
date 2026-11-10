@@ -3,7 +3,8 @@ import { Compass, Sparkles, X } from 'lucide-react';
 import {
   getWelcomeTriggerInfo,
   isDiscoveryHintPending,
-  markDiscoveryHintShown
+  markDiscoveryHintShown,
+  playNotificationSound
 } from '../../utils/notificationManager';
 import { advanceHintStage } from '../../utils/easterEggManager';
 
@@ -24,6 +25,7 @@ export default function DiscoveryHintNotification() {
       if (!isDiscoveryHintPending()) return;
 
       setIsVisible(true);
+      playNotificationSound('default');
       markDiscoveryHintShown();
       advanceHintStage(1);
 

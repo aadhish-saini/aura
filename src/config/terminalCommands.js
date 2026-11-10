@@ -4,7 +4,7 @@ import {
   advanceHintStage,
   getHintStage,
 } from '../utils/easterEggManager';
-import { unlockAchievement } from '../utils/achievementManager';
+import { unlockAchievement, recordProjectOpened } from '../utils/achievementManager';
 import { triggerGameDiscoveredNotification } from '../utils/notificationManager';
 
 export const AVAILABLE_COMMANDS = [
@@ -403,7 +403,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
       window.__aura_requested_project = 'dhruvnetra';
       window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'dhruvnetra' } }));
       if (openApp) openApp('projects');
-      unlockAchievement('project-explorer');
+      recordProjectOpened('dhruvnetra');
       return {
         type: 'success',
         content: [{ text: 'Opening DhruvNetra 3D Digital Twin project dossier...', style: 'accent' }]
@@ -414,7 +414,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
       window.__aura_requested_project = 'ai-voice-guard';
       window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'ai-voice-guard' } }));
       if (openApp) openApp('projects');
-      unlockAchievement('project-explorer');
+      recordProjectOpened('ai-voice-guard');
       return {
         type: 'success',
         content: [{ text: 'Opening AI-Voice Guard deepfake defense dossier...', style: 'accent' }]
@@ -425,7 +425,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
       window.__aura_requested_project = '3d-portfolio';
       window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: '3d-portfolio' } }));
       if (openApp) openApp('projects');
-      unlockAchievement('project-explorer');
+      recordProjectOpened('3d-portfolio');
       return {
         type: 'success',
         content: [{ text: 'Opening Interactive 3D Portfolio dossier...', style: 'accent' }]
@@ -436,7 +436,7 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
       window.__aura_requested_project = 'aura-os';
       window.dispatchEvent(new CustomEvent('aura:open-project', { detail: { projectId: 'aura-os' } }));
       if (openApp) openApp('projects');
-      unlockAchievement('project-explorer');
+      recordProjectOpened('aura-os');
       return {
         type: 'success',
         content: [{ text: 'Opening AURA OS architecture specification...', style: 'accent' }]

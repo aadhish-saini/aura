@@ -5,7 +5,7 @@ import AuraDetails from './projects/aura/AuraDetails';
 import AIVoiceGuardDetails from './projects/aivoiceguard/AIVoiceGuardDetails';
 import PortfolioDetails from './projects/portfolio/PortfolioDetails';
 import ErrorBoundary from '../common/ErrorBoundary';
-import { unlockAchievement } from '../../utils/achievementManager';
+import { unlockAchievement, recordProjectOpened, normalizeProjectId } from '../../utils/achievementManager';
 
 /**
  * Projects Explorer Application
@@ -53,15 +53,6 @@ const PROJECTS = [
   },
 ];
 
-function normalizeProjectId(id) {
-  if (!id) return null;
-  const lower = String(id).toLowerCase().trim();
-  if (['dhruvnetra', 'antarctic', 'antarctica'].includes(lower)) return 'dhruvnetra';
-  if (['aura', 'aura-os', 'aura-project'].includes(lower)) return 'aura';
-  if (['ai-project', 'ai-voice-guard', 'aivoiceguard', 'voiceguard'].includes(lower)) return 'ai-project';
-  if (['portfolio-website', 'portfolio', '3d-portfolio'].includes(lower)) return 'portfolio-website';
-  return lower;
-}
 
 export default function ProjectsApp() {
   const [selectedId, setSelectedId] = useState(() => {
@@ -84,13 +75,13 @@ export default function ProjectsApp() {
 
     if (normalized && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(normalized)) {
       setActiveProjectView(normalized);
-      unlockAchievement('project-explorer');
+      recordProjectOpened(normalized);
     }
   }, []);
 
   useEffect(() => {
     if (activeProjectView) {
-      unlockAchievement('project-explorer');
+      recordProjectOpened(activeProjectView);
     }
   }, [activeProjectView]);
 

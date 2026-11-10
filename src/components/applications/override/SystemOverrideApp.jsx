@@ -14,6 +14,7 @@ import {
   resetOverrideProgress,
   unlockGamingAchievement,
 } from '../../../utils/easterEggManager';
+import { triggerGameCompletedNotification } from '../../../utils/notificationManager';
 
 const MISSION_HINTS = {
   1: [
@@ -152,6 +153,7 @@ export default function SystemOverrideApp({ openApp }) {
       saveOverrideProgress(updated);
       return updated;
     });
+    triggerGameCompletedNotification();
     setView('archive');
   };
 

@@ -161,6 +161,7 @@ export function saveOverrideProgress(partialSave) {
 export function resetOverrideProgress() {
   try {
     localStorage.setItem(KEYS.OVERRIDE_SAVE, JSON.stringify(DEFAULT_GAME_SAVE));
+    localStorage.removeItem('aura_game_completed_notif_shown');
     return DEFAULT_GAME_SAVE;
   } catch (e) {
     return DEFAULT_GAME_SAVE;

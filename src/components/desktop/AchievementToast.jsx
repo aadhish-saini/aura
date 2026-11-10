@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Trophy, Gamepad2, Sparkles, X, ShieldCheck, Monitor, Terminal, Cpu, Layers, Compass } from 'lucide-react';
 import { EASTER_EGG_ACHIEVEMENT } from '../../utils/easterEggManager';
+import { playNotificationSound } from '../../utils/notificationManager';
 
 const ICON_MAP = {
   Monitor,
@@ -27,6 +28,7 @@ export default function AchievementToast() {
         clearTimeout(timerRef.current);
       }
       setActiveAchievement(data);
+      playNotificationSound('default');
 
       timerRef.current = setTimeout(() => {
         setActiveAchievement(null);

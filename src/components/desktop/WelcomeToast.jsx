@@ -3,7 +3,8 @@ import { ShieldCheck, Award, Gamepad2, Sparkles, X } from 'lucide-react';
 import {
   isWelcomeToastPending,
   markWelcomeToastHandled,
-  recordBootWelcomeNotification
+  recordBootWelcomeNotification,
+  playNotificationSound
 } from '../../utils/notificationManager';
 
 export default function WelcomeToast() {
@@ -17,6 +18,7 @@ export default function WelcomeToast() {
       const notif = recordBootWelcomeNotification();
       setNotification(notif);
       setIsVisible(true);
+      playNotificationSound('default');
 
       // Automatically dismiss the floating welcome notification after 6 seconds
       timerRef.current = setTimeout(() => {
@@ -38,6 +40,7 @@ export default function WelcomeToast() {
 
       setNotification(data);
       setIsVisible(true);
+      playNotificationSound(data.sound || 'default');
 
       timerRef.current = setTimeout(() => {
         setIsVisible(false);

@@ -3,10 +3,40 @@
  * Tracks user exploration milestones and saves progress in localStorage.
  */
 
-import { addNotification, triggerHonorsNotification, triggerGameDiscoveredNotification } from './notificationManager';
+import {
+  addNotification,
+  triggerHonorsNotification,
+  triggerGameDiscoveredNotification,
+  triggerAllProjectsExploredNotification
+} from './notificationManager';
 
 const STORAGE_KEY = 'aura_discovery_achievements_v1';
 const VISITED_APPS_KEY = 'aura_visited_apps_v1';
+const VISITED_PROJECTS_KEY = 'aura_visited_projects_v1';
+
+export const ALL_AVAILABLE_PROJECTS = ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'];
+
+export function normalizeProjectId(id) {
+  if (!id) return null;
+  const lower = String(id).toLowerCase().trim();
+  if (['dhruvnetra', 'dhruv netra', 'antarctic', 'antarctica'].includes(lower)) return 'dhruvnetra';
+  if (['aura', 'aura-os', 'aura-project', 'aura os', 'system'].includes(lower)) return 'aura';
+  if (['ai-project', 'ai-voice-guard', 'aivoiceguard', 'voice guard', 'voiceguard'].includes(lower)) return 'ai-project';
+  if (['portfolio-website', 'portfolio', '3d-portfolio', '3d portfolio', 'avatar'].includes(lower)) return 'portfolio-website';
+  return lower;
+}
+
+export function getVisitedProjects() {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(VISITED_PROJECTS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    return [];
+  }
+}
 
 export const ACHIEVEMENTS_DEF = [
   {
@@ -186,6 +216,35 @@ export function recordAppOpened(appId) {
     }
     if (appId === 'achievements') {
       triggerHonorsNotification();
+    }
+  } catch (e) {
+    // Ignore storage issues
+  }
+}
+
+/**
+ * Track an individual project exploration to evaluate the All Projects Explored notification
+ */
+export function recordProjectOpened(projectId) {
+  if (typeof window === 'undefined') return;
+  const normalized = normalizeProjectId(projectId);
+  if (!normalized) return;
+
+  try {
+    let visited = getVisitedProjects();
+
+    if (!visited.includes(normalized)) {
+      visited.push(normalized);
+      localStorage.setItem(VISITED_PROJECTS_KEY, JSON.stringify(visited));
+    }
+
+    // Award project-explorer achievement (viewed at least 1 project)
+    unlockAchievement('project-explorer');
+
+    // Check if all available projects have been explored
+    const hasAll = ALL_AVAILABLE_PROJECTS.every((p) => visited.includes(p));
+    if (hasAll) {
+      triggerAllProjectsExploredNotification();
     }
   } catch (e) {
     // Ignore storage issues
