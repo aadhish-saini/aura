@@ -79,24 +79,27 @@ export default function DeveloperArchiveModal({ score, attempts, onClose, onRepl
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
             <div className="bg-black/50 p-2.5 rounded border border-white/5">
-              <span className="text-slate-500 block text-[9px]">FAVORITE RPG:</span>
-              <span className="text-white font-bold">Cyberpunk 2077</span>
-              <span className="text-slate-400 block text-[9px] mt-0.5">Breach Protocol fan</span>
+              <span className="text-slate-500 block text-[9px]">FAVORITE RACING:</span>
+              <span className="text-white font-bold">Forza Horizon 4</span>
+              <span className="text-slate-400 block text-[9px] mt-0.5">Open-road adrenaline</span>
             </div>
+
             <div className="bg-black/50 p-2.5 rounded border border-white/5">
-              <span className="text-slate-500 block text-[9px]">FAVORITE SOULSLIKE:</span>
-              <span className="text-white font-bold">Elden Ring</span>
-              <span className="text-slate-400 block text-[9px] mt-0.5">Tarnished mindset</span>
+              <span className="text-slate-500 block text-[9px]">TACTICAL ASSASSIN:</span>
+              <span className="text-white font-bold">Hitman</span>
+              <span className="text-slate-400 block text-[9px] mt-0.5">Stealth & strategic thinking</span>
             </div>
+
             <div className="bg-black/50 p-2.5 rounded border border-white/5">
-              <span className="text-slate-500 block text-[9px]">COMPETITIVE FPS:</span>
+              <span className="text-slate-500 block text-[9px]">BATTLE / FPS:</span>
               <span className="text-white font-bold">Valorant</span>
               <span className="text-slate-400 block text-[9px] mt-0.5">Tactical coordination</span>
             </div>
+
             <div className="bg-black/50 p-2.5 rounded border border-white/5">
-              <span className="text-slate-500 block text-[9px]">PUZZLE MASTER:</span>
-              <span className="text-white font-bold">Portal 2</span>
-              <span className="text-slate-400 block text-[9px] mt-0.5">Spatial deduction</span>
+              <span className="text-slate-500 block text-[9px]">FAVORITE OPEN WORLD:</span>
+              <span className="text-white font-bold">Red Dead Redemption 2</span>
+              <span className="text-slate-400 block text-[9px] mt-0.5">Immersive exploration</span>
             </div>
           </div>
         </div>
