@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Trophy, Gamepad2, Sparkles, X, ShieldCheck, Monitor, Terminal, Cpu, Layers, Compass } from 'lucide-react';
 import { EASTER_EGG_ACHIEVEMENT } from '../../utils/easterEggManager';
 
@@ -15,22 +15,42 @@ const ICON_MAP = {
 
 export default function AchievementToast() {
   const [activeAchievement, setActiveAchievement] = useState(null);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     const handleUnlock = (e) => {
       const data = e.detail || EASTER_EGG_ACHIEVEMENT;
+      if (data?.id === 'game-lover' || data?.id === 'secret-gaming-easter-egg') {
+        return; // Handled by dedicated hidden game discovered floating toast
+      }
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
       setActiveAchievement(data);
 
-      const timer = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setActiveAchievement(null);
+        timerRef.current = null;
       }, 7000);
-
-      return () => clearTimeout(timer);
     };
 
     window.addEventListener('aura-achievement-unlocked', handleUnlock);
-    return () => window.removeEventListener('aura-achievement-unlocked', handleUnlock);
+    return () => {
+      window.removeEventListener('aura-achievement-unlocked', handleUnlock);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
   }, []);
+
+  const handleClose = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setActiveAchievement(null);
+  };
 
   if (!activeAchievement) return null;
 
@@ -85,7 +105,7 @@ export default function AchievementToast() {
 
               <button
                 type="button"
-                onClick={() => setActiveAchievement(null)}
+                onClick={handleClose}
                 aria-label="Close notification"
                 className="text-slate-400 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10 cursor-pointer"
               >

@@ -19,6 +19,7 @@ import FileExplorerApp from '../applications/FileExplorerApp';
 import SettingsApp from '../applications/SettingsApp';
 import DiscoveryHintNotification from './DiscoveryHintNotification';
 import AchievementToast from './AchievementToast';
+import WelcomeToast from './WelcomeToast';
 
 const SystemOverrideApp = React.lazy(() => import('../applications/override/SystemOverrideApp'));
 
@@ -26,6 +27,7 @@ import { DESKTOP_ICON_LIST } from '../../config/desktopApps';
 import { useWindowManager } from '../../hooks/useWindowManager';
 import { playStartupSoundIfQueued } from '../../utils/startupSound';
 import { unlockAchievement, recordAppOpened } from '../../utils/achievementManager';
+import { unlockGamingAchievement } from '../../utils/easterEggManager';
 import { Maximize } from 'lucide-react';
 import '../../styles/desktop.css';
 
@@ -53,7 +55,7 @@ export default function Desktop({
     snapWindow,
     toggleShowDesktop,
     focusWindow,
-    handleTaskbarItemClick,
+    handleTaskbarItemClick: wmHandleTaskbarItemClick,
     updateWindowPosition
   } = useWindowManager();
 
@@ -82,16 +84,34 @@ export default function Desktop({
   // Open app wrapper that records discovery achievements
   const handleOpenApp = useCallback(
     (appId, origin = null) => {
+      if (appId === 'system-override') {
+        unlockGamingAchievement();
+      }
       recordAppOpened(appId);
       openApp(appId, origin);
     },
     [openApp]
   );
 
+  // Taskbar item click wrapper that records discovery achievements
+  const handleTaskbarItemClick = useCallback(
+    (appId, origin = null) => {
+      if (appId === 'system-override') {
+        unlockGamingAchievement();
+      }
+      recordAppOpened(appId);
+      wmHandleTaskbarItemClick(appId, origin);
+    },
+    [wmHandleTaskbarItemClick]
+  );
+
   // Play startup confirmation sound and unlock First Boot achievement
   useEffect(() => {
     playStartupSoundIfQueued();
-    unlockAchievement('first-boot');
+    const timer = setTimeout(() => {
+      unlockAchievement('first-boot');
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Keep switcherIndex valid if windows close
@@ -518,7 +538,8 @@ export default function Desktop({
         setSortBy={setSortBy}
       />
 
-      {/* Desktop Easter Egg Discovery Hint & Gaming Achievement Notifications */}
+      {/* Desktop System Welcome, Easter Egg Discovery Hint & Gaming Achievement Notifications */}
+      <WelcomeToast />
       <DiscoveryHintNotification openApp={handleOpenApp} />
       <AchievementToast />
 

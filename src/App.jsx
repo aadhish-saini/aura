@@ -7,6 +7,7 @@ import ShutdownScreen from './components/shutdown/ShutdownScreen';
 import { useTheme } from './hooks/useTheme';
 import { useFullscreen } from './hooks/useFullscreen';
 import { unlockAndQueueStartupSound } from './utils/startupSound';
+import { startNewBootSession } from './utils/notificationManager';
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
@@ -26,6 +27,7 @@ export default function App() {
   // Transition from launcher to boot sequence
   const handleBoot = useCallback(({ withFullscreen, notice }) => {
     unlockAndQueueStartupSound();
+    startNewBootSession();
     if (notice) {
       setBootNotice(notice);
     } else {
@@ -42,6 +44,7 @@ export default function App() {
   // Reboot to boot screen
   const handleRestart = useCallback(() => {
     unlockAndQueueStartupSound();
+    startNewBootSession();
     setBootNotice(null);
     setSystemScreen('boot');
   }, []);

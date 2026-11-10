@@ -6,6 +6,9 @@
  * and game state in localStorage.
  */
 
+import { unlockAchievement, isAchievementUnlocked } from './achievementManager';
+import { triggerGameDiscoveredNotification } from './notificationManager';
+
 const KEYS = {
   HINT_DISMISSED: 'aura_easter_egg_hint_dismissed',
   HINT_STAGE: 'aura_easter_egg_hint_stage',
@@ -13,8 +16,6 @@ const KEYS = {
   ACHIEVEMENT_TIMESTAMP: 'aura_achievement_gaming_unlocked_at',
   OVERRIDE_SAVE: 'aura_override_save',
 };
-
-import { unlockAchievement } from './achievementManager';
 
 export const EASTER_EGG_ACHIEVEMENT = {
   id: 'secret-gaming-easter-egg',
@@ -78,7 +79,10 @@ export function advanceHintStage(stage) {
  */
 export function isGamingAchievementUnlocked() {
   try {
-    return localStorage.getItem(KEYS.ACHIEVEMENT_GAMING) === 'true';
+    return (
+      localStorage.getItem(KEYS.ACHIEVEMENT_GAMING) === 'true' ||
+      isAchievementUnlocked('game-lover')
+    );
   } catch (e) {
     return false;
   }
@@ -98,15 +102,7 @@ export function unlockGamingAchievement() {
     advanceHintStage(4);
 
     unlockAchievement('game-lover');
-
-    // Dispatch event for UI notifications
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('aura-achievement-unlocked', {
-          detail: EASTER_EGG_ACHIEVEMENT,
-        })
-      );
-    }
+    triggerGameDiscoveredNotification();
     return true;
   } catch (e) {
     return false;

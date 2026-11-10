@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { executeTerminalCommand, AVAILABLE_COMMANDS, OPENABLE_TARGETS } from '../../config/terminalCommands';
+import { recordAppOpened } from '../../utils/achievementManager';
 
 export default function TerminalApp({ openApp, onClose }) {
+  useEffect(() => {
+    recordAppOpened('terminal');
+  }, []);
   const [history, setHistory] = useState([
     {
       type: 'system',

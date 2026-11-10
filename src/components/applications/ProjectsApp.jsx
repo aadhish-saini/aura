@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Folder, Layers, FolderCode, Boxes } from 'lucide-react';
 import DhruvNetraDetails from './projects/dhruvnetra/DhruvNetraDetails';
 import AuraDetails from './projects/aura/AuraDetails';
@@ -76,6 +76,18 @@ export default function ProjectsApp() {
     return null;
   });
 
+  const handleSelectProject = useCallback((project) => {
+    if (!project) return;
+    const pid = typeof project === 'string' ? project : project.id;
+    const normalized = normalizeProjectId(pid);
+    setSelectedId(pid);
+
+    if (normalized && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(normalized)) {
+      setActiveProjectView(normalized);
+      unlockAchievement('project-explorer');
+    }
+  }, []);
+
   useEffect(() => {
     if (activeProjectView) {
       unlockAchievement('project-explorer');
@@ -85,27 +97,21 @@ export default function ProjectsApp() {
   // Listen for navigation events from other apps (e.g. Skills app)
   useEffect(() => {
     if (window.__aura_requested_project) {
-      const pid = normalizeProjectId(window.__aura_requested_project);
-      if (['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(pid)) {
-        setActiveProjectView(pid);
-        setSelectedId(pid);
-      }
+      handleSelectProject(window.__aura_requested_project);
       window.__aura_requested_project = null;
     }
 
     const handleOpenProjectEvent = (e) => {
       const { projectId } = e.detail || {};
-      const pid = normalizeProjectId(projectId);
-      if (pid && ['dhruvnetra', 'aura', 'ai-project', 'portfolio-website'].includes(pid)) {
-        setActiveProjectView(pid);
-        setSelectedId(pid);
+      if (projectId) {
+        handleSelectProject(projectId);
       }
     };
     window.addEventListener('aura:open-project', handleOpenProjectEvent);
     return () => {
       window.removeEventListener('aura:open-project', handleOpenProjectEvent);
     };
-  }, []);
+  }, [handleSelectProject]);
 
   // Clear selection when clicking canvas background
   const handleCanvasClick = () => {
@@ -114,32 +120,13 @@ export default function ProjectsApp() {
 
   const handleShortcutClick = (e, project) => {
     e.stopPropagation();
-    setSelectedId(project.id);
-
-    if (project.id === 'dhruvnetra') {
-      setActiveProjectView('dhruvnetra');
-    } else if (project.id === 'aura') {
-      setActiveProjectView('aura');
-    } else if (project.id === 'ai-project') {
-      setActiveProjectView('ai-project');
-    } else if (project.id === 'portfolio-website') {
-      setActiveProjectView('portfolio-website');
-    }
+    handleSelectProject(project);
   };
 
   const handleKeyDown = (e, project) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      setSelectedId(project.id);
-      if (project.id === 'dhruvnetra') {
-        setActiveProjectView('dhruvnetra');
-      } else if (project.id === 'aura') {
-        setActiveProjectView('aura');
-      } else if (project.id === 'ai-project') {
-        setActiveProjectView('ai-project');
-      } else if (project.id === 'portfolio-website') {
-        setActiveProjectView('portfolio-website');
-      }
+      handleSelectProject(project);
     }
   };
 

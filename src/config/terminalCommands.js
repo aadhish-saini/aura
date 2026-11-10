@@ -5,6 +5,7 @@ import {
   getHintStage,
 } from '../utils/easterEggManager';
 import { unlockAchievement } from '../utils/achievementManager';
+import { triggerGameDiscoveredNotification } from '../utils/notificationManager';
 
 export const AVAILABLE_COMMANDS = [
   'help',
@@ -40,6 +41,10 @@ export const OPENABLE_TARGETS = [
   'settings',
   'override',
   'system-override',
+  'system override',
+  'system_override',
+  'system_override.bin',
+  'override.bin',
   'dhruvnetra',
   'ai-voice-guard',
   'aivoiceguard',
@@ -329,9 +334,40 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
   }
 
   // Launching the hidden game directly via terminal
-  if (['override', 'system-override', 'system override', 'game-start'].includes(lower)) {
+  const isDirectGameCmd = [
+    'override',
+    'system-override',
+    'system override',
+    'system_override',
+    'system_override.bin',
+    './system_override.bin',
+    'override.bin',
+    './override',
+    './override.bin',
+    'game-start',
+    'game',
+    'play game',
+    'run override',
+    'run system-override',
+    'run system override',
+    'run system_override',
+    'run system_override.bin',
+    'start override',
+    'start system-override',
+    'start system override',
+    'start system_override',
+    'start system_override.bin',
+    'launch override',
+    'launch system-override',
+    'launch system override',
+    'launch system_override',
+    'launch system_override.bin'
+  ].includes(lower);
+
+  if (isDirectGameCmd) {
     unlockGamingAchievement();
     unlockAchievement('game-lover');
+    triggerGameDiscoveredNotification();
     if (openApp) openApp('system-override');
     return {
       type: 'success',
@@ -359,8 +395,8 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
   }
 
   // Open command: applications or specific projects
-  if (lower.startsWith('open ')) {
-    const target = lower.replace('open ', '').trim();
+  if (lower.startsWith('open ') || lower.startsWith('project ') || lower.startsWith('projects ')) {
+    const target = lower.replace(/^(open|projects|project)\s+/, '').trim();
 
     // Check project targets
     if (['dhruvnetra', 'dhruv netra', 'antarctic', 'antarctica'].includes(target)) {
@@ -407,9 +443,20 @@ export function executeTerminalCommand(rawCommand, { openApp, clearOutput, comma
       };
     }
 
-    if (target === 'override' || target === 'system-override') {
+    const isGameTarget = [
+      'override',
+      'system-override',
+      'system override',
+      'system_override',
+      'system_override.bin',
+      'override.bin',
+      'game'
+    ].includes(target);
+
+    if (isGameTarget) {
       unlockGamingAchievement();
       unlockAchievement('game-lover');
+      triggerGameDiscoveredNotification();
       if (openApp) openApp('system-override');
       return {
         type: 'success',

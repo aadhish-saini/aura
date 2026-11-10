@@ -3,7 +3,7 @@
  * Tracks user exploration milestones and saves progress in localStorage.
  */
 
-import { addNotification } from './notificationManager';
+import { addNotification, triggerHonorsNotification, triggerGameDiscoveredNotification } from './notificationManager';
 
 const STORAGE_KEY = 'aura_discovery_achievements_v1';
 const VISITED_APPS_KEY = 'aura_visited_apps_v1';
@@ -73,7 +73,9 @@ export function getAchievementsState() {
   if (typeof window === 'undefined') return {};
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
   } catch (err) {
     return {};
   }
@@ -120,6 +122,7 @@ export function unlockAchievement(id) {
         localStorage.setItem('aura_achievement_gaming_unlocked', 'true');
         localStorage.setItem('aura_achievement_gaming_unlocked_at', new Date().toISOString());
       } catch (e) {}
+      triggerGameDiscoveredNotification();
     }
 
     // 1. Dispatch achievement toast event
@@ -157,7 +160,12 @@ export function recordAppOpened(appId) {
   try {
     let visited = [];
     const raw = localStorage.getItem(VISITED_APPS_KEY);
-    if (raw) visited = JSON.parse(raw);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) visited = parsed;
+      } catch (e) {}
+    }
 
     if (!visited.includes(appId)) {
       visited.push(appId);
@@ -175,6 +183,9 @@ export function recordAppOpened(appId) {
     }
     if (appId === 'system-override') {
       unlockAchievement('game-lover');
+    }
+    if (appId === 'achievements') {
+      triggerHonorsNotification();
     }
   } catch (e) {
     // Ignore storage issues

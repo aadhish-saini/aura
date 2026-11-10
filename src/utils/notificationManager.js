@@ -5,36 +5,229 @@
 
 const STORAGE_KEY = 'aura_notifications_v2';
 
+export const WELCOME_NOTIFICATION_DEF = {
+  id: 'sys-welcome',
+  title: 'AURA Workstation Ready',
+  description: 'Welcome to AURA! Your personal developer workspace is ready. Explore my projects, skills, achievements and more.',
+  type: 'system'
+};
+
 const INITIAL_NOTIFICATIONS = [
   {
-    id: 'sys-welcome',
-    title: 'AURA Workstation Ready',
-    description: 'System booted into high-performance developer workspace. Press Ctrl+K for Command Palette.',
+    ...WELCOME_NOTIFICATION_DEF,
     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    type: 'system',
     read: false
   }
 ];
 
+// Session tracking for desktop welcome toast and discovery hint
+let currentBootSessionId = `${Date.now()}`;
+let welcomedBootSessionId = null;
+let welcomeTriggerTime = null;
+let welcomeTriggerSessionId = null;
+let honorsViewedSessionId = null;
+
+try {
+  if (typeof sessionStorage !== 'undefined') {
+    const storedSession = sessionStorage.getItem('aura_boot_session_id');
+    if (storedSession) {
+      currentBootSessionId = storedSession;
+    } else {
+      sessionStorage.setItem('aura_boot_session_id', currentBootSessionId);
+    }
+    welcomedBootSessionId = sessionStorage.getItem('aura_boot_welcomed_id');
+    const storedWelcomeTime = sessionStorage.getItem('aura_welcome_trigger_time');
+    const storedWelcomeSession = sessionStorage.getItem('aura_welcome_trigger_session');
+    if (storedWelcomeTime && storedWelcomeSession) {
+      welcomeTriggerTime = parseInt(storedWelcomeTime, 10);
+      welcomeTriggerSessionId = storedWelcomeSession;
+    }
+  }
+} catch (e) {}
+
+/**
+ * Initializes a new boot session for the welcome notification toast.
+ * Called whenever AURA boots or restarts.
+ */
+export function startNewBootSession() {
+  currentBootSessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
+  welcomedBootSessionId = null;
+  welcomeTriggerTime = null;
+  welcomeTriggerSessionId = null;
+  honorsViewedSessionId = null;
+  gameDiscoveredNotifFired = false;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('aura_boot_session_id', currentBootSessionId);
+      sessionStorage.removeItem('aura_boot_welcomed_id');
+      sessionStorage.removeItem('aura_welcome_trigger_time');
+      sessionStorage.removeItem('aura_welcome_trigger_session');
+      sessionStorage.removeItem('aura_discovery_hint_shown_session');
+      sessionStorage.removeItem('aura_honors_viewed_session');
+    }
+  } catch (e) {}
+  return currentBootSessionId;
+}
+
+/**
+ * Returns true if the welcome notification toast has not yet been shown for this boot session.
+ */
+export function isWelcomeToastPending() {
+  let sessionId = currentBootSessionId;
+  let welcomedId = welcomedBootSessionId;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionId = sessionStorage.getItem('aura_boot_session_id') || currentBootSessionId;
+      welcomedId = sessionStorage.getItem('aura_boot_welcomed_id') || welcomedBootSessionId;
+    }
+  } catch (e) {}
+  return welcomedId !== sessionId;
+}
+
+/**
+ * Marks the welcome toast as handled for the current boot session to prevent duplicate toasts.
+ */
+export function markWelcomeToastHandled() {
+  let sessionId = currentBootSessionId;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionId = sessionStorage.getItem('aura_boot_session_id') || currentBootSessionId;
+      sessionStorage.setItem('aura_boot_welcomed_id', sessionId);
+    }
+  } catch (e) {}
+  welcomedBootSessionId = sessionId;
+}
+
+/**
+ * Ensures the welcome notification is saved in the Notification Center
+ * with the current boot timestamp, without creating duplicate entries.
+ */
+export function recordBootWelcomeNotification() {
+  const current = getNotifications();
+  const safeCurrent = Array.isArray(current) ? current : [];
+  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const welcomePayload = {
+    ...WELCOME_NOTIFICATION_DEF,
+    timestamp: now,
+    read: false
+  };
+
+  const existingIndex = safeCurrent.findIndex((n) => n.id === 'sys-welcome');
+  let updated;
+  if (existingIndex >= 0) {
+    updated = [...safeCurrent];
+    updated[existingIndex] = {
+      ...updated[existingIndex],
+      ...welcomePayload
+    };
+  } else {
+    updated = [welcomePayload, ...safeCurrent].slice(0, 30);
+  }
+
+  saveNotifications(updated);
+
+  // Record welcome trigger timestamp and dispatch event for downstream triggers
+  const sessionId = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('aura_boot_session_id')) || currentBootSessionId;
+  welcomeTriggerTime = Date.now();
+  welcomeTriggerSessionId = sessionId;
+
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('aura_welcome_trigger_time', `${welcomeTriggerTime}`);
+      sessionStorage.setItem('aura_welcome_trigger_session', sessionId);
+    }
+  } catch (e) {}
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('aura-welcome-triggered', {
+        detail: { timestamp: welcomeTriggerTime, sessionId }
+      })
+    );
+  }
+
+  return welcomePayload;
+}
+
+/**
+ * Returns the timestamp and boot session when the welcome notification was triggered.
+ */
+export function getWelcomeTriggerInfo() {
+  let timestamp = welcomeTriggerTime;
+  let sessionId = welcomeTriggerSessionId;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      const storedTime = sessionStorage.getItem('aura_welcome_trigger_time');
+      const storedSession = sessionStorage.getItem('aura_welcome_trigger_session');
+      if (storedTime && storedSession) {
+        timestamp = parseInt(storedTime, 10);
+        sessionId = storedSession;
+      }
+    }
+  } catch (e) {}
+  return { timestamp, sessionId };
+}
+
+/**
+ * Returns true if the discovery clue notification has not yet been shown for this boot session.
+ */
+export function isDiscoveryHintPending() {
+  let sessionId = currentBootSessionId;
+  let shownSessionId = null;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionId = sessionStorage.getItem('aura_boot_session_id') || currentBootSessionId;
+      shownSessionId = sessionStorage.getItem('aura_discovery_hint_shown_session');
+    }
+  } catch (e) {}
+  return shownSessionId !== sessionId;
+}
+
+/**
+ * Marks the discovery clue notification as shown for the current boot session.
+ */
+export function markDiscoveryHintShown() {
+  let sessionId = currentBootSessionId;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionId = sessionStorage.getItem('aura_boot_session_id') || currentBootSessionId;
+      sessionStorage.setItem('aura_discovery_hint_shown_session', sessionId);
+    }
+  } catch (e) {}
+}
+
 export function getNotifications() {
-  if (typeof window === 'undefined') return INITIAL_NOTIFICATIONS;
+  if (typeof window === 'undefined') return [...INITIAL_NOTIFICATIONS];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_NOTIFICATIONS));
-      return INITIAL_NOTIFICATIONS;
+      return [...INITIAL_NOTIFICATIONS];
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [...INITIAL_NOTIFICATIONS];
   } catch (err) {
-    return INITIAL_NOTIFICATIONS;
+    return [...INITIAL_NOTIFICATIONS];
   }
+}
+
+// Initialize on first boot if storage key does not exist yet
+if (typeof window !== 'undefined') {
+  try {
+    const existing = localStorage.getItem(STORAGE_KEY);
+    if (!existing) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_NOTIFICATIONS));
+    }
+  } catch (err) {}
 }
 
 export function saveNotifications(notifications) {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notifications));
-    window.dispatchEvent(new CustomEvent('aura-notifications-updated', { detail: notifications }));
+    const safeNotifications = Array.isArray(notifications) ? notifications : [];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(safeNotifications));
+    window.dispatchEvent(new CustomEvent('aura-notifications-updated', { detail: safeNotifications }));
   } catch (err) {
     // Ignore storage errors
   }
@@ -42,6 +235,7 @@ export function saveNotifications(notifications) {
 
 export function addNotification({ title, description, type = 'system' }) {
   const current = getNotifications();
+  const safeCurrent = Array.isArray(current) ? current : [];
   const newNotif = {
     id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
     title,
@@ -51,14 +245,15 @@ export function addNotification({ title, description, type = 'system' }) {
     read: false
   };
 
-  const updated = [newNotif, ...current].slice(0, 30); // Cap at 30
+  const updated = [newNotif, ...safeCurrent].slice(0, 30); // Cap at 30
   saveNotifications(updated);
   return newNotif;
 }
 
 export function dismissNotification(id) {
   const current = getNotifications();
-  const updated = current.filter((n) => n.id !== id);
+  const safeCurrent = Array.isArray(current) ? current : [];
+  const updated = safeCurrent.filter((n) => n.id !== id);
   saveNotifications(updated);
 }
 
@@ -68,12 +263,120 @@ export function clearAllNotifications() {
 
 export function markAllAsRead() {
   const current = getNotifications();
-  const updated = current.map((n) => ({ ...n, read: true }));
+  const safeCurrent = Array.isArray(current) ? current : [];
+  const updated = safeCurrent.map((n) => ({ ...n, read: true }));
   saveNotifications(updated);
 }
 
 export function getUnreadCount() {
   const current = getNotifications();
-  return current.filter((n) => !n.read).length;
+  return Array.isArray(current) ? current.filter((n) => !n.read).length : 0;
 }
+
+/**
+ * Trigger the Honors Viewed milestone notification.
+ * Fires once per user session when the Honors application is opened.
+ */
+export function triggerHonorsNotification() {
+  if (typeof window === 'undefined') return;
+
+  const sessionId =
+    (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('aura_boot_session_id')) ||
+    currentBootSessionId;
+
+  let alreadyShown = false;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      alreadyShown = sessionStorage.getItem('aura_honors_viewed_session') === sessionId;
+    }
+  } catch (e) {}
+
+  if (alreadyShown || honorsViewedSessionId === sessionId) {
+    return;
+  }
+
+  honorsViewedSessionId = sessionId;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('aura_honors_viewed_session', sessionId);
+    }
+  } catch (e) {}
+
+  const title = 'Achievements Are Milestones, Not Destinations.';
+  const description =
+    "Every achievement represents the effort, learning, and persistence behind it. These honors are not the finish line — they're reminders of how far the journey has come and how much more lies ahead.";
+
+  // 1. Save in Notification Center
+  addNotification({
+    title,
+    description,
+    type: 'achievement'
+  });
+
+  // 2. Dispatch floating desktop toast event
+  window.dispatchEvent(
+    new CustomEvent('aura-desktop-toast', {
+      detail: {
+        id: 'honors-milestone',
+        title,
+        description,
+        category: 'HONORS // MILESTONES',
+        status: 'VERIFIED',
+        icon: 'Award',
+        accentGradient: 'linear-gradient(90deg, #f59e0b, #fbbf24, #10b981, #06b6d4)',
+        footerLabel: 'AURA // HONORS ARCHIVE',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    })
+  );
+}
+
+let gameDiscoveredNotifFired = false;
+
+/**
+ * Trigger the Hidden Game Discovered notification.
+ * Fires once when the user successfully discovers/unlocks AURA: SYSTEM OVERRIDE.
+ */
+export function triggerGameDiscoveredNotification() {
+  if (typeof window === 'undefined') return;
+  if (gameDiscoveredNotifFired) return;
+
+  try {
+    if (localStorage.getItem('aura_game_discovered_notif_shown') === 'true') {
+      return;
+    }
+    localStorage.setItem('aura_game_discovered_notif_shown', 'true');
+  } catch (e) {}
+
+  gameDiscoveredNotifFired = true;
+
+  const title = "Well... You Found It.";
+  const description =
+    "Not everyone makes it this far. You looked beyond the interface and uncovered something hidden within AURA. Enjoy the experience — you've earned it.";
+
+  // 1. Save in Notification Center
+  addNotification({
+    title,
+    description,
+    type: 'achievement'
+  });
+
+  // 2. Dispatch floating desktop toast event
+  window.dispatchEvent(
+    new CustomEvent('aura-desktop-toast', {
+      detail: {
+        id: 'game-discovered',
+        title,
+        description,
+        category: 'SECRET DISCOVERY',
+        status: 'UNLOCKED',
+        icon: 'Gamepad2',
+        accentGradient: 'linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6)',
+        footerLabel: 'AURA // SYSTEM OVERRIDE',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    })
+  );
+}
+
 

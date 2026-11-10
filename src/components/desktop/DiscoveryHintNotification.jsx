@@ -1,39 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import { X, Terminal } from 'lucide-react';
-import { isHintDismissed, dismissHint, isGamingAchievementUnlocked, advanceHintStage } from '../../utils/easterEggManager';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Compass, Sparkles, X } from 'lucide-react';
+import {
+  getWelcomeTriggerInfo,
+  isDiscoveryHintPending,
+  markDiscoveryHintShown
+} from '../../utils/notificationManager';
+import { advanceHintStage } from '../../utils/easterEggManager';
 
-export default function DiscoveryHintNotification({ openApp }) {
+export default function DiscoveryHintNotification() {
   const [isVisible, setIsVisible] = useState(false);
+  const presentationTimerRef = useRef(null);
+  const dismissTimerRef = useRef(null);
 
-  useEffect(() => {
-    // If already dismissed or achievement already unlocked, do not show
-    if (isHintDismissed() || isGamingAchievementUnlocked()) {
-      return;
-    }
+  const startPresentationTimer = useCallback((triggerTime) => {
+    if (presentationTimerRef.current) return;
+    if (!isDiscoveryHintPending()) return;
 
-    // Delay presentation by 14 seconds to let the visitor settle into the desktop
-    const timer = setTimeout(() => {
-      if (!isHintDismissed() && !isGamingAchievementUnlocked()) {
-        setIsVisible(true);
-        advanceHintStage(1);
-      }
-    }, 14000);
+    const elapsed = Date.now() - triggerTime;
+    const delay = Math.max(0, 14000 - elapsed);
 
-    return () => clearTimeout(timer);
+    presentationTimerRef.current = setTimeout(() => {
+      presentationTimerRef.current = null;
+      if (!isDiscoveryHintPending()) return;
+
+      setIsVisible(true);
+      markDiscoveryHintShown();
+      advanceHintStage(1);
+
+      // Automatically dismiss each hint notification after 6 seconds
+      dismissTimerRef.current = setTimeout(() => {
+        setIsVisible(false);
+        dismissTimerRef.current = null;
+      }, 6000);
+    }, delay);
   }, []);
 
-  const handleDismiss = () => {
-    setIsVisible(false);
-    dismissHint();
-  };
+  useEffect(() => {
+    // If already shown in this boot session, do not start timer
+    if (!isDiscoveryHintPending()) return;
 
-  const handleInvestigate = () => {
-    setIsVisible(false);
-    dismissHint();
-    if (openApp) {
-      openApp('terminal');
+    // Check if welcome notification was already triggered
+    const { timestamp, sessionId } = getWelcomeTriggerInfo();
+    const currentSessionId =
+      (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('aura_boot_session_id')) ||
+      sessionId;
+
+    if (timestamp && sessionId === currentSessionId) {
+      startPresentationTimer(timestamp);
     }
-  };
+
+    // Listen for welcome notification trigger
+    const handleWelcomeTrigger = (e) => {
+      const time = e.detail?.timestamp || Date.now();
+      startPresentationTimer(time);
+    };
+
+    window.addEventListener('aura-welcome-triggered', handleWelcomeTrigger);
+
+    // If gaming easter egg is unlocked, clean up and hide immediately
+    const handleAchievementUnlock = (e) => {
+      const ach = e.detail;
+      if (ach?.id === 'game-lover' || ach?.id === 'secret-gaming-easter-egg') {
+        if (presentationTimerRef.current) {
+          clearTimeout(presentationTimerRef.current);
+          presentationTimerRef.current = null;
+        }
+        if (dismissTimerRef.current) {
+          clearTimeout(dismissTimerRef.current);
+          dismissTimerRef.current = null;
+        }
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('aura-achievement-unlocked', handleAchievementUnlock);
+
+    return () => {
+      window.removeEventListener('aura-welcome-triggered', handleWelcomeTrigger);
+      window.removeEventListener('aura-achievement-unlocked', handleAchievementUnlock);
+      if (presentationTimerRef.current) {
+        clearTimeout(presentationTimerRef.current);
+        presentationTimerRef.current = null;
+      }
+      if (dismissTimerRef.current) {
+        clearTimeout(dismissTimerRef.current);
+        dismissTimerRef.current = null;
+      }
+    };
+  }, [startPresentationTimer]);
+
+  const handleManualDismiss = useCallback(() => {
+    if (presentationTimerRef.current) {
+      clearTimeout(presentationTimerRef.current);
+      presentationTimerRef.current = null;
+    }
+    if (dismissTimerRef.current) {
+      clearTimeout(dismissTimerRef.current);
+      dismissTimerRef.current = null;
+    }
+    setIsVisible(false);
+    markDiscoveryHintShown();
+  }, []);
 
   if (!isVisible) return null;
 
@@ -41,59 +108,67 @@ export default function DiscoveryHintNotification({ openApp }) {
     <aside
       role="status"
       aria-live="polite"
-      className="fixed bottom-14 right-4 z-40 max-w-sm w-[calc(100vw-32px)] sm:w-96 select-none animate-in fade-in slide-in-from-bottom-4 duration-300"
+      className="fixed bottom-14 right-3 left-3 sm:left-auto sm:right-6 sm:bottom-16 z-50 max-w-sm sm:max-w-md w-auto select-none animate-in fade-in slide-in-from-bottom-4 duration-300"
     >
       <div
-        className="p-4 rounded-xl border shadow-2xl backdrop-blur-xl font-sans relative overflow-hidden"
+        className="p-4 sm:p-5 rounded-2xl border shadow-2xl backdrop-blur-2xl font-sans relative overflow-hidden"
         style={{
-          backgroundColor: 'rgba(8, 14, 26, 0.94)',
+          backgroundColor: 'rgba(8, 14, 26, 0.95)',
           borderColor: 'rgba(56, 189, 248, 0.35)',
-          boxShadow: '0 12px 32px -4px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.15)',
+          boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.15)',
         }}
       >
         {/* Subtle top indicator bar */}
         <div
-          className="absolute top-0 left-0 right-0 h-0.5"
+          className="absolute top-0 left-0 right-0 h-1"
           style={{
-            background: 'linear-gradient(90deg, #38bdf8, #34d399, #818cf8)',
+            background: 'linear-gradient(90deg, #38bdf8, #818cf8, #c084fc)',
           }}
         />
 
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#38bdf8]" />
-            <span className="text-[11px] font-mono font-semibold tracking-wider text-cyan-300 uppercase">
-              AURA // System Thought
-            </span>
+        <div className="flex items-start gap-3.5">
+          {/* Subtle System Discovery Icon */}
+          <div className="relative shrink-0 mt-0.5">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-indigo-500/30 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(56,189,248,0.25)]">
+              <Compass size={22} className="text-cyan-400" />
+            </div>
+            <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
           </div>
 
-          <button
-            type="button"
-            onClick={handleDismiss}
-            aria-label="Dismiss notification"
-            className="text-slate-400 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10"
-          >
-            <X size={14} />
-          </button>
-        </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex items-center gap-1.5">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 flex items-center gap-1">
+                  <Sparkles size={10} />
+                  <span>AURA // SYSTEM DISCOVERY</span>
+                </span>
+              </div>
 
-        <p className="text-xs text-slate-200 leading-relaxed font-sans mb-3 pr-2">
-          "I built an entire operating system, added my projects, skills and achievements... but something important is still missing. 🤔"
-        </p>
+              <button
+                type="button"
+                onClick={handleManualDismiss}
+                aria-label="Close notification"
+                className="text-slate-400 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10 cursor-pointer"
+              >
+                <X size={14} />
+              </button>
+            </div>
 
-        <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[11px] font-mono">
-          <span className="text-slate-500 text-[10px]">HINT 01 OF 03</span>
-          <button
-            type="button"
-            onClick={handleInvestigate}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-medium text-xs transition-all cursor-pointer bg-cyan-500/15 border border-cyan-500/40 text-cyan-200 hover:bg-cyan-500/25 hover:border-cyan-400 active:scale-95"
-          >
-            <Terminal size={12} />
-            <span>Investigate CLI</span>
-          </button>
+            <h4 className="text-sm sm:text-base font-bold text-white tracking-tight mb-1">
+              Something Lies Beneath the Interface
+            </h4>
+
+            <p className="text-xs text-slate-300 leading-relaxed font-sans font-light">
+              Every system has something beyond what meets the eye. AURA is no exception. Look a little closer.
+            </p>
+
+            <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400">
+              <span className="text-cyan-400/80">AURA // ANOMALY DETECTED</span>
+              <span className="text-slate-500">LOOK CLOSER</span>
+            </div>
+          </div>
         </div>
       </div>
     </aside>
   );
 }
-
